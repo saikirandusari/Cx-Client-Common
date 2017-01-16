@@ -84,9 +84,9 @@
   
   <distributionManagement>
 	<repository>
-		<id>bintray-cxadmin-CxPluginsCommon</id>
-		<name>cxadmin-CxPluginsCommon</name>
-		<url>https://api.bintray.com/maven/cxadmin/CxPluginsCommon/Cx-Client/;publish=1</url>
+		<id>bintray-cxrepositories-CxPluginsCommon</id>
+		<name>CxRepositories-CxPluginsCommon</name>
+		<url>https://api.bintray.com/maven/cxrepositories/CxPluginsCommon/Cx-Client/;publish=1</url>
     </repository>
   </distributionManagement>
   
