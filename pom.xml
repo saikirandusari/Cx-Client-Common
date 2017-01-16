@@ -12,6 +12,13 @@
   <description>Enables web services access Checkmarx SAST and OSA scan.</description>
   <url>https://www.checkmarx.com</url>
 
+  <distributionManagement>
+	<repository>
+		<id>bintray-cxadmin-CxPluginsCommon</id>
+		<name>cxadmin-CxPluginsCommon</name>
+		<url>https://api.bintray.com/maven/cxadmin/CxPluginsCommon/Cx-Client/;publish=1</url>
+    </repository>
+  </distributionManagement>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
