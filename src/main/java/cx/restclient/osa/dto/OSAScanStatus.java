@@ -21,12 +21,13 @@ public class OSAScanStatus extends BaseStatus {
     private List<String> sharedSourceLocationPaths;
 private Status status;
 
-    public String getId() {
+    @Override
+    public String getBaseId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setBaseId(String baseId) {
+        this.id = baseId;
     }
 
     public String getStartAnalyzeTime() {
@@ -69,11 +70,11 @@ private Status status;
         this.sharedSourceLocationPaths = sharedSourceLocationPaths;
     }
 
-    public Status getStatus() {
+    public Status getBaseStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setBaseStatus(Status baseStatus) {
+        this.status = baseStatus;
     }
 }

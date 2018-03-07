@@ -1,5 +1,7 @@
 package cx.restclient.sast.dto;
 
+import java.util.List;
+
 /**
  * Created by Galn on 14/02/2018.
  */
@@ -7,7 +9,7 @@ public class Query {
     private long id;
     private String name;
     private String ownerName;
-    private CxLink link;
+    private Link link;
 
     public long getId() {
         return id;
@@ -33,11 +35,11 @@ public class Query {
         this.ownerName = ownerName;
     }
 
-    public CxLink getLink() {
+    public Link getLink() {
         return link;
     }
 
-    public void setLink(CxLink link) {
+    public void setLink(Link link) {
         this.link = link;
     }
 }

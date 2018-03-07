@@ -30,11 +30,11 @@ public class CreateProjectRequest {
         this.owningTeam = owningTeam;
     }
 
-    public boolean isPublic() {
+    public boolean getIsPublic() {
         return isPublic;
     }
 
-    public void setPublic(boolean aPublic) {
-        isPublic = aPublic;
+    public void setIsPublic(boolean isPublic) {
+        isPublic = isPublic;
     }
 }

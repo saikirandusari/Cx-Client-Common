@@ -3,7 +3,7 @@ package cx.restclient.sast.dto;
 /**
  * Created by Galn on 06/02/2018.
  */
-public class CxLink {
+public class Link {
     private String rel;
     private String uri;
 

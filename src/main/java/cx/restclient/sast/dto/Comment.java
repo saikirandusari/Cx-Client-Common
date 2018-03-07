@@ -4,17 +4,18 @@ package cx.restclient.sast.dto;
  * Created by Galn on 14/02/2018.
  */
 public class Comment {
-    private String content;
+    private String comment;
 
-    public Comment(String content) {
-        this.content = content;
+    public Comment(String comment) {
+        this.comment = comment;
     }
 
-    public String getContent() {
-        return content;
+    public String getComment() {
+        return comment;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
+

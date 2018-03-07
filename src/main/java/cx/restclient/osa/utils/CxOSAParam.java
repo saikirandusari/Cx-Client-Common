@@ -5,7 +5,7 @@ package cx.restclient.osa.utils;
  */
 public class CxOSAParam {
 
-    public static final String OSA_SCAN_PROJECT = "osa/scans";
+    public static final String OSA_SCAN_PROJECT = "osa/inventory";
     public static final String OSA_SCAN_STATUS = "osa/scans/{scanId}";
     public static final String OSA_SCAN_SUMMARY = "osa/reports";
     public static final String OSA_SCAN_LIBRARIES = "/osa/libraries";

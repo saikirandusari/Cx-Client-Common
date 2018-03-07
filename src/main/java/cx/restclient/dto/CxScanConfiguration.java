@@ -1,6 +1,8 @@
 package cx.restclient.dto;
 
 
+import cx.restclient.sast.dto.Project;
+
 import java.io.File;
 
 /**
@@ -11,10 +13,9 @@ public class CxScanConfiguration {
     private boolean SASTEnabled;
     private String OSAEnabled;
     private String cxOrigin;
-    private File sourceDir;
-    private File tempDir;
-    private File checkoutDir;
-    private String reportDir;
+    private String sourceDir;
+    private String tempDir;
+    private String reportsDir;
     private String username;
     private String password;
     private String url;
@@ -42,13 +43,14 @@ public class CxScanConfiguration {
     private Integer osaHighThreshold;
     private Integer osaMediumThreshold;
     private Integer osaLowThreshold;
-    private Integer projectId = 0;
     private boolean denyProject = false;
     private boolean isPublic = false;
     private boolean forceScan = false;
     private File zipFile;
     private Integer engineConfigurationId;
     private String osaDependenciesJson;
+
+    private Project project;
 
 
     public boolean isSASTEnabled() {
@@ -75,39 +77,23 @@ public class CxScanConfiguration {
         this.cxOrigin = cxOrigin;
     }
 
-    public File getSourceDir() {
+    public String getSourceDir() {
         return sourceDir;
     }
 
-    public void setSourceDir(File sourceDir) {
+    public void setSourceDir(String sourceDir) {
         this.sourceDir = sourceDir;
     }
 
-    public File getTempDir() {
+    public String getTempDir() {
         return tempDir;
     }
 
-    public void setTempDir(File tempDir) {
+    public void setTempDir(String tempDir) {
         this.tempDir = tempDir;
     }
 
-    public File getCheckoutDir() {
-        return checkoutDir;
-    }
-
-    public void setCheckoutDir(File checkoutDir) {
-        this.checkoutDir = checkoutDir;
-    }
-
-    public Integer getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Integer projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getUsername() {
+     public String getUsername() {
         return username;
     }
 
@@ -172,6 +158,9 @@ public class CxScanConfiguration {
     }
 
     public Integer getScanTimeoutInMinutes() {
+        if(scanTimeoutInMinutes == null){
+            scanTimeoutInMinutes = -1;
+        }
         return scanTimeoutInMinutes;
     }
 
@@ -367,12 +356,12 @@ public class CxScanConfiguration {
         return isOsaEnabled() && isOsaThresholdsEnabled() && (getOsaHighThreshold() != null || getOsaMediumThreshold() != null || getOsaLowThreshold() != null);
     }
 
-    public String getReportDir() {
-        return reportDir;
+    public String getReportsDir() {
+        return reportsDir;
     }
 
-    public void setReportDir(String reportDir) {
-        this.reportDir = reportDir;
+    public void setReportsDir(String reportsDir) {
+        this.reportsDir = reportsDir;
     }
 
     public boolean isDenyProject() {
@@ -421,5 +410,13 @@ public class CxScanConfiguration {
 
     public void setOsaDependenciesJson(String osaDependenciesJson) {
         this.osaDependenciesJson = osaDependenciesJson;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

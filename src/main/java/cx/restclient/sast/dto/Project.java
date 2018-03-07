@@ -4,14 +4,19 @@ package cx.restclient.sast.dto;
  * Created by Galn on 13/02/2018.
  */
 public class Project { //TODO
-    private long id;
+    private int id;
     private String name;
+    private String teamId;
+    private boolean isPublic;
+    private Link link;
+    private SourceSettingsLink sourceSettingsLink;
 
-    public long getId() {
+
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -21,5 +26,37 @@ public class Project { //TODO
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
+    public boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public Link getLink() {
+        return link;
+    }
+
+    public void setLink(Link link) {
+        this.link = link;
+    }
+
+    public SourceSettingsLink getSourceSettingsLink() {
+        return sourceSettingsLink;
+    }
+
+    public void setSourceSettingsLink(SourceSettingsLink sourceSettingsLink) {
+        this.sourceSettingsLink = sourceSettingsLink;
     }
 }

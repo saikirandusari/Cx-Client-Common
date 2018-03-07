@@ -2,17 +2,20 @@ package cx.restclient.sast.dto;
 
 import cx.restclient.common.BaseStatus;
 
+import java.util.List;
+
 /**
  * Created by Galn on 05/02/2018.
  */
 public class ResponseQueueScanStatus extends BaseStatus{
 
-    private Stage stage;
+    private long id;
+    private CxValueObj stage;
     private String stageDetails;
     private String stepDetails;
     private Project project;
-    private String engine;
-    private String languages;
+    private CxLinkObj engine;
+    private List<CxNameObj> languages;
     private String teamId;
     private String dateCreated;
     private String queuedOn;
@@ -25,15 +28,23 @@ public class ResponseQueueScanStatus extends BaseStatus{
     private int queuePosition;
     private int totalPercent;
     private int stagePercent;
+    private String initiator;
 
+    public long getId() {
+        return id;
+    }
 
- //   public Stage getStage() {
-    //    return stage;
-  //  }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-  //  public void setStage(Stage stage) {
-    //    this.stage = stage;
-   // }
+    public CxValueObj getStage() {
+        return stage;
+    }
+
+    public void setStage(CxValueObj stage) {
+        this.stage = stage;
+    }
 
     public String getStageDetails() {
         return stageDetails;
@@ -59,19 +70,19 @@ public class ResponseQueueScanStatus extends BaseStatus{
         this.project = project;
     }
 
-    public String getEngine() {
+    public CxLinkObj getEngine() {
         return engine;
     }
 
-    public void setEngine(String engine) {
+    public void setEngine(CxLinkObj engine) {
         this.engine = engine;
     }
 
-    public String getLanguages() {
+    public List<CxNameObj> getLanguages() {
         return languages;
     }
 
-    public void setLanguages(String languages) {
+    public void setLanguages(List<CxNameObj> languages) {
         this.languages = languages;
     }
 
@@ -123,19 +134,19 @@ public class ResponseQueueScanStatus extends BaseStatus{
         this.loc = loc;
     }
 
-    public boolean isIncremental() {
+    public boolean getIsIncremental() {
         return isIncremental;
     }
 
-    public void setIncremental(boolean incremental) {
+    public void setIsIncremental(boolean incremental) {
         isIncremental = incremental;
     }
 
-    public boolean isPublic() {
+    public boolean getIsPublic() {
         return isPublic;
     }
 
-    public void setPublic(boolean aPublic) {
+    public void setIsPublic(boolean aPublic) {
         isPublic = aPublic;
     }
 
@@ -171,11 +182,11 @@ public class ResponseQueueScanStatus extends BaseStatus{
         this.stagePercent = stagePercent;
     }
 
-    public Stage getStage() {
-        return stage;
+    public String getInitiator() {
+        return initiator;
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setInitiator(String initiator) {
+        this.initiator = initiator;
     }
 }

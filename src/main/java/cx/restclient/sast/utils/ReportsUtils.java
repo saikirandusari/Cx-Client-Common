@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

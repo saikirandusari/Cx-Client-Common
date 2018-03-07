@@ -3,13 +3,13 @@ package cx.restclient.sast.dto;
 /**
  * Created by Galn on 05/02/2018.
  */
-public class ScanRequest {
+public class CreateScanRequest {
     private long projectId;//TODO int??
     private boolean isIncremental = false;//TODO default param?
     private boolean isPublic = true;
     private boolean forceScan = true;
 
-    public ScanRequest(long projectId, boolean isIncremental, boolean isPublic, boolean forceScan) {
+    public CreateScanRequest(long projectId, boolean isIncremental, boolean isPublic, boolean forceScan) {
         this.projectId = projectId;
         this.isIncremental = isIncremental;
         this.isPublic = isPublic;

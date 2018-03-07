@@ -1,6 +1,5 @@
 package cx.restclient.osa;
 
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import cx.restclient.common.Status;
 import cx.restclient.common.Waiter;
 import cx.restclient.dto.CxScanConfiguration;
@@ -30,11 +29,10 @@ public class CxOSAClient implements ICxOSAClient {
     private CxHttpClient httpClient;
     private Logger log;
     private CxScanConfiguration config;
-    private OSAUtils OSAUtils = new OSAUtils(log);
     private OSAResults osaResults = new OSAResults();
     private Waiter<OSAScanStatus> osaWaiter = new Waiter<OSAScanStatus>("CxOSA", 20000) {
         @Override
-        public OSAScanStatus getStatus(long id) throws CxClientException, IOException {
+        public OSAScanStatus getStatus(String id) throws CxClientException, IOException {
             return getOSAScanStatus(id);
         }
 
@@ -68,34 +66,36 @@ public class CxOSAClient implements ICxOSAClient {
     private String resolveOSADependencies() {
         log.info("Scanning for CxOSA compatible files");
         Properties scannerProperties = OSAUtils.generateOSAScanConfiguration(config.getOsaFilterPattern(),
-                config.getOsaArchiveIncludePatterns(), config.getCheckoutDir().getAbsolutePath(), config.isOsaInstallBeforeScan());
+                config.getOsaArchiveIncludePatterns(), config.getSourceDir(), config.isOsaInstallBeforeScan());
         ComponentScan componentScan = new ComponentScan(scannerProperties);
         String osaDependenciesJson = componentScan.scan();
-        OSAUtils.writeToOsaListToTemp(osaDependenciesJson);
+        OSAUtils.writeToOsaListToTemp(osaDependenciesJson, log);
 
         return osaDependenciesJson;
     }
 
     public OSAResults getOSAResults(String scanId) throws CxClientException, IOException, CxOSAException, InterruptedException {
-        log.info("Waiting for OSA scan to finish");
-        OSAScanStatus osaScanStatus = osaWaiter.waitForScanToFinish(Integer.getInteger(scanId), -1, log);
-        log.info("OSA scan finished successfully");
-        log.info("Creating OSA reports");
-        OSASummaryResults osaSummaryResults = getOSAScanSummaryResults(scanId);
+        if (config.isOsaEnabled()) {
+            log.info("Waiting for OSA scan to finish");
+            OSAScanStatus osaScanStatus = osaWaiter.waitForScanToFinish(scanId, -1, log);
+            log.info("OSA scan finished successfully");
+            log.info("Creating OSA reports");
+            OSASummaryResults osaSummaryResults = getOSAScanSummaryResults(scanId);
 
-        List<Library> osaLibraries = getOSALibraries(scanId);
-        List<CVE> osaVulnerabilities = getOSAVulnerabilities(scanId);
-        osaResults.setResults(osaSummaryResults, osaLibraries, osaVulnerabilities, osaScanStatus);
-        OSAUtils.printOSAResultsToConsole(osaResults);
-
+            List<Library> osaLibraries = getOSALibraries(scanId);
+            List<CVE> osaVulnerabilities = getOSAVulnerabilities(scanId);
+            osaResults.setResults(osaSummaryResults, osaLibraries, osaVulnerabilities, osaScanStatus);
+            OSAUtils.printOSAResultsToConsole(osaResults, log);
+        }
         return osaResults;
     }
 
     //Private Methods
     private CreateOSAScanResponse sendOSAScan(String osaDependenciesJson) throws CxClientException, IOException {
         log.info("Sending OSA scan request");
-        CreateOSAScanResponse osaScan = scanOSA(config.getProjectId(), osaDependenciesJson);
-        String osaProjectSummaryLink = composeProjectOSASummaryLink(config.getUrl(), config.getProjectId());
+        long projectId = config.getProject().getId();
+        CreateOSAScanResponse osaScan = scanOSA(projectId, osaDependenciesJson);
+        String osaProjectSummaryLink = composeProjectOSASummaryLink(config.getUrl(), projectId);
         osaResults.setOsaProjectSummaryLink(osaProjectSummaryLink);
         log.info("OSA scan created successfully");
 
@@ -110,31 +110,31 @@ public class CxOSAClient implements ICxOSAClient {
 
     private OSASummaryResults getOSAScanSummaryResults(String scanId) throws CxClientException, IOException {
         String relativePath = OSA_SCAN_SUMMARY + SCAN_ID_QUERY_PARAM + scanId;
-        return (OSASummaryResults) httpClient.getRequest(relativePath, CONTENT_TYPE_APPLICATION_JSON_V1, OSASummaryResults.class, 200, "OSA scan summary results");
+        return httpClient.getRequest(relativePath, CONTENT_TYPE_APPLICATION_JSON_V1, OSASummaryResults.class, 200, "OSA scan summary results", false);
     }
 
     private List<Library> getOSALibraries(String scanId) throws CxClientException, IOException {
         String relPath = OSA_SCAN_LIBRARIES + SCAN_ID_QUERY_PARAM + scanId + ITEM_PER_PAGE_QUERY_PARAM + MAX_ITEMS;
-        return httpClient.getRequest(relPath, CONTENT_TYPE_APPLICATION_JSON_V1, TypeFactory.defaultInstance().constructCollectionType(List.class, Library.class), 200, "OSA libraries");
+        return (List<Library>) httpClient.getRequest(relPath, CONTENT_TYPE_APPLICATION_JSON_V1, Library.class, 200, "OSA libraries", true);
     }
 
     private List<CVE> getOSAVulnerabilities(String scanId) throws CxClientException, IOException {
         String relPath = OSA_SCAN_VULNERABILITIES + SCAN_ID_QUERY_PARAM + scanId + ITEM_PER_PAGE_QUERY_PARAM + MAX_ITEMS;
-        return httpClient.getRequest(relPath, CONTENT_TYPE_APPLICATION_JSON_V1, TypeFactory.defaultInstance().constructCollectionType(List.class, CVE.class), 200, "OSA vulnerabilities");
+        return (List<CVE>) httpClient.getRequest(relPath, CONTENT_TYPE_APPLICATION_JSON_V1, CVE.class, 200, "OSA vulnerabilities", true);
     }
 
     //Waiter - overload methods
-    private OSAScanStatus getOSAScanStatus(long scanId) throws CxClientException, IOException {
-        String relPath = OSA_SCAN_STATUS.replace("{scanId}", String.valueOf(scanId)); //TODO scanId int or string or both?
-        OSAScanStatus scanStatus = httpClient.getRequest(relPath, CONTENT_TYPE_APPLICATION_JSON_V1, OSASummaryResults.class, 200, "OSA scan status");
+    private OSAScanStatus getOSAScanStatus(String scanId) throws CxClientException, IOException {
+        String relPath = OSA_SCAN_STATUS.replace("{scanId}", scanId); //TODO scanId int or string or both?
+        OSAScanStatus scanStatus = httpClient.getRequest(relPath, CONTENT_TYPE_APPLICATION_JSON_V1, OSAScanStatus.class, 200, "OSA scan status", false);
         int stateId = scanStatus.getState().getId();
 
         if (OSAScanStatusEnum.SUCCEEDED.getNum() == stateId) {
-            scanStatus.setStatus(Status.SUCCEEDED);
+            scanStatus.setBaseStatus(Status.SUCCEEDED);
         } else if (OSAScanStatusEnum.IN_PROGRESS.getNum() == stateId || OSAScanStatusEnum.NOT_STARTED.getNum() == stateId) {
-            scanStatus.setStatus(Status.IN_PROGRESS);
+            scanStatus.setBaseStatus(Status.IN_PROGRESS);
         } else {
-            scanStatus.setStatus(Status.FAILED);
+            scanStatus.setBaseStatus(Status.FAILED);
         }
         return scanStatus;
     }
@@ -151,11 +151,11 @@ public class CxOSAClient implements ICxOSAClient {
     }
 
     private OSAScanStatus resolveOSAStatus(OSAScanStatus scanStatus) throws CxClientException {
-        if (Status.FAILED == scanStatus.getStatus()) {
+        if (Status.FAILED == scanStatus.getBaseStatus()) {
             String failedMsg = scanStatus.getState() == null ? "" : "status [" + scanStatus.getState().getName() + "]. Reason: " + scanStatus.getState().getFailureReason();
             throw new CxClientException("OSA scan cannot be completed. " + failedMsg);
         }
-        if (Status.SUCCEEDED == scanStatus.getStatus()) {
+        if (Status.SUCCEEDED == scanStatus.getBaseStatus()) {
             log.info("OSA scan finished.");
             return scanStatus;
         }

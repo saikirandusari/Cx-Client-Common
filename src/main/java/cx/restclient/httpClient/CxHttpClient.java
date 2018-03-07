@@ -1,7 +1,10 @@
 package cx.restclient.httpClient;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import cx.restclient.dto.LoginRequest;
 import cx.restclient.httpClient.exception.CxClientException;
+import cx.restclient.sast.dto.Project;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.*;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
@@ -16,10 +19,14 @@ import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
-import static cx.restclient.common.CxPARAM.AUTHENTICATION;
-import static cx.restclient.common.CxPARAM.CSRF_TOKEN_HEADER;
+
+import static cx.restclient.common.CxPARAM.*;
 import static cx.restclient.httpClient.utils.ClientUtils.*;
+import static cx.restclient.sast.utils.CxSASTParam.CONTENT_TYPE_APPLICATION_JSON_V1;
 import static cx.restclient.sast.utils.CxSASTParam.SAST_CREATE_SCAN;
 
 /**
@@ -40,6 +47,8 @@ public class CxHttpClient {
 
     private final HttpRequestInterceptor requestFilter = new HttpRequestInterceptor() {
         public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
+            httpRequest.addHeader(ORIGIN_HEADER, cxOrigin);
+
             if (csrfToken != null) {
                 httpRequest.addHeader(CSRF_TOKEN_HEADER, csrfToken);
             }
@@ -69,7 +78,6 @@ public class CxHttpClient {
 
         }
     };
-
 
     public CxHttpClient(String hostname, String username, String password, String origin) {
         this.username = username;
@@ -107,41 +115,49 @@ public class CxHttpClient {
     }
 
     //GET REQUEST
-    public <T> T getRequest(String relPath, String contentType, Object responseType, int expectStatus, String failedMsg) throws IOException, CxClientException {
+    public <T> T getRequest(String relPath, String contentType, Class<T> responseType, Integer expectStatus, String failedMsg, boolean isCollection) throws IOException, CxClientException {
         String resolvedPath = rootPath + relPath;
         HttpGet getRequest = new HttpGet(resolvedPath);
+        getRequest.setHeader("Accept", "application/json");
         getRequest.addHeader("Content-type", contentType);
         HttpResponse response = null; //TODO
         try {
             response = apacheClient.execute(getRequest);
-            validateResponse(response, expectStatus, "Failed to get " + failedMsg);
-            return (T) convertToObject(response, responseType.getClass());
+            if (expectStatus != null) {
+                validateResponse(response, expectStatus, "Failed to get " + failedMsg);
+            } else if (response.getStatusLine().getStatusCode() == 404) {
+                return null;
+            }
+            if (isCollection) {
+                return convertToCollectionObject(response, TypeFactory.defaultInstance().constructCollectionType(List.class, responseType));
+            }
+       /*     if(responseType.equals(String.class)){
+                return (T)IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset());
+            } */
+
+            if(responseType.equals(byte[].class)){
+                return (T)IOUtils.toByteArray(response.getEntity().getContent());
+            }
+
+            return convertToObject(response, responseType);
         } finally {
             getRequest.releaseConnection();
             HttpClientUtils.closeQuietly(response);
         }
     }
 
-    public <T> T getRequestNoValid(String relPath, String contentType, Object responseType) throws IOException, CxClientException {
-        String resolvedPath = rootPath + relPath;
-        HttpGet getRequest = new HttpGet(resolvedPath);
-        getRequest.addHeader("Content-type", contentType);
-        HttpResponse response = null; //TODO
-        try {
-            response = apacheClient.execute(getRequest);
-            return (T) convertToObject(response, responseType.getClass());
-        } finally {
-            getRequest.releaseConnection();
-            HttpClientUtils.closeQuietly(response);
-        }
-    }
 
     //POST REQUEST
     public <T> T postRequest(String relPath, String contentType, HttpEntity entity, Class<T> responseType, int expectStatus, String failedMsg) throws CxClientException, IOException {
         String resolvedPath = rootPath + relPath;
         HttpPost post = new HttpPost(resolvedPath);
         post.setEntity(entity);
-        post.addHeader("Content-type", contentType);
+        if (contentType != null) {
+            post.addHeader("Content-type", contentType);
+        }
+
+        post.addHeader("Accept", "application/json;v=1.0");
+
         if (resolvedPath.equals(SAST_CREATE_SCAN)) { //TODO If create scan- need to add roigion
             post.addHeader("CxOrigin", cxOrigin);
         }
@@ -160,7 +176,7 @@ public class CxHttpClient {
         }
     }
 
-    //POST REQUEST
+    //PATCH REQUEST
     public void patchRequest(String relPath, String contentType, HttpEntity entity, int expectStatus, String failedMsg) throws CxClientException, IOException {
         String resolvedPath = rootPath + relPath;
         HttpPatch patch = new HttpPatch(resolvedPath);
@@ -170,10 +186,7 @@ public class CxHttpClient {
 
         try {
             response = apacheClient.execute(patch);
-            if (response.getStatusLine().getStatusCode() != expectStatus) {
-                validateResponse(response, expectStatus, "Failed to " + failedMsg);
-            }
-
+            validateResponse(response, expectStatus, "Failed to " + failedMsg);
         } catch (Exception ex) {
             log.warn("Failed to " + failedMsg + ": " + ex.getMessage());
         } finally {

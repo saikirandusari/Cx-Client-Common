@@ -6,8 +6,7 @@ package cx.restclient.common;
 public class CxPARAM {
     public static final String AUTHENTICATION = "auth/login";
     public static final String CSRF_TOKEN_HEADER = "CXCSRFToken";
-
-
+    public static final String ORIGIN_HEADER = "cxOrigin";
     public static final String CXPRESETS = "/presets";
     public static final String CXTEAMS = "/auth/teams";
 }

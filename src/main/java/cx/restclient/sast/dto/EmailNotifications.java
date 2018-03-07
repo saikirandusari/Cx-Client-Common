@@ -1,34 +1,37 @@
 package cx.restclient.sast.dto;
 
+import java.util.List;
+
 /**
  * Created by Galn on 05/02/2018.
  */
-public class EmailNotifications {
-    private String failedScan;
-    private String beforeScan;
-    private String afterScan;
 
-    public String getFailedScan() {
+public class EmailNotifications {
+    private List<String> failedScan;
+    private List<String> beforeScan;
+    private List<String> afterScan;
+
+    public List<String> getFailedScan() {
         return failedScan;
     }
 
-    public void setFailedScan(String failedScan) {
+    public void setFailedScan(List<String> failedScan) {
         this.failedScan = failedScan;
     }
 
-    public String getBeforeScan() {
+    public List<String> getBeforeScan() {
         return beforeScan;
     }
 
-    public void setBeforeScan(String beforeScan) {
+    public void setBeforeScan(List<String> beforeScan) {
         this.beforeScan = beforeScan;
     }
 
-    public String getAfterScan() {
+    public List<String> getAfterScan() {
         return afterScan;
     }
 
-    public void setAfterScan(String afterScan) {
+    public void setAfterScan(List<String> afterScan) {
         this.afterScan = afterScan;
     }
 }

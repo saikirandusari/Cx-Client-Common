@@ -37,20 +37,8 @@
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.checkmarx.components</groupId>
-      <artifactId>zipper</artifactId>
-      <version>1.2.1</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>log4j</groupId>
-          <artifactId>log4j</artifactId>
-        </exclusion>
-      </exclusions>
+      <artifactId>commons-lang</artifactId>
+      <version>2.4</version>
     </dependency>
     <dependency>
       <groupId>org.whitesource</groupId>
@@ -82,7 +70,13 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.25</version>
+      <version>1.6.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.6.1</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <developers>

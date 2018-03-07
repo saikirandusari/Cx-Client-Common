@@ -23,20 +23,20 @@ public abstract class Waiter<T> {
     private long startTime;
     protected Status status = null;
 
-    public T waitForScanToFinish(long id, long scanTimeoutInMin, Logger log) throws CxClientException, InterruptedException {
+    public T waitForScanToFinish(String id, long scanTimeoutInMin, Logger log) throws CxClientException, InterruptedException {
+        sleepInterval = 10;
         startTime = System.currentTimeMillis();
         long elapsedTime = 0L;
         long timeout = scanTimeoutInMin * 60000;
-        boolean exit = false;
-        T  obj = null;
-        while (elapsedTime < timeout) {
+        status = Status.IN_PROGRESS;
+        T obj = null;
+
 
             Thread.sleep(sleepInterval);  //Get status every 20 sec
-            while (!exit) {
+            while (status.equals(Status.IN_PROGRESS) && (scanTimeoutInMin <= 0 || elapsedTime < timeout)){
                 try {
                     obj = getStatus(id);
-                    status = ((BaseStatus)obj).getStatus();
-                    exit = true;
+                    status = ((BaseStatus) obj).getBaseStatus();
                 } catch (Exception e) {
                     log.debug("Failed to get status from " + scanType + ". retrying (" + (retry - 1) + " tries left). Error message: " + e.getMessage());
                     if (retry < 0) { //TODO <= maybe
@@ -44,19 +44,15 @@ public abstract class Waiter<T> {
                     }
                     retry--;
                 }
+                elapsedTime = (new Date()).getTime() - startTime;
+                printProgress(obj);
             }
-            if ((!Status.IN_PROGRESS.equals(status))) {
-                obj = resolveStatus(obj);
-                return obj;
-            }
-            elapsedTime = (new Date()).getTime() - startTime;
-            printProgress(obj);
-        }
+
+            return resolveStatus(obj);
         //TODO timeout- check Osa and SAST
-        return null;
     }
 
-    public abstract T getStatus(long id) throws CxClientException, IOException;
+    public abstract T getStatus(String id) throws CxClientException, IOException;
 
     public abstract void printProgress(T status);
 

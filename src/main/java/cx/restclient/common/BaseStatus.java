@@ -4,31 +4,29 @@ package cx.restclient.common;
  * Created by Galn on 13/02/2018.
  */
 public class BaseStatus {
-    private long id;
-    private Status status;
+    private String baseId;
+    private Status baseStatus;
 
     public BaseStatus() {
     }
 
-    public BaseStatus(long id) {
-        this.id = id;
+    public BaseStatus(String id) {
+        this.baseId = id;
     }
 
-    public Status getStatus() {
-        return status;
+    public Status getBaseStatus() {
+        return baseStatus;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setBaseStatus(Status baseStatus) {
+        this.baseStatus = baseStatus;
     }
 
-    public long getId() {
-        return id;
+    public String getBaseId() {
+        return baseId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setBaseId(String baseId) {
+        this.baseId = baseId;
     }
-
-
 }

@@ -15,21 +15,15 @@ import java.util.Properties;
 /**
  * Created by Galn on 07/02/2018.
  */
-public class OSAUtils {
+public abstract class OSAUtils {
 
-    private Logger logger;
-
-    public OSAUtils(Logger logger) {
-        this.logger = logger;
-    }
-
-    public void writeToOsaListToTemp(String osaDependenciesJson) {
+    public static void writeToOsaListToTemp(String osaDependenciesJson, Logger log) {
         try {
             File temp = new File(FileUtils.getTempDirectory(), "CxOSAFileList.json");
             FileUtils.writeStringToFile(temp, osaDependenciesJson, Charset.defaultCharset());
-            logger.info("OSA file list saved to file: ["+temp.getAbsolutePath()+"]");
+            log.info("OSA file list saved to file: ["+temp.getAbsolutePath()+"]");
         } catch (Exception e) {
-            logger.info("Failed to write OSA file list to temp directory: " + e.getMessage());
+            log.info("Failed to write OSA file list to temp directory: " + e.getMessage());
         }
 
     }
@@ -38,7 +32,7 @@ public class OSAUtils {
         return String.format( url + "/CxWebClient/SPA/#/viewer/project/%s", projectId);
     }
 
-    public Properties generateOSAScanConfiguration(String filterPatterns, String archiveIncludes, String scanFolder, boolean installBeforeScan) {
+    public static Properties generateOSAScanConfiguration(String filterPatterns, String archiveIncludes, String scanFolder, boolean installBeforeScan) {
         Properties ret = new Properties();
         filterPatterns = StringUtils.defaultString(filterPatterns);
         archiveIncludes = StringUtils.defaultString(archiveIncludes);
@@ -57,8 +51,8 @@ public class OSAUtils {
             }
         }
 
-        String includesString = StringUtils.join(",", inclusions);
-        String excludesString = StringUtils.join(",", exclusions);
+        String includesString = String.join(",", inclusions);
+        String excludesString = String.join(",", exclusions);
 
         if(StringUtils.isNotEmpty(includesString)) {
             ret.put("includes",includesString);
@@ -69,7 +63,16 @@ public class OSAUtils {
         }
 
         if(StringUtils.isNotEmpty(archiveIncludes)) {
+            String[] archivePatterns = archiveIncludes.split("\\s*,\\s*"); //split by comma and trim (spaces + newline)
+            for (int i = 0; i < archivePatterns.length; i++) {
+                if(StringUtils.isNotEmpty(archivePatterns[i]) && archivePatterns[i].startsWith("*.")) {
+                    archivePatterns[i] = "**/" + archivePatterns[i];
+                }
+            }
+            archiveIncludes = String.join(",", archivePatterns);
             ret.put("archiveIncludes", archiveIncludes);
+        } else {
+            ret.put("archiveIncludes", "**/.*jar,**/*.war,**/*.ear,**/*.sca,**/*.gem,**/*.whl,**/*.egg,**/*.tar,**/*.tar.gz,**/*.tgz,**/*.zip,**/*.rar");
         }
 
         ret.put("archiveExtractionDepth", "4");
@@ -84,28 +87,28 @@ public class OSAUtils {
         return ret;
     }
 
-    public void printOSAResultsToConsole(OSAResults osaResults) {
+    public static void printOSAResultsToConsole(OSAResults osaResults, Logger log) {
         OSASummaryResults osaSummaryResults = osaResults.getOsaSummaryResults();
-        logger.info("----------------------------Checkmarx Scan Results(CxOSA):-------------------------------");
-        logger.info("");
-        logger.info("------------------------");
-        logger.info("Vulnerabilities Summary:");
-        logger.info("------------------------");
-        logger.info("OSA high severity results: " + osaSummaryResults.getTotalHighVulnerabilities());
-        logger.info("OSA medium severity results: " + osaSummaryResults.getTotalMediumVulnerabilities());
-        logger.info("OSA low severity results: " + osaSummaryResults.getTotalLowVulnerabilities());
-        logger.info("Vulnerability score: " + osaSummaryResults.getVulnerabilityScore());
-        logger.info("");
-        logger.info("-----------------------");
-        logger.info("Libraries Scan Results:");
-        logger.info("-----------------------");
-        logger.info("Open-source libraries: " + osaSummaryResults.getTotalLibraries());
-        logger.info("Vulnerable and outdated: " + osaSummaryResults.getVulnerableAndOutdated());
-        logger.info("Vulnerable and updated: " + osaSummaryResults.getVulnerableAndUpdated());
-        logger.info("Non-vulnerable libraries: " + osaSummaryResults.getNonVulnerableLibraries());
-        logger.info("");
-        logger.info("OSA scan results location: " + osaResults.getOsaProjectSummaryLink());
-        logger.info("-----------------------------------------------------------------------------------------");
+        log.info("----------------------------Checkmarx Scan Results(CxOSA):-------------------------------");
+        log.info("");
+        log.info("------------------------");
+        log.info("Vulnerabilities Summary:");
+        log.info("------------------------");
+        log.info("OSA high severity results: " + osaSummaryResults.getTotalHighVulnerabilities());
+        log.info("OSA medium severity results: " + osaSummaryResults.getTotalMediumVulnerabilities());
+        log.info("OSA low severity results: " + osaSummaryResults.getTotalLowVulnerabilities());
+        log.info("Vulnerability score: " + osaSummaryResults.getVulnerabilityScore());
+        log.info("");
+        log.info("-----------------------");
+        log.info("Libraries Scan Results:");
+        log.info("-----------------------");
+        log.info("Open-source libraries: " + osaSummaryResults.getTotalLibraries());
+        log.info("Vulnerable and outdated: " + osaSummaryResults.getVulnerableAndOutdated());
+        log.info("Vulnerable and updated: " + osaSummaryResults.getVulnerableAndUpdated());
+        log.info("Non-vulnerable libraries: " + osaSummaryResults.getNonVulnerableLibraries());
+        log.info("");
+        log.info("OSA scan results location: " + osaResults.getOsaProjectSummaryLink());
+        log.info("-----------------------------------------------------------------------------------------");
     }
 
 

@@ -4,22 +4,22 @@ package cx.restclient.sast.dto;
  * Created by Galn on 12/02/2018.
  */
 public class Links {
-    private CxLink report;
-    private CxLink status;
+    private Link report;
+    private Link status;
 
-    public CxLink getReport() {
+    public Link getReport() {
         return report;
     }
 
-    public void setReport(CxLink report) {
+    public void setReport(Link report) {
         this.report = report;
     }
 
-    public CxLink getStatus() {
+    public Link getStatus() {
         return status;
     }
 
-    public void setStatus(CxLink status) {
+    public void setStatus(Link status) {
         this.status = status;
     }
 }

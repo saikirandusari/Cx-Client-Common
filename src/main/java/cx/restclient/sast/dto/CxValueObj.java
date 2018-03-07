@@ -3,7 +3,7 @@ package cx.restclient.sast.dto;
 /**
  * Created by Galn on 13/02/2018.
  */
-public class Stage {
+public class CxValueObj {
     private int id;
     private String value;
 

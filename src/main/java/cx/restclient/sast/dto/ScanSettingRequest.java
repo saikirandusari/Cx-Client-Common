@@ -3,18 +3,18 @@ package cx.restclient.sast.dto;
 /**
  * Created by Galn on 05/02/2018.
  */
-public class ScanSetting {
-    private long projectId;//TODO int??
+public class ScanSettingRequest {
+    private int projectId;//TODO int??
     private int presetId;//TODO int??
     private int engineConfigurationId;
-    private int postScanActionId;
+    private Integer postScanActionId;
     private EmailNotifications emailNotifications;
 
-     public long getProjectId() {
+    public int getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(long projectId) {
+    public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
 
@@ -34,11 +34,11 @@ public class ScanSetting {
         this.engineConfigurationId = engineConfigurationId;
     }
 
-    public int getPostScanActionId() {
+    public Integer getPostScanActionId() {
         return postScanActionId;
     }
 
-    public void setPostScanActionId(int postScanActionId) {
+    public void setPostScanActionId(Integer postScanActionId) {
         this.postScanActionId = postScanActionId;
     }
 
