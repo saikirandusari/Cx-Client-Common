@@ -1,14 +1,14 @@
-import cx.restclient.CxRestClient;
-import cx.restclient.dto.CxScanConfiguration;
-import cx.restclient.httpClient.exception.CxClientException;
-import cx.restclient.osa.CxOSAClient;
-import cx.restclient.osa.dto.CreateOSAScanResponse;
-import cx.restclient.osa.dto.OSAResults;
-import cx.restclient.osa.exception.CxOSAException;
-import cx.restclient.sast.CxSASTClient;
-import cx.restclient.sast.dto.CxLinkObj;
-import cx.restclient.sast.dto.SASTResults;
-import cx.restclient.sast.exception.CxSASTException;
+import com.cx.restclient.CxRestClient;
+import com.cx.restclient.dto.CxScanConfiguration;
+import com.cx.restclient.httpClient.exception.CxClientException;
+import com.cx.restclient.osa.CxOSAClient;
+import com.cx.restclient.osa.dto.CreateOSAScanResponse;
+import com.cx.restclient.osa.dto.OSAResults;
+import com.cx.restclient.osa.exception.CxOSAException;
+import com.cx.restclient.sast.CxSASTClient;
+import com.cx.restclient.sast.dto.CxLinkObj;
+import com.cx.restclient.sast.dto.SASTResults;
+import com.cx.restclient.sast.exception.CxSASTException;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 
@@ -282,7 +282,6 @@ public class testi {
         };
 
         CxScanConfiguration config = setConfigi();
-
 
         CxRestClient client = new CxRestClient(config, logi);
         client.login();
