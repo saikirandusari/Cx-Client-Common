@@ -1,5 +1,7 @@
 package com.cx.restclient.common;
 
+import com.cx.restclient.dto.BaseStatus;
+import com.cx.restclient.dto.Status;
 import com.cx.restclient.httpClient.exception.CxClientException;
 import org.slf4j.Logger;
 

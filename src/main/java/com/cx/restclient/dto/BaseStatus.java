@@ -1,4 +1,4 @@
-package com.cx.restclient.common;
+package com.cx.restclient.dto;
 
 /**
  * Created by Galn on 13/02/2018.

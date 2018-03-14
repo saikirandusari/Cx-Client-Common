@@ -1,13 +1,12 @@
 package com.cx.restclient;
 
-import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.common.summary.SummaryUtils;
-import com.cx.restclient.dto.CxScanConfiguration;
+import com.cx.restclient.dto.ScanConfiguration;
+import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.httpClient.exception.CxClientException;
 import com.cx.restclient.osa.CxOSAClient;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.sast.CxSASTClient;
-
 import com.cx.restclient.sast.dto.*;
 import org.slf4j.Logger;
 
@@ -16,21 +15,20 @@ import java.util.List;
 
 import static com.cx.restclient.common.CxPARAM.CXPRESETS;
 import static com.cx.restclient.common.CxPARAM.CXTEAMS;
-import static com.cx.restclient.sast.utils.CxSASTParam.CONTENT_TYPE_APPLICATION_JSON_V1;
-import static com.cx.restclient.sast.utils.CxSASTParam.SAST_ENGINE_CONFIG;
-import static com.cx.restclient.sast.utils.CxSASTParam.SAST_GET_PROJECT;
+import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_JSON_V1;
 import static com.cx.restclient.sast.utils.PrintUtils.printBuildFailure;
+import static com.cx.restclient.sast.utils.SASTParam.SAST_ENGINE_CONFIG;
+import static com.cx.restclient.sast.utils.SASTParam.SAST_GET_PROJECT;
 
 /**
  * Created by Galn on 05/02/2018.
  */
-public class CxRestClient {
+public class CxRestClient implements ICxRestClient {
     private CxHttpClient httpClient;
     private Logger log;
-    private CxScanConfiguration config;
+    private ScanConfiguration config;
 
-    public CxRestClient(CxScanConfiguration config, Logger log) {
-
+    public CxRestClient(ScanConfiguration config, Logger log) {
         this.config = config;
         this.log = log;
         httpClient = new CxHttpClient(config.getUrl(), config.getUsername(), config.getPassword(), config.getCxOrigin());
@@ -60,8 +58,6 @@ public class CxRestClient {
 
     public CxOSAClient getOSAClient() throws IOException, CxClientException {
         resolveProject();
-
-
         return new CxOSAClient(httpClient, log, config);
     }
 
@@ -78,11 +74,11 @@ public class CxRestClient {
 
     }
 
-    public String generateHTMLSummary(SASTResults sastResults, OSAResults osaResults){
-        if (config.getCxOrigin().equals("Jenkins")){
-            return SummaryUtils.generateJellySummary(sastResults, osaResults);
+    public String generateHTMLSummary(SASTResults sastResults, OSAResults osaResults) {
+        if (config.getCxOrigin().equals("Jenkins")) {
+            return SummaryUtils.generateJellySummary(sastResults, osaResults, log);
         }
-        return SummaryUtils.generateSummary(sastResults, osaResults);
+        return SummaryUtils.generateSummary(sastResults, osaResults, config, log);
     }
 
     private List<Project> getProjectByName(String projectName, String teamId) throws IOException, CxClientException {
@@ -105,17 +101,15 @@ public class CxRestClient {
     }
 
 
-
     //Config Public Methods
 
-    private List<Team> getTeamList() throws IOException, CxClientException {
+    public List<Team> getTeamList() throws IOException, CxClientException {
         return (List<Team>) httpClient.getRequest(CXTEAMS, CONTENT_TYPE_APPLICATION_JSON_V1, Team.class, 200, " Preset list", true);
     }
 
     public List<Query> getPresetList() throws IOException, CxClientException {
         return (List<Query>) httpClient.getRequest(CXPRESETS, CONTENT_TYPE_APPLICATION_JSON_V1, Query.class, 200, " Preset list", true);
     }
-
 
     public List<CxNameObj> GetConfigurationSetList() throws IOException, CxClientException {
         return (List<CxNameObj>) httpClient.getRequest(SAST_ENGINE_CONFIG, CONTENT_TYPE_APPLICATION_JSON_V1, CxNameObj.class, 200, " EngineConfiguration", true);

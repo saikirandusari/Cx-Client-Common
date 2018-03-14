@@ -1,7 +1,7 @@
 package com.cx.restclient.osa.dto;
 
-import com.cx.restclient.common.BaseStatus;
-import com.cx.restclient.common.Status;
+import com.cx.restclient.dto.BaseStatus;
+import com.cx.restclient.dto.Status;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;

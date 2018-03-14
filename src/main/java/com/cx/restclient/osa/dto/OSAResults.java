@@ -1,6 +1,6 @@
 package com.cx.restclient.osa.dto;
 
-import com.cx.restclient.dto.CxScanConfiguration;
+import com.cx.restclient.dto.ScanConfiguration;
 
 import java.util.List;
 
@@ -8,11 +8,6 @@ import java.util.List;
  * Created by Galn on 07/02/2018.
  */
 public class OSAResults {
-    private boolean thresholdEnabled;
-    private Integer osaHighThreshold;
-    private Integer osaMediumThreshold;
-    private Integer osaLowThreshold;
-
     private OSASummaryResults results;
     private List<Library> osaLibraries;
     private List<CVE> osaVulnerabilities;
@@ -32,38 +27,7 @@ public class OSAResults {
         setOsaResultsReady(true);
     }
 
-    public void setConfig(CxScanConfiguration config) {
-        setThresholdEnabled(config.isThresholdsEnabled());
-        setOsaHighThreshold(config.getOsaHighThreshold());
-        setOsaMediumThreshold(config.getOsaMediumThreshold());
-        setOsaLowThreshold(config.getOsaLowThreshold());
-    }
-
-    public Integer getOsaHighThreshold() {
-        return osaHighThreshold;
-    }
-
-    public void setOsaHighThreshold(Integer osaHighThreshold) {
-        this.osaHighThreshold = osaHighThreshold;
-    }
-
-    public Integer getOsaMediumThreshold() {
-        return osaMediumThreshold;
-    }
-
-    public void setOsaMediumThreshold(Integer osaMediumThreshold) {
-        this.osaMediumThreshold = osaMediumThreshold;
-    }
-
-    public Integer getOsaLowThreshold() {
-        return osaLowThreshold;
-    }
-
-    public void setOsaLowThreshold(Integer osaLowThreshold) {
-        this.osaLowThreshold = osaLowThreshold;
-    }
-
-    public List<Library> getOsaLibraries() {
+      public List<Library> getOsaLibraries() {
         return osaLibraries;
     }
 
@@ -109,13 +73,5 @@ public class OSAResults {
 
     public void setOsaResultsReady(boolean osaResultsReady) {
         this.osaResultsReady = osaResultsReady;
-    }
-
-    public boolean isThresholdEnabled() {
-        return thresholdEnabled;
-    }
-
-    public void setThresholdEnabled(boolean thresholdEnabled) {
-        this.thresholdEnabled = thresholdEnabled;
     }
 }

@@ -1,13 +1,13 @@
 package com.cx.restclient.sast;
 
-import com.cx.restclient.common.BaseStatus;
-import com.cx.restclient.common.Status;
+import com.cx.restclient.dto.BaseStatus;
+import com.cx.restclient.dto.Status;
 import com.cx.restclient.common.Waiter;
+import com.cx.restclient.dto.ScanConfiguration;
 import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.httpClient.exception.CxClientException;
-import com.cx.restclient.dto.CxScanConfiguration;
-import com.cx.restclient.sast.exception.CxSASTException;
 import com.cx.restclient.sast.dto.*;
+import com.cx.restclient.sast.exception.CxSASTException;
 import com.cx.restclient.sast.utils.PrintUtils;
 import com.cx.restclient.sast.utils.zip.CxZipUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,10 +23,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import static com.cx.restclient.common.summary.ResultUtils.convertToXMLResult;
 import static com.cx.restclient.httpClient.utils.ClientUtils.convertToJson;
-import static com.cx.restclient.sast.utils.CxSASTParam.*;
+import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_JSON_V1;
+import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_PDF_V1;
+import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_XML_V1;
+import static com.cx.restclient.sast.utils.SASTParam.*;
 import static com.cx.restclient.sast.utils.ReportsUtils.writePDFReport;
+import static com.cx.restclient.sast.utils.SASTUtils.convertToXMLResult;
 import static com.cx.restclient.sast.utils.SASTUtils.deleteTempZipFile;
 
 /**
@@ -37,8 +40,7 @@ public class CxSASTClient implements ICxSASTClient {
 
     private Logger log;
     private CxHttpClient httpClient;
-    private CxScanConfiguration config;
-    private SASTResults scanResults = new SASTResults();
+    private ScanConfiguration config;
     private int reportTimeoutSec = 500;
     private Waiter<ResponseQueueScanStatus> scanWaiter = new Waiter<ResponseQueueScanStatus>("CxSAST Scan", 20000) {
         @Override
@@ -73,7 +75,7 @@ public class CxSASTClient implements ICxSASTClient {
         }
     };
 
-    public CxSASTClient(CxHttpClient client, Logger log, CxScanConfiguration config) {
+    public CxSASTClient(CxHttpClient client, Logger log, ScanConfiguration config) {
         this.log = log;
         this.httpClient = client;
         this.config = config;
@@ -127,12 +129,7 @@ public class CxSASTClient implements ICxSASTClient {
             //Start a new createSASTScan
             CreateScanRequest scanRequest = new CreateScanRequest(projectId, config.isIncremental(), config.isPublic(), config.isForceScan());
             createScanResponse = createScan(scanRequest);
-            scanResults.setConfig(config);
-            log.info("Scan created successfully. CxLink to project state: " + scanResults.getSastProjectLink());
-            /*if (!StringUtils.isEmpty(config.getScanComment())) {
-                Thread.sleep(20000);//Wait for the scan to create
-                updateScanComment(config.getScanComment(), createScanResponse.getBaseId());
-            }TODO!!  */
+            log.info(String.format("Scan created successfully. CxLink to project state: "+ config.getUrl() + LINK_FORMAT, projectId));
 
         } catch (Exception ex) {
             throw new CxSASTException(ex.getMessage());//TODO!!!!
@@ -142,12 +139,19 @@ public class CxSASTClient implements ICxSASTClient {
 
     //GET SAST Scan + Reports
     public SASTResults getSASTResults(CxLinkObj createScanResponse) {
+        SASTResults scanResults = new SASTResults();
+
         try {
             log.info("------------------------------------Get CxSAST Results:-----------------------------------");
             //wait for SAST scan to finish
             log.info("Waiting for CxSAST scan to finish.");
             scanWaiter.waitForScanToFinish(Long.toString(createScanResponse.getId()), config.getScanTimeoutInMinutes(), log);
             log.info("Scan finished. Retrieving scan results");
+    /*if (!StringUtils.isEmpty(config.getScanComment())) {
+                Thread.sleep(20000);//Wait for the scan to create
+                updateScanComment(config.getScanComment(), createScanResponse.getBaseId());
+            }TODO!!  */
+
 
             //retrieve SAST scan results
             //TODO ProjectScannedData projectScannedData = getScanResults(createScanResponse.getId());
@@ -173,7 +177,6 @@ public class CxSASTClient implements ICxSASTClient {
 
 
             if (config.isGeneratePDFReport()) {
-
                 log.info("Generating PDF report");
                 byte[] pdfReport = getScanReport(scanResults.getScanId(), ReportType.PDF, CONTENT_TYPE_APPLICATION_PDF_V1);
                 scanResults.setPDFReport(pdfReport);

@@ -1,6 +1,6 @@
 package com.cx.restclient.sast.dto;
 
-import com.cx.restclient.common.BaseStatus;
+import com.cx.restclient.dto.BaseStatus;
 
 /**
  * Created by Galn on 07/03/2018.

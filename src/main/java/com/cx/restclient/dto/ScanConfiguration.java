@@ -8,7 +8,7 @@ import java.io.File;
 /**
  * Created by galn on 21/12/2016.
  */
-public class CxScanConfiguration {
+public class ScanConfiguration {
 
     private boolean SASTEnabled;
     private String OSAEnabled;
@@ -49,7 +49,6 @@ public class CxScanConfiguration {
     private File zipFile;
     private Integer engineConfigurationId;
     private String osaDependenciesJson;
-
     private Project project;
 
 

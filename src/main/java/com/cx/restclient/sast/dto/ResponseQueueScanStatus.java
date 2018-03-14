@@ -1,6 +1,6 @@
 package com.cx.restclient.sast.dto;
 
-import com.cx.restclient.common.BaseStatus;
+import com.cx.restclient.dto.BaseStatus;
 
 import java.util.List;
 

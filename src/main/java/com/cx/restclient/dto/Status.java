@@ -1,4 +1,4 @@
-package com.cx.restclient.common;
+package com.cx.restclient.dto;
 
 /**
  * Created by: Dorg.

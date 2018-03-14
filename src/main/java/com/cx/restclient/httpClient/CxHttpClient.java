@@ -17,8 +17,10 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 
-
-import static com.cx.restclient.sast.utils.CxSASTParam.CONTENT_TYPE_APPLICATION_JSON_V1;
+import static com.cx.restclient.common.CxPARAM.*;
+import static com.cx.restclient.httpClient.utils.ClientUtils.*;
+import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_JSON;
+import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_JSON_V1;
 
 /**
  * Created by Galn on 05/02/2018.
@@ -97,7 +99,7 @@ public class CxHttpClient {
     public <T> T getRequest(String relPath, String contentType, Class<T> responseType, Integer expectStatus, String failedMsg, boolean isCollection) throws IOException, CxClientException {
         String resolvedPath = rootPath + relPath;
         HttpGet getRequest = new HttpGet(resolvedPath);
-        getRequest.setHeader("Accept", CONTENT_TYPE_APPLICATION_JSON_V1);
+        getRequest.setHeader("Accept", CONTENT_TYPE_APPLICATION_JSON);
         getRequest.addHeader("Content-type", contentType);
         HttpResponse response = null; //TODO
         try {
@@ -125,7 +127,7 @@ public class CxHttpClient {
         if (contentType != null) {
             post.addHeader("Content-type", contentType);
         }
-        post.addHeader("Accept", CONTENT_TYPE_APPLICATION_JSON_V1);
+        post.addHeader("Accept", CONTENT_TYPE_APPLICATION_JSON);
         HttpResponse response = null;
 
         try {

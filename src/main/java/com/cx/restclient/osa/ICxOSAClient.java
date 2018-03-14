@@ -12,7 +12,7 @@ import java.io.IOException;
  */
 public interface ICxOSAClient {
 
-    public CreateOSAScanResponse createOSAScan() throws IOException, InterruptedException, CxClientException;
+     CreateOSAScanResponse createOSAScan() throws IOException, InterruptedException, CxClientException;
 
-    public OSAResults getOSAResults(String scanId) throws CxClientException, IOException, CxOSAException, InterruptedException;
+     OSAResults getOSAResults(String scanId) throws CxClientException, IOException, CxOSAException, InterruptedException;
 }

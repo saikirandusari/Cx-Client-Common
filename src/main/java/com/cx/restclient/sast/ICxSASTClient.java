@@ -1,9 +1,9 @@
 package com.cx.restclient.sast;
 
 import com.cx.restclient.httpClient.exception.CxClientException;
-import com.cx.restclient.sast.exception.CxSASTException;
 import com.cx.restclient.sast.dto.CxLinkObj;
 import com.cx.restclient.sast.dto.SASTResults;
+import com.cx.restclient.sast.exception.CxSASTException;
 
 import java.io.IOException;
 
@@ -12,6 +12,8 @@ import java.io.IOException;
  */
 public interface ICxSASTClient {
     CxLinkObj createSASTScan() throws CxSASTException, IOException, InterruptedException;
+
     SASTResults getSASTResults(CxLinkObj createScanResponse);
-    public void cancelSASTScan(String scanId) throws IOException, CxClientException;
+
+    void cancelSASTScan(String scanId) throws IOException, CxClientException;
 }

@@ -3,10 +3,10 @@ package com.cx.restclient.common.summary;
 /**
  * Created by Galn on 11/03/2018.
  */
-public class ResultsConst {
+public class SummaryConst {
     public static final String SAST_RESULTS_READY = "cx.sastResultsReady";
 
-    public static final String SAST_SYNC_MODE = "cx.syncMode";
+    public static final String SYNC_MODE = "cx.syncMode";
 
     public static final String HIGH_RESULTS = "cx.highResults";
     public static final String MEDIUM_RESULTS = "cx.mediumResults";
@@ -18,7 +18,7 @@ public class ResultsConst {
     public static final String LOW_THRESHOLD = "cx.lowThreshold";
 
     public static final String SAST_SUMMARY_RESULTS_LINK = "cx.sastSummaryResultsLink";
-    public static final  String SAST_SCAN_RESULTS_LINK = "cx.sastScanResultsLink";
+    public static final String SAST_SCAN_RESULTS_LINK = "cx.sastScanResultsLink";
 
 
     public static final String SCAN_DETAILED_REPORT = "cx.scanDetailedReport";

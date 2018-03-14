@@ -1,8 +1,8 @@
 package com.cx.restclient.sast.dto;
 
-import com.cx.restclient.dto.CxScanConfiguration;
-
 import java.util.List;
+
+import static com.cx.restclient.sast.utils.SASTParam.LINK_FORMAT;
 
 /**
  * Created by Galn on 05/02/2018.
@@ -10,12 +10,6 @@ import java.util.List;
 public class SASTResults {
 
     private long scanId;//TODO
-
-    private boolean syncMode;
-    private boolean thresholdEnabled;
-    private Integer highThreshold;
-    private Integer mediumThreshold;
-    private Integer lowThreshold;
 
     private boolean sastResultsReady = false;
     private String highResults;
@@ -34,7 +28,6 @@ public class SASTResults {
 
     private byte[] PDFReport;
 
-
     public void setScanDetailedReport(CxXMLResults reportObj) {
         this.scanStart = reportObj.getScanStart();
         this.scanTime = reportObj.getScanTime();
@@ -43,15 +36,6 @@ public class SASTResults {
         this.queryList = reportObj.getQuery();
     }
 
-    public void setConfig(CxScanConfiguration config) {
-        setThresholdEnabled(config.isThresholdsEnabled());
-        if (thresholdEnabled) {
-            setHighThreshold(config.getHighThreshold());
-            setMediumThreshold(config.getMediumThreshold());
-            setLowThreshold(config.getLowThreshold());
-        }
-        setSastProjectLink(config.getUrl(), config.getProject().getId());
-    }
 
     public void setResults(ProjectScannedData projectScannedData, String url) {
         setScanId(projectScannedData.getLastScanID());   //TODO!!!!! Need it??
@@ -69,30 +53,6 @@ public class SASTResults {
 
     public void setScanId(long scanId) {
         this.scanId = scanId;
-    }
-
-    public Integer getHighThreshold() {
-        return highThreshold;
-    }
-
-    public void setHighThreshold(Integer highThreshold) {
-        this.highThreshold = highThreshold;
-    }
-
-    public Integer getMediumThreshold() {
-        return mediumThreshold;
-    }
-
-    public void setMediumThreshold(Integer mediumThreshold) {
-        this.mediumThreshold = mediumThreshold;
-    }
-
-    public Integer getLowThreshold() {
-        return lowThreshold;
-    }
-
-    public void setLowThreshold(Integer lowThreshold) {
-        this.lowThreshold = lowThreshold;
     }
 
     public String getHighResults() {
@@ -149,7 +109,7 @@ public class SASTResults {
     }
 
     public void setSastProjectLink(String url, long projectId) {
-        this.sastProjectLink = String.format(url + "/CxWebClient/portal#/projectState/%s/Summary", projectId);
+        this.sastProjectLink = String.format(url + LINK_FORMAT, projectId);
     }
 
     public String getScanStart() {
@@ -174,23 +134,6 @@ public class SASTResults {
 
     public void setFilesScanned(String filesScanned) {
         this.filesScanned = filesScanned;
-    }
-
-
-    public boolean isSyncMode() {
-        return syncMode;
-    }
-
-    public void setSyncMode(boolean syncMode) {
-        this.syncMode = syncMode;
-    }
-
-    public boolean isThresholdEnabled() {
-        return thresholdEnabled;
-    }
-
-    public void setThresholdEnabled(boolean thresholdEnabled) {
-        this.thresholdEnabled = thresholdEnabled;
     }
 
     public boolean isSastResultsReady() {

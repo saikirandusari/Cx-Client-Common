@@ -1,13 +1,13 @@
 package com.cx.restclient.osa;
 
-import com.cx.restclient.httpClient.CxHttpClient;
-import com.cx.restclient.osa.dto.*;
-import com.cx.restclient.osa.utils.OSAUtils;
-import com.cx.restclient.common.Status;
+import com.cx.restclient.dto.Status;
 import com.cx.restclient.common.Waiter;
-import com.cx.restclient.dto.CxScanConfiguration;
+import com.cx.restclient.dto.ScanConfiguration;
+import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.httpClient.exception.CxClientException;
+import com.cx.restclient.osa.dto.*;
 import com.cx.restclient.osa.exception.CxOSAException;
+import com.cx.restclient.osa.utils.OSAUtils;
 import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
 import org.whitesource.fs.ComponentScan;
@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.Properties;
 
 import static com.cx.restclient.httpClient.utils.ClientUtils.convertToJson;
-import static com.cx.restclient.sast.utils.CxSASTParam.CONTENT_TYPE_APPLICATION_JSON_V1;
+import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_JSON;
+import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_JSON_V1;
+import static com.cx.restclient.osa.utils.CxOSAParam.*;
 
 /**
  * Created by Galn on 05/02/2018.
@@ -26,7 +28,7 @@ public class CxOSAClient implements ICxOSAClient {
 
     private CxHttpClient httpClient;
     private Logger log;
-    private CxScanConfiguration config;
+    private ScanConfiguration config;
     private OSAResults osaResults = new OSAResults();
     private Waiter<OSAScanStatus> osaWaiter = new Waiter<OSAScanStatus>("CxOSA", 20000) {
         @Override
@@ -45,7 +47,7 @@ public class CxOSAClient implements ICxOSAClient {
         }
     };
 
-    public CxOSAClient(CxHttpClient client, Logger log, CxScanConfiguration config) {
+    public CxOSAClient(CxHttpClient client, Logger log, ScanConfiguration config) {
         this.log = log;
         this.httpClient = client;
         this.config = config;
@@ -74,17 +76,30 @@ public class CxOSAClient implements ICxOSAClient {
 
     public OSAResults getOSAResults(String scanId) throws CxClientException, IOException, CxOSAException, InterruptedException {
         if (config.isOsaEnabled()) {
-            osaResults.setConfig(config);
             log.info("Waiting for OSA scan to finish");
             OSAScanStatus osaScanStatus = osaWaiter.waitForScanToFinish(scanId, -1, log);
             log.info("OSA scan finished successfully");
             log.info("Creating OSA reports");
-            OSASummaryResults osaSummaryResults = getOSAScanSummaryResults(scanId);
+          OSASummaryResults osaSummaryResults = getOSAScanSummaryResults(scanId);
+          /*  OSASummaryResults osaSummaryResults = new OSASummaryResults();
+            osaSummaryResults.setTotalLibraries(15);
+            osaSummaryResults.setHighVulnerabilityLibraries(10);
+            osaSummaryResults.setMediumVulnerabilityLibraries(9);
+            osaSummaryResults.setLowVulnerabilityLibraries(8);
+            osaSummaryResults.setNonVulnerableLibraries(7);
+            osaSummaryResults.setVulnerableAndUpdated(12);
+            osaSummaryResults.setVulnerableAndOutdated(13);
+            osaSummaryResults.setVulnerabilityScore("52");
+            osaSummaryResults.setTotalHighVulnerabilities(21);
+            osaSummaryResults.setTotalMediumVulnerabilities(22);
+            osaSummaryResults.setTotalLowVulnerabilities(23);*/
 
             List<Library> osaLibraries = getOSALibraries(scanId);
             List<CVE> osaVulnerabilities = getOSAVulnerabilities(scanId);
             osaResults.setResults(osaSummaryResults, osaLibraries, osaVulnerabilities, osaScanStatus);
+
             OSAUtils.printOSAResultsToConsole(osaResults, log);
+
         }
         return osaResults;
     }
