@@ -1,4 +1,4 @@
-package com.cx.restclient.sast.dto;
+package com.cx.restclient.dto;
 
 /**
  * Created by Galn on 14/02/2018.

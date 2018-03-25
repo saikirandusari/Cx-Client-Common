@@ -2,7 +2,6 @@ package com.cx.restclient.dto;
 
 
 import com.cx.restclient.sast.dto.Project;
-
 import java.io.File;
 
 /**

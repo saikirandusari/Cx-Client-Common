@@ -10,6 +10,10 @@ public class BaseStatus {
     public BaseStatus() {
     }
 
+    public BaseStatus(Status baseStatus) {
+        this.baseStatus = baseStatus;
+    }
+
     public BaseStatus(String id) {
         this.baseId = id;
     }

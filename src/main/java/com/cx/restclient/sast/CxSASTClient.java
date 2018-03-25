@@ -6,6 +6,7 @@ import com.cx.restclient.common.Waiter;
 import com.cx.restclient.dto.ScanConfiguration;
 import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.httpClient.exception.CxClientException;
+import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
 import com.cx.restclient.sast.dto.*;
 import com.cx.restclient.sast.exception.CxSASTException;
 import com.cx.restclient.sast.utils.PrintUtils;
@@ -44,7 +45,7 @@ public class CxSASTClient implements ICxSASTClient {
     private int reportTimeoutSec = 500;
     private Waiter<ResponseQueueScanStatus> scanWaiter = new Waiter<ResponseQueueScanStatus>("CxSAST Scan", 20000) {
         @Override
-        public ResponseQueueScanStatus getStatus(String id) throws CxClientException, IOException {
+        public ResponseQueueScanStatus getStatus(String id) throws CxClientException, IOException, CxTokenExpiredException {
             return getSASTScanStatus(id);
         }
 
@@ -60,7 +61,7 @@ public class CxSASTClient implements ICxSASTClient {
     };
     private Waiter<BaseStatus> reportWaiter = new Waiter<BaseStatus>("Scan report", 10000) {
         @Override
-        public BaseStatus getStatus(String id) throws CxClientException, IOException {
+        public BaseStatus getStatus(String id) throws CxClientException, IOException, CxTokenExpiredException {
             return getReportStatus(id);
         }
 
@@ -90,14 +91,16 @@ public class CxSASTClient implements ICxSASTClient {
 
         CxLinkObj createScanResponse = null;
 
-        ScanSettingResponse scanSettingResponse = new ScanSettingResponse();
+        ScanSettingResponse scanSettingResponse;
         ScanSettingRequest scanSettingRequest = new ScanSettingRequest();
         try {
             Project project = config.getProject();
+
             if (project == null) { // Project is new
                 //Create newProject
                 CreateProjectRequest request = new CreateProjectRequest(config.getProjectName(), config.getTeamId(), config.isPublic());
                 project = createNewProject(request);
+                scanSettingRequest.setEngineConfigurationId(1);// default enginConfigId
 
             } else { //Project already exist
                 scanSettingResponse = getScanSetting(project.getId());
@@ -108,10 +111,10 @@ public class CxSASTClient implements ICxSASTClient {
             int projectId = project.getId();
             scanSettingRequest.setProjectId(projectId);
             scanSettingRequest.setPresetId(config.getPresetId());
+
             if (config.getEngineConfigurationId() != null) {
                 scanSettingRequest.setEngineConfigurationId(config.getEngineConfigurationId());
             }
-
             //Define createSASTScan settings
             defineScanSetting(scanSettingRequest);
 
@@ -152,15 +155,15 @@ public class CxSASTClient implements ICxSASTClient {
                 updateScanComment(config.getScanComment(), createScanResponse.getBaseId());
             }TODO!!  */
 
-
+            getScanResults();
             //retrieve SAST scan results
             //TODO ProjectScannedData projectScannedData = getScanResults(createScanResponse.getId());
-            ProjectScannedData projectScannedData = new ProjectScannedData();
-            projectScannedData.setHighVulnerabilities(3);
-            projectScannedData.setMediumVulnerabilities(2);
-            projectScannedData.setLowVulnerabilities(1);
-            projectScannedData.setInfoVulnerabilities(4);
-            projectScannedData.setRiskLevelScore(5);
+         //   ProjectScannedData projectScannedData = new ProjectScannedData();
+         //   projectScannedData.setHighVulnerabilities(3);
+        //    projectScannedData.setMediumVulnerabilities(2);
+         //   projectScannedData.setLowVulnerabilities(1);
+        //    projectScannedData.setInfoVulnerabilities(4);
+         /*   projectScannedData.setRiskLevelScore(5);
             projectScannedData.setLoc(5250);
             projectScannedData.setTeamName("CxServer");
             projectScannedData.setTotalVulnerabilities(10);
@@ -183,7 +186,7 @@ public class CxSASTClient implements ICxSASTClient {
                 if (!StringUtils.isEmpty(config.getReportsDir())) {
                     writePDFReport(pdfReport, config.getReportsDir(), log);
                 }
-            }
+            }*/
             //TODO resolveSASTResults including failing build and fail message
         } catch (Exception e) {
             int i = 0;
@@ -194,39 +197,44 @@ public class CxSASTClient implements ICxSASTClient {
     }
 
     //Cancel SAST Scan
-    public void cancelSASTScan(String scanId) throws IOException, CxClientException {
+    public void cancelSASTScan(long scanId) throws IOException, CxClientException, CxTokenExpiredException {
         log.warn("Scan was canceled");//TODO
-        httpClient.patchRequest(SAST_QUEUE_SCAN_STATUS.replace("{scanId}", scanId), CONTENT_TYPE_APPLICATION_JSON_V1, null, 200, "cancel SAST scan");
+
+        CancelRequest request = new CancelRequest(CurrentStatus.CANCELED.value());
+        String json = convertToJson(request);
+        StringEntity entity = new StringEntity(json);
+
+        httpClient.patchRequest(SAST_QUEUE_SCAN_STATUS.replace("{scanId}", Long.toString(scanId)), CONTENT_TYPE_APPLICATION_JSON_V1, entity, 200, "cancel SAST scan");
     }
 
 
     //**------ Private Methods  ------**//
 
-    private Project createNewProject(CreateProjectRequest request) throws CxClientException, IOException {
+    private Project createNewProject(CreateProjectRequest request) throws CxClientException, IOException, CxTokenExpiredException {
         String json = convertToJson(request);
         StringEntity entity = new StringEntity(json);
         return httpClient.postRequest(SAST_SCAN_PROJECT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, Project.class, 201, "create new project: " + request.getName());
     }
 
-    private ScanSettingResponse getScanSetting(long projectId) throws IOException, CxClientException {
-        return httpClient.getRequest(SAST_GET_SCAN_SETTINGS.replace("{projectId}", Long.toString(projectId)), CONTENT_TYPE_APPLICATION_JSON_V1, ScanSettingResponse.class, 200, " Scan setting", false);
+    private ScanSettingResponse getScanSetting(long projectId) throws IOException, CxClientException, CxTokenExpiredException {
+        return httpClient.getRequest(SAST_GET_SCAN_SETTINGS.replace("{projectId}", Long.toString(projectId)), CONTENT_TYPE_APPLICATION_JSON_V1, ScanSettingResponse.class, 200, "Scan setting", false);
     }
 
 //    private ScanSettingRequest updateProjectIncremental(boolean incremental) throws IOException, CxClientException {
 //        return httpClient.patchRequest(SAST_GET_SCAN_SETTINGS, CONTENT_TYPE_APPLICATION_JSON_V1, ScanSettingRequest.class, 200, " update Incremental field");
 //    }
 
-    private void defineScanSetting(ScanSettingRequest scanSetting) throws IOException, CxClientException { //TODO suold return scanId or Void?
+    private void defineScanSetting(ScanSettingRequest scanSetting) throws IOException, CxClientException, CxTokenExpiredException { //TODO suold return scanId or Void?
         StringEntity entity = new StringEntity(convertToJson(scanSetting));
         httpClient.postRequest(SAST_UPDATE_SCAN_SETTINGS, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CxLinkObj.class, 200, "define scan setting");
     }
 
-    private void updateScanComment(String comment, long scanId) throws CxClientException, IOException {
+    private void updateScanComment(String comment, long scanId) throws CxClientException, IOException, CxTokenExpiredException {
         StringEntity entity = new StringEntity(convertToJson(new Comment(comment)));
         httpClient.patchRequest(SAST_UPDATE_COMMENT.replace("{scanId}", Long.toString(scanId)), CONTENT_TYPE_APPLICATION_JSON_V1, entity, 204, "update comment");
     }
 
-    private void uploadZipFile(File zipFile, long projectId) throws CxClientException, IOException {
+    private void uploadZipFile(File zipFile, long projectId) throws CxClientException, IOException, CxTokenExpiredException {
         InputStreamBody streamBody = new InputStreamBody(new FileInputStream(zipFile.getAbsoluteFile()), ContentType.APPLICATION_OCTET_STREAM, "zippedSource");
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -235,10 +243,16 @@ public class CxSASTClient implements ICxSASTClient {
         httpClient.postRequest(SAST_ZIP_ATTACHMENTS.replace("{projectId}", Long.toString(projectId)), null, entity, null, 204, "upload ZIP file");
     }
 
-    private CxLinkObj createScan(CreateScanRequest request) throws CxClientException, IOException { //TODO suold return scanId or Void?
+    private CxLinkObj createScan(CreateScanRequest request) throws CxClientException, IOException, CxTokenExpiredException { //TODO suold return scanId or Void?
         StringEntity entity = new StringEntity(convertToJson(request));
-        return httpClient.postRequest(SAST_CREATE_SCAN, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CxLinkObj.class, 201, "create new createSASTScan");
+        return httpClient.postRequest(SAST_CREATE_SCAN, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CxLinkObj.class, 201, "create new SAST Scan");
     }
+
+    private CxLinkObj getScanResults() throws CxClientException, IOException, CxTokenExpiredException { //TODO suold return scanId or Void?
+        return httpClient.getRequest(SAST_CREATE_SCAN, CONTENT_TYPE_APPLICATION_JSON_V1,  CxLinkObj.class, 201, "get SAST results", false);
+    }
+
+
 
 /*    private ProjectScannedData getScanResults(long projectId) throws CxClientException, IOException {
         ResponseProjectScannedData scanDataResponse = getProjectScannedDisplayData(projectId);
@@ -252,12 +266,12 @@ public class CxSASTClient implements ICxSASTClient {
         return httpClient.getRequest(SAST_DISPLAY_DATA_TODO.replace("{projectId}", Long.toString(projectId)), CONTENT_TYPE_APPLICATION_JSON_V1, ResponseProjectScannedData.class, 200, "failed to get SAST results", false);//TODO
     }*/
 
-    private CreateReportResponse createScanReport(CreateReportRequest reportRequest) throws CxClientException, IOException {
+    private CreateReportResponse createScanReport(CreateReportRequest reportRequest) throws CxClientException, IOException, CxTokenExpiredException {
         StringEntity entity = new StringEntity(convertToJson(reportRequest));
         return httpClient.postRequest(SAST_CREATE_REPORT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CreateReportResponse.class, 202, "to create " + reportRequest.getReportType() + " scan report");
     }
 
-    private byte[] getScanReport(long scanId, ReportType reportType, String contentType) throws CxClientException, InterruptedException, IOException {
+    private byte[] getScanReport(long scanId, ReportType reportType, String contentType) throws CxClientException, InterruptedException, IOException, CxTokenExpiredException {
         CreateReportRequest reportRequest = new CreateReportRequest(scanId, reportType.name());
         CreateReportResponse createReportResponse = createScanReport(reportRequest);
         int reportId = createReportResponse.getReportId();
@@ -267,14 +281,23 @@ public class CxSASTClient implements ICxSASTClient {
         return scanReport;
     }
 
-    private byte[] getReport(long reportId, String contentType) throws CxClientException, IOException {
-        return httpClient.getRequest(SAST_GET_REPORT.replace("{reportId}", Long.toString(reportId)), contentType, byte[].class, 200, "to retrieve scan report: " + reportId, false);
+    private byte[] getReport(long reportId, String contentType) throws CxClientException, IOException, CxTokenExpiredException {
+        return httpClient.getRequest(SAST_GET_REPORT.replace("{reportId}", Long.toString(reportId)), contentType, byte[].class, 200, " scan report: " + reportId, false);
     }
 
     //SCAN Waiter - overload methods
-    private ResponseQueueScanStatus getSASTScanStatus(String scanId) throws CxClientException, IOException {
-        ResponseQueueScanStatus scanStatus = httpClient.getRequest(SAST_QUEUE_SCAN_STATUS.replace("{scanId}", scanId), CONTENT_TYPE_APPLICATION_JSON_V1, ResponseQueueScanStatus.class, 200, "failed to get createSASTScan status", false);//TODO scanId and meddage
-        String currentStatus = scanStatus.getStage().getValue();
+    private ResponseQueueScanStatus getSASTScanStatus(String scanId) throws CxClientException, IOException, CxTokenExpiredException {
+        ResponseQueueScanStatus scanStatus = httpClient.getRequest(SAST_QUEUE_SCAN_STATUS.replace("{scanId}", scanId), CONTENT_TYPE_APPLICATION_JSON_V1, ResponseQueueScanStatus.class, 200, "SASTScan status", false);//TODO scanId and meddage
+
+        String currentStatus;//TODO
+        if(scanStatus == null){ //The scan didn't arrive the Queue
+            scanStatus =  new ResponseQueueScanStatus(Status.IN_PROGRESS); //TODO fix after Yeal fixingthe issue
+            scanStatus.setStage(new CxValueObj(1, "not started :(")); //TODO fix after Yeal Queueu fix
+            return scanStatus;
+
+        }else{
+            currentStatus = scanStatus.getStage().getValue();
+        }
 
         if (CurrentStatus.FAILED.value().equals(currentStatus) || CurrentStatus.CANCELED.value().equals(currentStatus) ||
                 CurrentStatus.DELETED.value().equals(currentStatus) || CurrentStatus.UNKNOWN.value().equals(currentStatus)) {
@@ -309,8 +332,8 @@ public class CxSASTClient implements ICxSASTClient {
     }
 
     //Report Waiter - overload methods
-    private BaseStatus getReportStatus(String reportId) throws CxClientException, IOException {
-        ReportStatus reportStatus = httpClient.getRequest(SAST_GET_REPORT_STATUS.replace("{reportId}", reportId), CONTENT_TYPE_APPLICATION_JSON_V1, ReportStatus.class, null, "", false);
+    private BaseStatus getReportStatus(String reportId) throws CxClientException, IOException, CxTokenExpiredException {
+        ReportStatus reportStatus = httpClient.getRequest(SAST_GET_REPORT_STATUS.replace("{reportId}", reportId), CONTENT_TYPE_APPLICATION_JSON_V1, ReportStatus.class, null, " report status", false);
         BaseStatus status = new BaseStatus(reportId);
         if (reportStatus != null) { //not equals 404(not found) and not deleted
             String currentStatus = reportStatus.getStatus().getValue();

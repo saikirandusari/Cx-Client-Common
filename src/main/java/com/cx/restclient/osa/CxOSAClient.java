@@ -5,9 +5,11 @@ import com.cx.restclient.common.Waiter;
 import com.cx.restclient.dto.ScanConfiguration;
 import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.httpClient.exception.CxClientException;
+import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
 import com.cx.restclient.osa.dto.*;
 import com.cx.restclient.osa.exception.CxOSAException;
 import com.cx.restclient.osa.utils.OSAUtils;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
 import org.whitesource.fs.ComponentScan;
@@ -17,7 +19,6 @@ import java.util.List;
 import java.util.Properties;
 
 import static com.cx.restclient.httpClient.utils.ClientUtils.convertToJson;
-import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_JSON;
 import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_JSON_V1;
 import static com.cx.restclient.osa.utils.CxOSAParam.*;
 
@@ -32,7 +33,7 @@ public class CxOSAClient implements ICxOSAClient {
     private OSAResults osaResults = new OSAResults();
     private Waiter<OSAScanStatus> osaWaiter = new Waiter<OSAScanStatus>("CxOSA", 20000) {
         @Override
-        public OSAScanStatus getStatus(String id) throws CxClientException, IOException {
+        public OSAScanStatus getStatus(String id) throws CxClientException, IOException, CxTokenExpiredException {
             return getOSAScanStatus(id);
         }
 
@@ -54,7 +55,7 @@ public class CxOSAClient implements ICxOSAClient {
     }
 
     //API
-    public CreateOSAScanResponse createOSAScan() throws IOException, InterruptedException, CxClientException {
+    public CreateOSAScanResponse createOSAScan() throws IOException, InterruptedException, CxClientException, CxTokenExpiredException {
         log.info("Creating OSA scan");
         String osaDependenciesJson = config.getOsaDependenciesJson();
         if (osaDependenciesJson == null) {
@@ -74,7 +75,7 @@ public class CxOSAClient implements ICxOSAClient {
         return osaDependenciesJson;
     }
 
-    public OSAResults getOSAResults(String scanId) throws CxClientException, IOException, CxOSAException, InterruptedException {
+    public OSAResults getOSAResults(String scanId) throws CxClientException, IOException, CxOSAException, InterruptedException, CxTokenExpiredException {
         if (config.isOsaEnabled()) {
             log.info("Waiting for OSA scan to finish");
             OSAScanStatus osaScanStatus = osaWaiter.waitForScanToFinish(scanId, -1, log);
@@ -105,7 +106,7 @@ public class CxOSAClient implements ICxOSAClient {
     }
 
     //Private Methods
-    private CreateOSAScanResponse sendOSAScan(String osaDependenciesJson) throws CxClientException, IOException {
+    private CreateOSAScanResponse sendOSAScan(String osaDependenciesJson) throws CxClientException, IOException, CxTokenExpiredException {
         log.info("Sending OSA scan request");
         long projectId = config.getProject().getId();
         CreateOSAScanResponse osaScan = scanOSA(projectId, osaDependenciesJson);
@@ -116,29 +117,29 @@ public class CxOSAClient implements ICxOSAClient {
         return osaScan;
     }
 
-    private CreateOSAScanResponse scanOSA(long projectId, String osaDependenciesJson) throws IOException, CxClientException {
+    private CreateOSAScanResponse scanOSA(long projectId, String osaDependenciesJson) throws IOException, CxClientException, CxTokenExpiredException {
         CreateOSAScanRequest req = new CreateOSAScanRequest(projectId, osaDependenciesJson);
         StringEntity entity = new StringEntity(convertToJson(req));
         return httpClient.postRequest(OSA_SCAN_PROJECT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CreateOSAScanResponse.class, 201, "create OSA scan");
     }
 
-    private OSASummaryResults getOSAScanSummaryResults(String scanId) throws CxClientException, IOException {
+    private OSASummaryResults getOSAScanSummaryResults(String scanId) throws CxClientException, IOException, CxTokenExpiredException {
         String relativePath = OSA_SCAN_SUMMARY + SCAN_ID_QUERY_PARAM + scanId;
         return httpClient.getRequest(relativePath, CONTENT_TYPE_APPLICATION_JSON_V1, OSASummaryResults.class, 200, "OSA scan summary results", false);
     }
 
-    private List<Library> getOSALibraries(String scanId) throws CxClientException, IOException {
+    private List<Library> getOSALibraries(String scanId) throws CxClientException, IOException, CxTokenExpiredException {
         String relPath = OSA_SCAN_LIBRARIES + SCAN_ID_QUERY_PARAM + scanId + ITEM_PER_PAGE_QUERY_PARAM + MAX_ITEMS;
         return (List<Library>) httpClient.getRequest(relPath, CONTENT_TYPE_APPLICATION_JSON_V1, Library.class, 200, "OSA libraries", true);
     }
 
-    private List<CVE> getOSAVulnerabilities(String scanId) throws CxClientException, IOException {
+    private List<CVE> getOSAVulnerabilities(String scanId) throws CxClientException, IOException, CxTokenExpiredException {
         String relPath = OSA_SCAN_VULNERABILITIES + SCAN_ID_QUERY_PARAM + scanId + ITEM_PER_PAGE_QUERY_PARAM + MAX_ITEMS;
         return (List<CVE>) httpClient.getRequest(relPath, CONTENT_TYPE_APPLICATION_JSON_V1, CVE.class, 200, "OSA vulnerabilities", true);
     }
 
     //Waiter - overload methods
-    private OSAScanStatus getOSAScanStatus(String scanId) throws CxClientException, IOException {
+    private OSAScanStatus getOSAScanStatus(String scanId) throws CxClientException, IOException, CxTokenExpiredException {
         String relPath = OSA_SCAN_STATUS.replace("{scanId}", scanId);
         OSAScanStatus scanStatus = httpClient.getRequest(relPath, CONTENT_TYPE_APPLICATION_JSON_V1, OSAScanStatus.class, 200, "OSA scan status", false);
         int stateId = scanStatus.getState().getId();

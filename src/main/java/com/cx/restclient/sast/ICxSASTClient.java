@@ -1,6 +1,7 @@
 package com.cx.restclient.sast;
 
 import com.cx.restclient.httpClient.exception.CxClientException;
+import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
 import com.cx.restclient.sast.dto.CxLinkObj;
 import com.cx.restclient.sast.dto.SASTResults;
 import com.cx.restclient.sast.exception.CxSASTException;
@@ -15,5 +16,5 @@ public interface ICxSASTClient {
 
     SASTResults getSASTResults(CxLinkObj createScanResponse);
 
-    void cancelSASTScan(String scanId) throws IOException, CxClientException;
+    void cancelSASTScan(long scanId) throws IOException, CxClientException, CxTokenExpiredException;
 }

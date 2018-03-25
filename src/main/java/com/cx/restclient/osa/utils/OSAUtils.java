@@ -41,35 +41,35 @@ public abstract class OSAUtils {
         List<String> exclusions = new ArrayList<String>();
         String[] filters = filterPatterns.split("\\s*,\\s*"); //split by comma and trim (spaces + newline)
         for (String filter : filters) {
-            if(StringUtils.isNotEmpty(filter)) {
-                if (!filter.startsWith("!") ) {
+            if (StringUtils.isNotEmpty(filter)) {
+                if (!filter.startsWith("!")) {
                     inclusions.add(filter);
-                } else if(filter.length() > 1){
+                } else if (filter.length() > 1) {
                     filter = filter.substring(1); // Trim the "!"
                     exclusions.add(filter);
                 }
             }
         }
 
-        String includesString = String.join(",", inclusions);
-        String excludesString = String.join(",", exclusions);
+        String includesString = StringUtils.join(inclusions, ",");
+        String excludesString = StringUtils.join(exclusions, ",");
 
-        if(StringUtils.isNotEmpty(includesString)) {
-            ret.put("includes",includesString);
+        if (StringUtils.isNotEmpty(includesString)) {
+            ret.put("includes", includesString);
         }
 
-        if(StringUtils.isNotEmpty(excludesString)) {
-            ret.put("excludes",excludesString);
+        if (StringUtils.isNotEmpty(excludesString)) {
+            ret.put("excludes", excludesString);
         }
 
-        if(StringUtils.isNotEmpty(archiveIncludes)) {
+        if (StringUtils.isNotEmpty(archiveIncludes)) {
             String[] archivePatterns = archiveIncludes.split("\\s*,\\s*"); //split by comma and trim (spaces + newline)
             for (int i = 0; i < archivePatterns.length; i++) {
-                if(StringUtils.isNotEmpty(archivePatterns[i]) && archivePatterns[i].startsWith("*.")) {
+                if (StringUtils.isNotEmpty(archivePatterns[i]) && archivePatterns[i].startsWith("*.")) {
                     archivePatterns[i] = "**/" + archivePatterns[i];
                 }
             }
-            archiveIncludes = String.join(",", archivePatterns);
+            archiveIncludes = StringUtils.join(archivePatterns, ",");
             ret.put("archiveIncludes", archiveIncludes);
         } else {
             ret.put("archiveIncludes", "**/.*jar,**/*.war,**/*.ear,**/*.sca,**/*.gem,**/*.whl,**/*.egg,**/*.tar,**/*.tar.gz,**/*.tgz,**/*.zip,**/*.rar");
@@ -77,7 +77,7 @@ public abstract class OSAUtils {
 
         ret.put("archiveExtractionDepth", "4");
 
-        if(installBeforeScan) {
+        if (installBeforeScan) {
             ret.put("npm.runPreStep", "true");
             ret.put("bower.runPreStep", "true");
         }
@@ -86,6 +86,7 @@ public abstract class OSAUtils {
 
         return ret;
     }
+
 
     public static void printOSAResultsToConsole(OSAResults osaResults, Logger log) {
         OSASummaryResults osaSummaryResults = osaResults.getResults();

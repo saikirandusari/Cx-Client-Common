@@ -3,6 +3,7 @@ package com.cx.restclient.common;
 import com.cx.restclient.dto.BaseStatus;
 import com.cx.restclient.dto.Status;
 import com.cx.restclient.httpClient.exception.CxClientException;
+import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public abstract class Waiter<T> {
 
 
             Thread.sleep(sleepInterval);  //Get status every 20 sec
-            while (status.equals(Status.IN_PROGRESS) && (scanTimeoutInMin <= 0 || elapsedTime < timeout)){
+            while (status.equals(Status.IN_PROGRESS) && (scanTimeoutInMin <= 0 || elapsedTime < timeout)) {
                 try {
                     obj = getStatus(id);
                     status = ((BaseStatus) obj).getBaseStatus();
@@ -47,14 +48,16 @@ public abstract class Waiter<T> {
                     retry--;
                 }
                 elapsedTime = (new Date()).getTime() - startTime;
-                printProgress(obj);
+                if (obj != null) { //TODO // FIXME: 21/03/2018 
+                    printProgress(obj);
+                }
             }
 
             return resolveStatus(obj);
         //TODO timeout- check Osa and SAST
     }
 
-    public abstract T getStatus(String id) throws CxClientException, IOException;
+    public abstract T getStatus(String id) throws CxClientException, IOException, CxTokenExpiredException;
 
     public abstract void printProgress(T status);
 

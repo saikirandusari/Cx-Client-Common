@@ -1,6 +1,7 @@
 package com.cx.restclient.httpClient.utils;
 
 import com.cx.restclient.httpClient.exception.CxClientException;
+import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -18,7 +19,7 @@ public abstract class ClientUtils {
     public static <T> T convertToObject(HttpResponse response, Class<T> responseType, boolean isCollection) throws IOException, CxClientException {
         //TODO errorHandling
         //  if (responseType != null) {
-        if (response.getEntity() == null || response.getEntity().getContentLength() == 0) {
+        if (response.getEntity() == null || response.getEntity().getContentLength() == 0 || responseType == null) {
             return null;
         }
         if (responseType.equals(byte[].class)) { //convert to byte[]
@@ -27,6 +28,7 @@ public abstract class ClientUtils {
         if (isCollection) { //convert to List<T>
             return convertToCollectionObject(response, TypeFactory.defaultInstance().constructCollectionType(List.class, responseType));
         }
+
         return convertToStrObject(response, responseType); //convert to T
         // }
         // return (T)""; //In cases where is no content in the response TODO
@@ -74,7 +76,7 @@ public abstract class ClientUtils {
     }
 
 
-    public static void validateResponse(HttpResponse response, int status, String message) throws CxClientException, IOException {
+    public static void validateResponse(HttpResponse response, int status, String message) throws CxClientException, IOException, CxTokenExpiredException {
         if (response.getStatusLine().getStatusCode() != status) {
             String responseBody = extractResponseBody(response);
             responseBody = responseBody.replace("{", "").replace("}", "").replace(System.getProperty("line.separator"), " ").replace("  ", "");
@@ -82,9 +84,10 @@ public abstract class ClientUtils {
         }
     }
 
-    private static String extractResponseBody(HttpResponse response) {
+    public static String extractResponseBody(HttpResponse response) {
         try {
-            return IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset());
+            String str = IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset());
+            return str;
         } catch (Exception e) {
             return "";
         }

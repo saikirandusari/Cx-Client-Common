@@ -2,8 +2,10 @@ package com.cx.restclient;
 
 import com.cx.restclient.common.summary.SummaryUtils;
 import com.cx.restclient.dto.ScanConfiguration;
+import com.cx.restclient.dto.Team;
 import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.httpClient.exception.CxClientException;
+import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
 import com.cx.restclient.osa.CxOSAClient;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.sast.CxSASTClient;
@@ -34,19 +36,20 @@ public class CxRestClient implements ICxRestClient {
         httpClient = new CxHttpClient(config.getUrl(), config.getUsername(), config.getPassword(), config.getCxOrigin());
     }
 
-    public CxSASTClient getSASTClient() throws IOException, CxClientException {
+    public CxSASTClient getSASTClient() throws IOException, CxClientException, CxTokenExpiredException {
         resolveProject();
         return new CxSASTClient(httpClient, log, config);
     }
 
-    private void resolveProject() throws IOException, CxClientException {
+    private void resolveProject() throws IOException, CxClientException, CxTokenExpiredException {
         Project project = null;
         if (config.getProject() == null) {
             List<Project> projects = getProjectByName(config.getProjectName(), config.getTeamId());
             if (projects == null) { // Project is new
                 if (config.isDenyProject()) {
                     {
-                        denyProject();
+                         denyProject();
+                        return;
                     }
                 }
             } else {
@@ -56,7 +59,7 @@ public class CxRestClient implements ICxRestClient {
         }
     }
 
-    public CxOSAClient getOSAClient() throws IOException, CxClientException {
+    public CxOSAClient getOSAClient() throws IOException, CxClientException, CxTokenExpiredException {
         resolveProject();
         return new CxOSAClient(httpClient, log, config);
     }
@@ -65,13 +68,12 @@ public class CxRestClient implements ICxRestClient {
         httpClient.close();
     }
 
-    public void login() throws IOException, CxClientException {
-        //      checkServerConnectivity();
-        //perform login to server
+    public void login() throws IOException, CxClientException, CxTokenExpiredException {
+
+        // perform login to server
         log.info("Logging into the Checkmarx service.");
         //loginToServer();
         httpClient.login();
-
     }
 
     public String generateHTMLSummary(SASTResults sastResults, OSAResults osaResults) {
@@ -81,9 +83,9 @@ public class CxRestClient implements ICxRestClient {
         return SummaryUtils.generateSummary(sastResults, osaResults, config, log);
     }
 
-    private List<Project> getProjectByName(String projectName, String teamId) throws IOException, CxClientException {
+    private List<Project> getProjectByName(String projectName, String teamId) throws IOException, CxClientException, CxTokenExpiredException {
         String projectNamePath = SAST_GET_PROJECT.replace("{name}", projectName).replace("{teamId}", teamId);
-        return (List<Project>) httpClient.getRequest(projectNamePath, CONTENT_TYPE_APPLICATION_JSON_V1, Project.class, null, "", true);
+        return (List<Project>) httpClient.getRequest(projectNamePath, CONTENT_TYPE_APPLICATION_JSON_V1, Project.class, 200, "project by name", true);
     }
 
     // private List<Project> getAllProjects() throws IOException, CxClientException {
@@ -103,16 +105,16 @@ public class CxRestClient implements ICxRestClient {
 
     //Config Public Methods
 
-    public List<Team> getTeamList() throws IOException, CxClientException {
-        return (List<Team>) httpClient.getRequest(CXTEAMS, CONTENT_TYPE_APPLICATION_JSON_V1, Team.class, 200, " Preset list", true);
+    public List<Team> getTeamList() throws IOException, CxClientException, CxTokenExpiredException {
+        return (List<Team>) httpClient.getRequest(CXTEAMS, CONTENT_TYPE_APPLICATION_JSON_V1, Team.class, 200, "team list", true);
     }
 
-    public List<Query> getPresetList() throws IOException, CxClientException {
-        return (List<Query>) httpClient.getRequest(CXPRESETS, CONTENT_TYPE_APPLICATION_JSON_V1, Query.class, 200, " Preset list", true);
+    public List<Query> getPresetList() throws IOException, CxClientException, CxTokenExpiredException {
+        return (List<Query>) httpClient.getRequest(CXPRESETS, CONTENT_TYPE_APPLICATION_JSON_V1, Query.class, 200, "preset list", true);
     }
 
-    public List<CxNameObj> GetConfigurationSetList() throws IOException, CxClientException {
-        return (List<CxNameObj>) httpClient.getRequest(SAST_ENGINE_CONFIG, CONTENT_TYPE_APPLICATION_JSON_V1, CxNameObj.class, 200, " EngineConfiguration", true);
+    public List<CxNameObj> GetConfigurationSetList() throws IOException, CxClientException, CxTokenExpiredException {
+        return (List<CxNameObj>) httpClient.getRequest(SAST_ENGINE_CONFIG, CONTENT_TYPE_APPLICATION_JSON_V1, CxNameObj.class, 200, "engine configurations", true);
     }
 
 }

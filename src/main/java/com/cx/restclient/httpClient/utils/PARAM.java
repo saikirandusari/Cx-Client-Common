@@ -4,7 +4,6 @@ package com.cx.restclient.httpClient.utils;
  * Created by Galn on 11/03/2018.
  */
 public class PARAM {
-    public static final String CONTENT_TYPE_MULTIPART_FORM_DATA = "multipart/form-data";
     public static final String CONTENT_TYPE_APPLICATION_JSON = "application/json";
     public static final String CONTENT_TYPE_APPLICATION_JSON_V1 = "application/json;v=1.0";
     public static final String CONTENT_TYPE_APPLICATION_XML_V1 = "application/xml;v=1.0";

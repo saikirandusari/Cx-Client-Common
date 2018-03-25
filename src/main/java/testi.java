@@ -1,14 +1,13 @@
 import com.cx.restclient.CxRestClient;
 import com.cx.restclient.dto.ScanConfiguration;
+import com.cx.restclient.dto.Team;
 import com.cx.restclient.httpClient.exception.CxClientException;
-import com.cx.restclient.osa.CxOSAClient;
-import com.cx.restclient.osa.dto.CreateOSAScanResponse;
+import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.osa.exception.CxOSAException;
 import com.cx.restclient.sast.CxSASTClient;
 import com.cx.restclient.sast.dto.*;
 import com.cx.restclient.sast.exception.CxSASTException;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.w3c.dom.Document;
@@ -18,7 +17,10 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.List;
 
 
@@ -41,7 +43,7 @@ public class testi {
     private static String DEFAULT_OSA_ARCHIVE_INCLUDE_PATTERNS = "*.zip, *.tgz, *.war, *.ear";
 
 
-    public static void main(String[] args) throws IOException, CxClientException, CxSASTException, InterruptedException, CxOSAException, ParserConfigurationException, SAXException {
+    public static void main(String[] args) throws IOException, CxClientException, CxSASTException, InterruptedException, CxOSAException, ParserConfigurationException, SAXException, CxTokenExpiredException {
         SASTResults sastResults = null;
         OSAResults osaResults = null;
 
@@ -292,26 +294,24 @@ public class testi {
         };
         ScanConfiguration config = setConfigi();
 
-
-
         CxRestClient client = new CxRestClient(config, logi);
         client.login();
 
-        //List<Team> teamList = client.getTeamList();
-        //List<Query> presetList = client.getPresetList();
-      //  List<CxNameObj> configList = client.GetConfigurationSetList();
+        List<Team> teamList = client.getTeamList();
+        List<Query> presetList = client.getPresetList();
+        List<CxNameObj> configList = client.GetConfigurationSetList();
 
         CxSASTClient sastClient = client.getSASTClient();
-        CxOSAClient osaClient = client.getOSAClient();
+    //    CxOSAClient osaClient = client.getOSAClient();
 
         CxLinkObj createScanResponse = sastClient.createSASTScan();
-        CreateOSAScanResponse createOSAScanResponse = osaClient.createOSAScan();
+      //  sastClient.cancelSASTScan(createScanResponse.getId());
+    //    CreateOSAScanResponse createOSAScanResponse = osaClient.createOSAScan();
 
         sastResults = sastClient.getSASTResults(createScanResponse);
-        osaResults = osaClient.getOSAResults(createOSAScanResponse.getScanId());
+    //    osaResults = osaClient.getOSAResults(createOSAScanResponse.getScanId());
 
-     //   client.generateHTMLSummary(sastResults, osaResults);
-        generateHtml(sastResults, osaResults);
+        client.generateHTMLSummary(sastResults, osaResults);
         client.close();
 
     }
@@ -326,8 +326,9 @@ public class testi {
         config.setReportsDir("C:\\Users\\galm\\Desktop\\restiDir\\reportsDir");
         config.setUsername("admin@cx");
         config.setPassword("Cx123456!");
-        config.setUrl("http://localhost");
-        config.setProjectName("TESTPROJECT");
+        //config.setUrl("http://10.31.3.123");
+        config.setUrl("http://10.31.1.125");
+        config.setProjectName("SanityTesmt842");
         config.setPresetName("Default");//TODO why name and id?
         config.setPresetId(7);
         config.setFullTeamPath("CxServer");//TODO why name and id?
@@ -353,7 +354,7 @@ public class testi {
         //config.setOsaLowThreshold();
         config.setDenyProject(false);
         config.setPublic(true);
-        config.setForceScan(false);
+        config.setForceScan(true);
         //config.setZipFile();
         config.setEngineConfigurationId(null);//TODO what should be the value?
         //config.setOsaDependenciesJson();
@@ -431,9 +432,4 @@ public class testi {
         return "";
 
     }
-
-
-
-
-
 }

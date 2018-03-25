@@ -1,6 +1,7 @@
 package com.cx.restclient.sast.dto;
 
 import com.cx.restclient.dto.BaseStatus;
+import com.cx.restclient.dto.Status;
 
 import java.util.List;
 
@@ -29,6 +30,15 @@ public class ResponseQueueScanStatus extends BaseStatus{
     private int totalPercent;
     private int stagePercent;
     private String initiator;
+
+    public ResponseQueueScanStatus() {
+    }
+
+
+
+    public ResponseQueueScanStatus(Status baseStatus) {
+        super(baseStatus);
+    }
 
     public long getId() {
         return id;

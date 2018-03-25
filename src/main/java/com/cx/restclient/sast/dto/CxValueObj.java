@@ -7,6 +7,14 @@ public class CxValueObj {
     private int id;
     private String value;
 
+    public CxValueObj() {
+    }
+
+    public CxValueObj(int id, String value) {
+        this.id = id;
+        this.value = value;
+    }
+
     public int getId() {
         return id;
     }

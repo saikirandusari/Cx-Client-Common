@@ -4,7 +4,7 @@ package com.cx.restclient.sast.utils;
  * Created by Galn on 06/02/2018.
  */
 public class SASTParam {
-    public static final String SAST_ENGINE_CONFIG = "sast/engineConfiguration";
+    public static final String SAST_ENGINE_CONFIG = "sast/engineConfigurations";
     public static final String SAST_UPDATE_SCAN_SETTINGS = "sast/scanSettings"; //Update preset and configuration
     public static final String SAST_GET_SCAN_SETTINGS = "/sast/scanSettings/{projectId}"; //Update preset and configuration
     public static final String SAST_CREATE_SCAN = "sast/scans"; //Run a new Scan
