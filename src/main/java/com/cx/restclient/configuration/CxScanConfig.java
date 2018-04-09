@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Created by galn on 21/12/2016.
  */
-public class ScanConfiguration {
+public class CxScanConfig {
 
     private Boolean sastEnabled;//TODO
     private Boolean osaEnabled;//TODO
@@ -26,16 +26,16 @@ public class ScanConfiguration {
     private Boolean forceScan = false;
     private String presetName;
     private Integer presetId;
-    private String folderExclusions;
-    private String filterPattern;
-    private Integer scanTimeoutInMinutes;
+    private String sastFolderExclusions;
+    private String sastFilterPattern;
+    private Integer sastScanTimeoutInMinutes;
     private String scanComment;
     private Boolean isIncremental = false;
     private Boolean isSynchronous = false;
-    private Boolean thresholdsEnabled = false;
-    private Integer highThreshold;
-    private Integer mediumThreshold;
-    private Integer lowThreshold;
+    private Boolean sastThresholdsEnabled = false;
+    private Integer sastHighThreshold;
+    private Integer sastMediumThreshold;
+    private Integer sastLowThreshold;
     private Boolean generatePDFReport = false;
     private File zipFile;
     private Integer engineConfigurationId; //TODO what are the default values
@@ -178,28 +178,28 @@ public class ScanConfiguration {
         this.presetId = presetId;
     }
 
-    public String getFolderExclusions() {
-        return folderExclusions;
+    public String getSastFolderExclusions() {
+        return sastFolderExclusions;
     }
 
-    public void setFolderExclusions(String folderExclusions) {
-        this.folderExclusions = folderExclusions;
+    public void setSastFolderExclusions(String sastFolderExclusions) {
+        this.sastFolderExclusions = sastFolderExclusions;
     }
 
-    public String getFilterPattern() {
-        return filterPattern;
+    public String getSastFilterPattern() {
+        return sastFilterPattern;
     }
 
-    public void setFilterPattern(String filterPattern) {
-        this.filterPattern = filterPattern;
+    public void setSastFilterPattern(String sastFilterPattern) {
+        this.sastFilterPattern = sastFilterPattern;
     }
 
-    public Integer getScanTimeoutInMinutes() {
-        return scanTimeoutInMinutes;
+    public Integer getSastScanTimeoutInMinutes() {
+        return sastScanTimeoutInMinutes;
     }
 
-    public void setScanTimeoutInMinutes(Integer scanTimeoutInMinutes) {
-        this.scanTimeoutInMinutes = scanTimeoutInMinutes;
+    public void setSastScanTimeoutInMinutes(Integer sastScanTimeoutInMinutes) {
+        this.sastScanTimeoutInMinutes = sastScanTimeoutInMinutes;
     }
 
     public String getScanComment() {
@@ -226,36 +226,36 @@ public class ScanConfiguration {
         isSynchronous = synchronous;
     }
 
-    public Boolean getThresholdsEnabled() {
-        return thresholdsEnabled;
+    public Boolean getSastThresholdsEnabled() {
+        return sastThresholdsEnabled;
     }
 
-    public void setThresholdsEnabled(Boolean thresholdsEnabled) {
-        this.thresholdsEnabled = thresholdsEnabled;
+    public void setSastThresholdsEnabled(Boolean sastThresholdsEnabled) {
+        this.sastThresholdsEnabled = sastThresholdsEnabled;
     }
 
-    public Integer getHighThreshold() {
-        return highThreshold;
+    public Integer getSastHighThreshold() {
+        return sastHighThreshold;
     }
 
-    public void setHighThreshold(Integer highThreshold) {
-        this.highThreshold = highThreshold;
+    public void setSastHighThreshold(Integer sastHighThreshold) {
+        this.sastHighThreshold = sastHighThreshold;
     }
 
-    public Integer getMediumThreshold() {
-        return mediumThreshold;
+    public Integer getSastMediumThreshold() {
+        return sastMediumThreshold;
     }
 
-    public void setMediumThreshold(Integer mediumThreshold) {
-        this.mediumThreshold = mediumThreshold;
+    public void setSastMediumThreshold(Integer sastMediumThreshold) {
+        this.sastMediumThreshold = sastMediumThreshold;
     }
 
-    public Integer getLowThreshold() {
-        return lowThreshold;
+    public Integer getSastLowThreshold() {
+        return sastLowThreshold;
     }
 
-    public void setLowThreshold(Integer lowThreshold) {
-        this.lowThreshold = lowThreshold;
+    public void setSastLowThreshold(Integer sastLowThreshold) {
+        this.sastLowThreshold = sastLowThreshold;
     }
 
     public Boolean getGeneratePDFReport() {
@@ -350,7 +350,15 @@ public class ScanConfiguration {
         return osaDependenciesJson;
     }
 
-    public void setOsaDependenciesJson(String osaDependenciesJson) {
+    public boolean isSASTThresholdEffectivelyEnabled() {
+        return getSastEnabled() && getSastThresholdsEnabled()&& (getSastHighThreshold() != null || getSastMediumThreshold() != null || getSastLowThreshold() != null);
+    }
+
+    public boolean isOSAThresholdEffectivelyEnabled() {
+        return getOsaEnabled() && getOsaThresholdsEnabled() && (getOsaHighThreshold() != null || getOsaMediumThreshold() != null || getOsaLowThreshold() != null);
+    }    public void setOsaDependenciesJson(String osaDependenciesJson) {
         this.osaDependenciesJson = osaDependenciesJson;
     }
+
+
 }

@@ -1,6 +1,6 @@
 package com.cx.restclient.common.summary;
 
-import com.cx.restclient.configuration.ScanConfiguration;
+import com.cx.restclient.configuration.CxScanConfig;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.sast.dto.SASTResults;
 import org.apache.commons.io.IOUtils;
@@ -34,7 +34,7 @@ public abstract class SummaryUtils {
     }
 
 
-    public static String generateSummary(SASTResults sastResults, OSAResults osaResults, ScanConfiguration config, Logger log) {
+    public static String generateSummary(SASTResults sastResults, OSAResults osaResults, CxScanConfig config, Logger log) {
         String resultsTemplate = getResultsTemplate(log);
         if (resultsTemplate == null) {
             return "";
@@ -45,15 +45,15 @@ public abstract class SummaryUtils {
             //SAST: fill html with results
             ret = ret
                     .replace(SAST_RESULTS_READY, OPTION_TRUE)
-                    .replaceAll(HIGH_RESULTS, String.valueOf(sastResults.getHighResults()))
-                    .replace(MEDIUM_RESULTS, String.valueOf(sastResults.getMediumResults()))
-                    .replace(LOW_RESULTS, String.valueOf(sastResults.getLowResults()))
+                    .replaceAll(HIGH_RESULTS, String.valueOf(sastResults.getSastHighResults()))
+                    .replace(MEDIUM_RESULTS, String.valueOf(sastResults.getSastMediumResults()))
+                    .replace(LOW_RESULTS, String.valueOf(sastResults.getSastLowResults()))
                     .replace(SAST_SUMMARY_RESULTS_LINK, String.valueOf(sastResults.getSastProjectLink()))
                     .replace(SAST_SCAN_RESULTS_LINK, String.valueOf(sastResults.getSastScanLink()))
-                    .replace(THRESHOLD_ENABLED, String.valueOf(config.getThresholdsEnabled()))
-                    .replace(HIGH_THRESHOLD, String.valueOf(config.getHighThreshold()))
-                    .replace(MEDIUM_THRESHOLD, String.valueOf(config.getMediumThreshold()))
-                    .replace(LOW_THRESHOLD, String.valueOf(config.getLowThreshold()))
+                    .replace(THRESHOLD_ENABLED, String.valueOf(config.getSastThresholdsEnabled()))
+                    .replace(HIGH_THRESHOLD, String.valueOf(config.getSastHighThreshold()))
+                    .replace(MEDIUM_THRESHOLD, String.valueOf(config.getSastMediumThreshold()))
+                    .replace(LOW_THRESHOLD, String.valueOf(config.getSastLowThreshold()))
                     .replace(SCAN_START_DATE, String.valueOf(sastResults.getScanStart()))
                     .replace(SCAN_TIME, String.valueOf(sastResults.getScanTime()))
                     .replace(SCAN_FILES_SCANNED, String.valueOf(sastResults.getFilesScanned()))
@@ -89,7 +89,7 @@ public abstract class SummaryUtils {
                     .replace(OSA_MEDIUM_RESULTS, String.valueOf(osaResults.getResults().getTotalMediumVulnerabilities()))
                     .replace(OSA_LOW_RESULTS, String.valueOf(osaResults.getResults().getTotalLowVulnerabilities()))
                     .replace(OSA_SUMMARY_RESULTS_LINK, String.valueOf(osaResults.getOsaProjectSummaryLink()))
-                    .replace(OSA_THRESHOLD_ENABLED, String.valueOf(config.getThresholdsEnabled()))
+                    .replace(OSA_THRESHOLD_ENABLED, String.valueOf(config.getOsaThresholdsEnabled()))
                     .replace(OSA_HIGH_THRESHOLD, String.valueOf(config.getOsaHighThreshold()))
                     .replace(OSA_MEDIUM_THRESHOLD, String.valueOf(config.getOsaMediumThreshold()))
                     .replace(OSA_LOW_THRESHOLD, String.valueOf(config.getOsaLowThreshold()))

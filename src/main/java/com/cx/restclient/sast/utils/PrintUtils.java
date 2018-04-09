@@ -9,10 +9,10 @@ import org.slf4j.Logger;
 public abstract class PrintUtils {
     public static void printResultsToConsole(SASTResults scanResults, Logger logger) {
         logger.info("----------------------------Checkmarx Scan Results(CxSAST):-------------------------------");
-        logger.info("High severity results: " + scanResults.getHighResults());
-        logger.info("Medium severity results: " + scanResults.getMediumResults());
-        logger.info("Low severity results: " + scanResults.getLowResults());
-        logger.info("Info severity results: " + scanResults.getInfoResults());
+        logger.info("High severity results: " + scanResults.getSastHighResults());
+        logger.info("Medium severity results: " + scanResults.getSastMediumResults());
+        logger.info("Low severity results: " + scanResults.getSastLowResults());
+        logger.info("Info severity results: " + scanResults.getSastInfoResults());
         logger.info("");
         logger.info("Scan results location: " + scanResults.getSastScanLink());
         logger.info("------------------------------------------------------------------------------------------\n");

@@ -1,7 +1,7 @@
 package com.cx.restclient;
 
 import com.cx.restclient.common.summary.SummaryUtils;
-import com.cx.restclient.configuration.ScanConfiguration;
+import com.cx.restclient.configuration.CxScanConfig;
 import com.cx.restclient.dto.Team;
 import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.httpClient.exception.CxClientException;
@@ -29,11 +29,11 @@ import static com.cx.restclient.sast.utils.SASTParam.SAST_GET_PROJECT;
 public class CxShragaClient /*implements ICxShragaClient*/ {
     private CxHttpClient httpClient;
     private Logger log;
-    private ScanConfiguration config;
+    private CxScanConfig config;
     private Integer projectId;
 
 
-    public CxShragaClient(ScanConfiguration config, Logger log) {
+    public CxShragaClient(CxScanConfig config, Logger log) {
         this.config = config;
         this.log = log;
         this.httpClient = new CxHttpClient(config.getUrl(), config.getUsername(), config.getPassword(), config.getCxOrigin());
@@ -43,7 +43,7 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
 
     public void init() throws CxClientException, IOException, CxTokenExpiredException {
         login();
-        if(config.getSastEnabled()){
+        if (config.getSastEnabled()) {
             resolvePreset();
         }
         resolveTeam();
@@ -65,6 +65,18 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         return SummaryUtils.generateSummary(sastResults, osaResults, config, log);
     }
 
+    // public resolveBuild(){
+    //  if (config.getSastEnabled()){
+    //assert if expected exception is thrown  OR when vulnerabilities under threshold
+    //   StringBuilder res = new StringBuilder("");
+    //    if (configUtil.assertVulnerabilities(scanResults, osaSummaryResults, res, config) || sastWaitException != null || osaException != null) {
+    //     printUtils.printBuildFailure(res, sastWaitException, osaException, loggerAdapter, log);
+    //     return taskResultBuilder.failed().build();
+    //  }
+
+    // }
+    // }
+//
     public void close() {
         httpClient.close();
     }
@@ -82,7 +94,7 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
     public String getTeamIdByName(String teamName) throws CxClientException, IOException, CxTokenExpiredException {
         List<Team> allTeams = getTeamList();
         for (Team team : allTeams) {
-            if (team.getFullName().equalsIgnoreCase(teamName)) { //TODO caseSenesitive- checkkk
+            if ((team.getFullName()).equalsIgnoreCase("\\"  + teamName)) { //TODO caseSenesitive- checkkk and REMOVE The WA "\"
                 return team.getId();
             }
         }
@@ -118,13 +130,13 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
 
     //Private methods
     private void resolveTeam() throws CxClientException, IOException, CxTokenExpiredException {
-        if (config.getTeamId() == null){
+        if (config.getTeamId() == null) {
             config.setTeamId(getTeamIdByName(config.getTeamPath()));
         }
     }
 
     private void resolvePreset() throws CxClientException, IOException, CxTokenExpiredException {
-        if (config.getPresetId() == null){
+        if (config.getPresetId() == null) {
             config.setPresetId(getPresetIdByName(config.getPresetName()));
         }
     }
@@ -134,8 +146,8 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         if (projects == null) { // Project is new
             if (config.getDenyProject()) {
                 String errMsg = "Creation of the new project [" + config.getProjectName() + "] is not authorized. " +
-                                "Please use an existing project. \nYou can enable the creation of new projects by disabling" + "" +
-                                " the Deny new Checkmarx projects creation checkbox in the Checkmarx plugin global settings.\n";
+                        "Please use an existing project. \nYou can enable the creation of new projects by disabling" + "" +
+                        " the Deny new Checkmarx projects creation checkbox in the Checkmarx plugin global settings.\n";
                 throw new CxClientException(errMsg);
             }
             //Create newProject
@@ -162,7 +174,7 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         config.setZipFile(zipFile);
     }
 
-    public void updateOSAJsonDependencies(String osaDependenciesJson){
+    public void updateOSAJsonDependencies(String osaDependenciesJson) {
         config.setOsaDependenciesJson(osaDependenciesJson);
     }
     // private List<Project> getAllProjects() throws IOException, CxClientException {

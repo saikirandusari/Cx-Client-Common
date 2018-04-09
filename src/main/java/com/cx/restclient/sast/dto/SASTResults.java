@@ -12,10 +12,10 @@ public class SASTResults {
     private long scanId;//TODO
 
     private boolean sastResultsReady = false;
-    private String highResults;
-    private String mediumResults;
-    private String lowResults;
-    private String infoResults;
+    private String sastHighResults;
+    private String sastMediumResults;
+    private String sastLowResults;
+    private String sastInfoResults;
 
     private String sastScanLink;
     private String sastProjectLink;
@@ -39,10 +39,10 @@ public class SASTResults {
 
     public void setResults(ProjectScannedData projectScannedData, String url) {
         setScanId(projectScannedData.getLastScanID());   //TODO!!!!! Need it??
-        setHighResults(Integer.toString(projectScannedData.getHighVulnerabilities())); //TODO what if null??
-        setMediumResults(Integer.toString(projectScannedData.getMediumVulnerabilities())); //TODO what if null??
-        setLowResults(Integer.toString(projectScannedData.getLowVulnerabilities())); //TODO what if null??
-        setInfoResults(Integer.toString(projectScannedData.getInfoVulnerabilities())); //TODO what if null??
+        setSastHighResults(Integer.toString(projectScannedData.getHighVulnerabilities())); //TODO what if null??
+        setSastMediumResults(Integer.toString(projectScannedData.getMediumVulnerabilities())); //TODO what if null??
+        setSastLowResults(Integer.toString(projectScannedData.getLowVulnerabilities())); //TODO what if null??
+        setSastInfoResults(Integer.toString(projectScannedData.getInfoVulnerabilities())); //TODO what if null??
         setSastScanLink(url, projectScannedData.getLastScanID(), projectScannedData.getProjectID());
         setSastResultsReady(true);
     }
@@ -55,36 +55,36 @@ public class SASTResults {
         this.scanId = scanId;
     }
 
-    public String getHighResults() {
-        return highResults;
+    public String getSastHighResults() {
+        return sastHighResults;
     }
 
-    public void setHighResults(String highResults) {
-        this.highResults = highResults;
+    public void setSastHighResults(String sastHighResults) {
+        this.sastHighResults = sastHighResults;
     }
 
-    public String getMediumResults() {
-        return mediumResults;
+    public String getSastMediumResults() {
+        return sastMediumResults;
     }
 
-    public void setMediumResults(String mediumResults) {
-        this.mediumResults = mediumResults;
+    public void setSastMediumResults(String sastMediumResults) {
+        this.sastMediumResults = sastMediumResults;
     }
 
-    public String getLowResults() {
-        return lowResults;
+    public String getSastLowResults() {
+        return sastLowResults;
     }
 
-    public void setLowResults(String lowResults) {
-        this.lowResults = lowResults;
+    public void setSastLowResults(String sastLowResults) {
+        this.sastLowResults = sastLowResults;
     }
 
-    public String getInfoResults() {
-        return infoResults;
+    public String getSastInfoResults() {
+        return sastInfoResults;
     }
 
-    public void setInfoResults(String infoResults) {
-        this.infoResults = infoResults;
+    public void setSastInfoResults(String sastInfoResults) {
+        this.sastInfoResults = sastInfoResults;
     }
 
 

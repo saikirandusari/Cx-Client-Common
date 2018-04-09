@@ -27,34 +27,34 @@ public abstract class Waiter<T> {
     protected Status status = null;
 
     public T waitForTaskToFinish(String taskId, long scanTimeoutInMin, Logger log) throws CxClientException, InterruptedException {
-        sleepInterval = 10;
         startTime = System.currentTimeMillis();
         long elapsedTime = 0L;
         long timeout = scanTimeoutInMin * 60000;
         status = Status.IN_PROGRESS;
         T obj = null;
 
-
-            Thread.sleep(sleepInterval);  //Get status every 20 sec
-            while (status.equals(Status.IN_PROGRESS) && (scanTimeoutInMin <= 0 || elapsedTime < timeout)) {
-                try {
-                    obj = getStatus(taskId);
-                    status = ((BaseStatus) obj).getBaseStatus();
-                } catch (Exception e) {
-                    log.debug("Failed to get status from " + scanType + ". retrying (" + (retry - 1) + " tries left). Error message: " + e.getMessage());
-                    if (retry < 0) { //TODO <= maybe
-                        throw new CxClientException("Failed to get status from SAST scan. Error message: " + e.getMessage());
-                    }
-                    retry--;
+        while (status.equals(Status.IN_PROGRESS) && (scanTimeoutInMin <= 0 || elapsedTime < timeout)) {
+            Thread.sleep(sleepInterval);
+            try {
+                obj = getStatus(taskId);
+                status = ((BaseStatus) obj).getBaseStatus();
+            } catch (Exception e) {
+                log.debug("Failed to get status from " + scanType + ". retrying (" + (retry - 1) + " tries left). Error message: " + e.getMessage());
+                if (retry < 0) { //TODO <= maybe
+                    throw new CxClientException("Failed to get status from SAST scan. Error message: " + e.getMessage());
                 }
-                elapsedTime = (new Date()).getTime() - startTime;
-                if (obj != null) { //TODO // FIXME: 21/03/2018 
-                    printProgress(obj);
-                }
+                retry--;
             }
+            elapsedTime = (new Date()).getTime() - startTime;
+            if (obj != null) { //TODO // FIXME: 21/03/2018
+                printProgress(obj);
+            }
+        }
+        if(timeout > elapsedTime && !status.equals(Status.SUCCEEDED)){
+            throw new CxClientException("Scan has reached the time limit. (" + scanTimeoutInMin + " minutes).");
+        } //TODO Timeout QA
+        return resolveStatus(obj);
 
-            return resolveStatus(obj);
-        //TODO timeout- check Osa and SAST
     }
 
     public abstract T getStatus(String id) throws CxClientException, IOException, CxTokenExpiredException;

@@ -1,6 +1,6 @@
 package com.cx.restclient.osa;
 
-import com.cx.restclient.configuration.ScanConfiguration;
+import com.cx.restclient.configuration.CxScanConfig;
 import com.cx.restclient.dto.Status;
 import com.cx.restclient.common.Waiter;
 import com.cx.restclient.httpClient.CxHttpClient;
@@ -29,7 +29,7 @@ public class CxOSAClient /**implements ICxOSAClient **/{
     private CxHttpClient httpClient;
     private Logger log;
     private Integer projectId;
-    private ScanConfiguration config;
+    private CxScanConfig config;
     private OSAResults osaResults = new OSAResults();
     private Waiter<OSAScanStatus> osaWaiter = new Waiter<OSAScanStatus>("CxOSA", 20000) {
         @Override
@@ -48,7 +48,7 @@ public class CxOSAClient /**implements ICxOSAClient **/{
         }
     };
 
-    public CxOSAClient(CxHttpClient client, Logger log, ScanConfiguration config, Integer projectId) {
+    public CxOSAClient(CxHttpClient client, Logger log, CxScanConfig config, Integer projectId) {
         this.log = log;
         this.httpClient = client;
         this.config = config;
@@ -60,7 +60,6 @@ public class CxOSAClient /**implements ICxOSAClient **/{
         log.info("Creating OSA scan");
         String osaDependenciesJson = config.getOsaDependenciesJson();
         if (osaDependenciesJson == null) {
-
             osaDependenciesJson = resolveOSADependencies();
         }
         return sendOSAScan(osaDependenciesJson);
@@ -113,7 +112,7 @@ public class CxOSAClient /**implements ICxOSAClient **/{
         CreateOSAScanResponse osaScan = scanOSA(projectId, osaDependenciesJson);
         String osaProjectSummaryLink = OSAUtils.composeProjectOSASummaryLink(config.getUrl(), projectId);
         osaResults.setOsaProjectSummaryLink(osaProjectSummaryLink);
-        log.info("OSA scan created successfully");
+        log.info("OSA scan created successfully. Link to project state: " + osaProjectSummaryLink);
 
         return osaScan.getScanId();
     }

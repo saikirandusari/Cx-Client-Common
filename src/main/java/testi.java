@@ -1,5 +1,5 @@
 import com.cx.restclient.CxShragaClient;
-import com.cx.restclient.configuration.ScanConfiguration;
+import com.cx.restclient.configuration.CxScanConfig;
 import com.cx.restclient.httpClient.exception.CxClientException;
 import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
 import com.cx.restclient.osa.CxOSAClient;
@@ -22,6 +22,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
+
+import static com.cx.restclient.httpClient.utils.ClientUtils.convertToJson;
 
 
 /**
@@ -46,7 +48,6 @@ public class testi {
     public static void main(String[] args) throws IOException, CxClientException, CxSASTException, InterruptedException, CxOSAException, ParserConfigurationException, SAXException, CxTokenExpiredException {
         SASTResults sastResults = null;
         OSAResults osaResults = null;
-
 
         Logger logi = new Logger() {
             public String getName() {
@@ -293,7 +294,7 @@ public class testi {
 
             }
         };
-        ScanConfiguration config = setConfigi();
+        CxScanConfig config = setConfigi();
 
         CxShragaClient client = new CxShragaClient(config, logi);
         //   CxZipUtils.zipWorkspaceFolder()
@@ -308,8 +309,8 @@ public class testi {
         CxSASTClient sastClient = client.newSASTClient();
         CxOSAClient osaClient = client.newOSAClient();
 
-        int sastScanId = sastClient.createSASTScan();
-        //  sastClient.cancelSASTScan(sastScanId);
+        long sastScanId = sastClient.createSASTScan();
+         // sastClient.cancelSASTScan(sastScanId);
 
         //jenkins OSAUtils.generateOSAScanConfiguration(sasasa)
         //jenkins client.updateOSAJsonDependencies("fsafsfsfsf");
@@ -324,8 +325,8 @@ public class testi {
     }
 
 
-    private static ScanConfiguration setConfigi() {
-        ScanConfiguration config = new ScanConfiguration();
+    private static CxScanConfig setConfigi() {
+        CxScanConfig config = new CxScanConfig();
         config.setSastEnabled(true);
         config.setCxOrigin("Bamboo");
         config.setSourceDir("C:\\Users\\galn\\Desktop\\restiDir\\srcDir");
@@ -333,20 +334,20 @@ public class testi {
         config.setUsername("admin@cx");
         config.setPassword("Cx123456!");
         //config.setUrl("http://10.31.3.123");
-        config.setUrl("http://10.31.1.125");
+        config.setUrl("http://10.31.0.152");
         //config.setUrl("http://galn-laptop");
         config.setProjectName("SanityTesmt842");
         config.setPresetName("Default");//TODO why name and id?
        // config.setPresetId(7);
         config.setTeamPath("CxServer");//TODO why name and id?
       //  config.setTeamId("00000000-1111-1111-b111-989c9070eb11");
-        config.setFolderExclusions("");
-        config.setFilterPattern(DEFAULT_FILTER_PATTERNS);
-        config.setScanTimeoutInMinutes(null);//todo check
+        config.setSastFolderExclusions("");
+        config.setSastFilterPattern(DEFAULT_FILTER_PATTERNS);
+        config.setSastScanTimeoutInMinutes(null);//todo check
         config.setScanComment("This is First test of the Common client");
         config.setIncremental(false);
         config.setSynchronous(true);
-        config.setThresholdsEnabled(false);
+        config.setSastThresholdsEnabled(false);
         //config.setHighThreshold();
         //config.setMediumThreshold();
         //config.setLowThreshold();
