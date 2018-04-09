@@ -27,7 +27,7 @@ public interface ICxShragaClient {
 
     List<Preset> getPresetList() throws IOException, CxClientException, CxTokenExpiredException;
 
-    List<CxNameObj> GetConfigurationSetList() throws IOException, CxClientException, CxTokenExpiredException;
+    List<CxNameObj> getConfigurationSetList() throws IOException, CxClientException, CxTokenExpiredException;
 
     File zipWorkspace() throws IOException, InterruptedException;
 

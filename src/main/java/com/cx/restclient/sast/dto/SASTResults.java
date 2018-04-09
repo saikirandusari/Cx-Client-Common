@@ -2,7 +2,8 @@ package com.cx.restclient.sast.dto;
 
 import java.util.List;
 
-import static com.cx.restclient.sast.utils.SASTParam.LINK_FORMAT;
+import static com.cx.restclient.sast.utils.SASTParam.*;
+
 
 /**
  * Created by Galn on 05/02/2018.
@@ -12,10 +13,10 @@ public class SASTResults {
     private long scanId;//TODO
 
     private boolean sastResultsReady = false;
-    private String sastHighResults;
-    private String sastMediumResults;
-    private String sastLowResults;
-    private String sastInfoResults;
+    private int highResults;
+    private int mediumResults;
+    private int lowResults;
+    private int infoResults;
 
     private String sastScanLink;
     private String sastProjectLink;
@@ -37,13 +38,14 @@ public class SASTResults {
     }
 
 
-    public void setResults(ProjectScannedData projectScannedData, String url) {
-        setScanId(projectScannedData.getLastScanID());   //TODO!!!!! Need it??
-        setSastHighResults(Integer.toString(projectScannedData.getHighVulnerabilities())); //TODO what if null??
-        setSastMediumResults(Integer.toString(projectScannedData.getMediumVulnerabilities())); //TODO what if null??
-        setSastLowResults(Integer.toString(projectScannedData.getLowVulnerabilities())); //TODO what if null??
-        setSastInfoResults(Integer.toString(projectScannedData.getInfoVulnerabilities())); //TODO what if null??
-        setSastScanLink(url, projectScannedData.getLastScanID(), projectScannedData.getProjectID());
+    public void setResults(SASTResultsResponse results, SASTStatisticsResponse statisticsResults, String url, long projectId) {
+        setScanId(results.getId());
+        setHighResults(statisticsResults.getHighSeverity());
+        setMediumResults(statisticsResults.getMediumSeverity());
+        setLowResults(statisticsResults.getLowSeverity());
+        setInfoResults(statisticsResults.getInfoSeverity());
+        setSastScanLink(url, results.getId(), projectId);
+        setSastProjectLink(url, projectId);
         setSastResultsReady(true);
     }
 
@@ -55,36 +57,36 @@ public class SASTResults {
         this.scanId = scanId;
     }
 
-    public String getSastHighResults() {
-        return sastHighResults;
+    public int getHighResults() {
+        return highResults;
     }
 
-    public void setSastHighResults(String sastHighResults) {
-        this.sastHighResults = sastHighResults;
+    public void setHighResults(int highResults) {
+        this.highResults = highResults;
     }
 
-    public String getSastMediumResults() {
-        return sastMediumResults;
+    public int getMediumResults() {
+        return mediumResults;
     }
 
-    public void setSastMediumResults(String sastMediumResults) {
-        this.sastMediumResults = sastMediumResults;
+    public void setMediumResults(int mediumResults) {
+        this.mediumResults = mediumResults;
     }
 
-    public String getSastLowResults() {
-        return sastLowResults;
+    public int getLowResults() {
+        return lowResults;
     }
 
-    public void setSastLowResults(String sastLowResults) {
-        this.sastLowResults = sastLowResults;
+    public void setLowResults(int lowResults) {
+        this.lowResults = lowResults;
     }
 
-    public String getSastInfoResults() {
-        return sastInfoResults;
+    public int getInfoResults() {
+        return infoResults;
     }
 
-    public void setSastInfoResults(String sastInfoResults) {
-        this.sastInfoResults = sastInfoResults;
+    public void setInfoResults(int infoResults) {
+        this.infoResults = infoResults;
     }
 
 
@@ -97,7 +99,7 @@ public class SASTResults {
     }
 
     public void setSastScanLink(String url, long scanId, long projectId) {
-        this.sastScanLink = String.format(url + "/CxWebClient/ViewerMain.aspx?scanId=%s&ProjectID=%s", scanId, projectId);
+        this.sastScanLink = String.format(url + SCAN_LINK_FORMAT, scanId, projectId);
     }
 
     public String getSastProjectLink() {
@@ -109,7 +111,7 @@ public class SASTResults {
     }
 
     public void setSastProjectLink(String url, long projectId) {
-        this.sastProjectLink = String.format(url + LINK_FORMAT, projectId);
+        this.sastProjectLink = String.format(url + PROJECT_LINK_FORMAT, projectId);
     }
 
     public String getScanStart() {

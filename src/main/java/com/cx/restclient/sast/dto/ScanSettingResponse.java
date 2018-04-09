@@ -6,12 +6,11 @@ package com.cx.restclient.sast.dto;
  */
 public class ScanSettingResponse {
 
-
-    public CxLinkObj project;
-    public CxLinkObj preset;
-    public CxLinkObj engineConfiguration;
-    public CxLinkObj postScanAction;
-    public EmailNotifications emailNotifications;
+    private CxLinkObj project;
+    private CxLinkObj preset;
+    private CxLinkObj engineConfiguration;
+    private CxLinkObj postScanAction;
+    private EmailNotifications emailNotifications;
 
     public EmailNotifications getEmailNotifications() {
         return emailNotifications;

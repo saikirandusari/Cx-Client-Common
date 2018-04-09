@@ -113,7 +113,6 @@ public class CxHttpClient {
         HttpResponse response = null;
 
         try {
-            //send scan request
             response = apacheClient.execute(httpMethod);
             if (response.getStatusLine().getStatusCode() == 401) { //Token expired
                 throw new CxTokenExpiredException(extractResponseBody(response));
@@ -123,7 +122,6 @@ public class CxHttpClient {
             }
 
             if (expectStatus != null) {
-                //verify scan request
                 validateResponse(response, expectStatus, "Failed to " + failedMsg);
             }
             //extract response as object and return the link

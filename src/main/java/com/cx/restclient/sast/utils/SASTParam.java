@@ -8,11 +8,9 @@ public class SASTParam {
     public static final String SAST_UPDATE_SCAN_SETTINGS = "sast/scanSettings"; //Update preset and configuration
     public static final String SAST_GET_SCAN_SETTINGS = "/sast/scanSettings/{projectId}"; //Update preset and configuration
     public static final String SAST_CREATE_SCAN = "sast/scans"; //Run a new Scan
-    public static final String SAST_SCAN_STATUS = "sast/scans/{scanId}"; //Get Scan status (by scan ID)
-    public static final String SAST_SCAN_QUEUE = "sast/scansQueue";
+    public static final String SAST_SCAN_RESULTS = "sast/scans/{scanId}"; //Get Scan status (by scan ID)
+    public static final String SAST_SCAN_RESULTS_STATISTICS = "sast/scans/{scanId}/resultsStatistics";
     public static final String SAST_QUEUE_SCAN_STATUS = "sast/scansQueue/{scanId}";
-    public static final String SAST_DISPLAY_DATA_TODO = "sast/displayData/{projectId}";//TODO
-    public static final String SAST_UPDATE_COMMENT = "sast/scans/{scanId}";
 
     public static final String SAST_GET_PROJECT = "projects?projectname={name}&teamid={teamId}";// Get  project)
     public static final String SAST_PROJECT_BY_ID = "projects/{projectId}"; //GetProjectConfiguration
@@ -28,5 +26,6 @@ public class SASTParam {
     public static final String TEMP_FILE_NAME_TO_ZIP = "zippedSource";
 
 
-    public static final String LINK_FORMAT = "/CxWebClient/portal#/projectState/%d/Summary";
+    public static final String SCAN_LINK_FORMAT = "/CxWebClient/ViewerMain.aspx?scanId=%s&ProjectID=%s";
+    public static final String PROJECT_LINK_FORMAT = "/CxWebClient/portal#/projectState/%d/Summary";
 }

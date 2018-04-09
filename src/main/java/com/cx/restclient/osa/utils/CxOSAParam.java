@@ -13,5 +13,4 @@ public class CxOSAParam {
     public static final String SCAN_ID_QUERY_PARAM = "?scanId=";
     public static final String ITEM_PER_PAGE_QUERY_PARAM = "&itemsPerPage=";
     public static final long MAX_ITEMS = 1000000;
-    public static int waitForScanToFinishRetry = 5;
 }
