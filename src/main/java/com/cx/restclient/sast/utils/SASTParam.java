@@ -14,7 +14,6 @@ public class SASTParam {
     public static final String SAST_DISPLAY_DATA_TODO = "sast/displayData/{projectId}";//TODO
     public static final String SAST_UPDATE_COMMENT = "sast/scans/{scanId}";
 
-    public static final String SAST_SCAN_PROJECT = "projects";//Create new project (default preset and configuration)
     public static final String SAST_GET_PROJECT = "projects?projectname={name}&teamid={teamId}";// Get  project)
     public static final String SAST_PROJECT_BY_ID = "projects/{projectId}"; //GetProjectConfiguration
     public static final String SAST_ZIP_ATTACHMENTS = "projects/{projectId}/sourceCode/attachments";//Attach ZIP file

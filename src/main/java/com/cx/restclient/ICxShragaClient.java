@@ -1,30 +1,37 @@
 package com.cx.restclient;
 
+import com.cx.restclient.dto.Team;
 import com.cx.restclient.httpClient.exception.CxClientException;
 import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
 import com.cx.restclient.osa.CxOSAClient;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.sast.CxSASTClient;
 import com.cx.restclient.sast.dto.CxNameObj;
-import com.cx.restclient.sast.dto.Query;
+import com.cx.restclient.sast.dto.Preset;
 import com.cx.restclient.sast.dto.SASTResults;
-import com.cx.restclient.dto.Team;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 /**
  * Created by Galn on 11/03/2018.
  */
-public interface ICxRestClient {
+public interface ICxShragaClient {
 
-    void login() throws IOException, CxClientException, CxTokenExpiredException;
+    void init() throws CxClientException, IOException, CxTokenExpiredException;
+
+
 
     List<Team> getTeamList() throws IOException, CxClientException, CxTokenExpiredException;
 
-    List<Query> getPresetList() throws IOException, CxClientException, CxTokenExpiredException;
+    List<Preset> getPresetList() throws IOException, CxClientException, CxTokenExpiredException;
 
     List<CxNameObj> GetConfigurationSetList() throws IOException, CxClientException, CxTokenExpiredException;
+
+    File zipWorkspace() throws IOException, InterruptedException;
+
+
 
     CxSASTClient getSASTClient() throws IOException, CxClientException, CxTokenExpiredException;
 
@@ -33,4 +40,6 @@ public interface ICxRestClient {
     String generateHTMLSummary(SASTResults sastResults, OSAResults osaResults);
 
     void close();
+
+    void login() throws IOException, CxClientException, CxTokenExpiredException;
 }

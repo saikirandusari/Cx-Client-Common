@@ -2,7 +2,7 @@
 package com.cx.restclient.sast.utils.zip;
 
 
-import com.cx.restclient.dto.ScanConfiguration;
+import com.cx.restclient.configuration.ScanConfiguration;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
@@ -23,8 +23,7 @@ public abstract class CxZipUtils {
     public static File zipWorkspaceFolder(ScanConfiguration config, long maxZipBytes, Logger log) throws IOException, InterruptedException {
         final String combinedFilterPattern = generatePattern(config.getFolderExclusions(), config.getFilterPattern(), log);
         CxZip cxZip = new CxZip(TEMP_FILE_NAME_TO_ZIP, maxZipBytes, log);
-
-        return cxZip.zipWorkspaceFolder(new File(config.getSourceDir()), new File(config.getTempDir()), combinedFilterPattern);
+        return cxZip.zipWorkspaceFolder(new File(config.getSourceDir()), combinedFilterPattern);
 
     }
 

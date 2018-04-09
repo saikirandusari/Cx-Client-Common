@@ -1,13 +1,14 @@
-import com.cx.restclient.CxRestClient;
-import com.cx.restclient.dto.ScanConfiguration;
-import com.cx.restclient.dto.Team;
+import com.cx.restclient.CxShragaClient;
+import com.cx.restclient.configuration.ScanConfiguration;
 import com.cx.restclient.httpClient.exception.CxClientException;
 import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
+import com.cx.restclient.osa.CxOSAClient;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.osa.exception.CxOSAException;
 import com.cx.restclient.sast.CxSASTClient;
 import com.cx.restclient.sast.dto.*;
 import com.cx.restclient.sast.exception.CxSASTException;
+
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.w3c.dom.Document;
@@ -21,7 +22,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.List;
 
 
 /**
@@ -46,6 +46,7 @@ public class testi {
     public static void main(String[] args) throws IOException, CxClientException, CxSASTException, InterruptedException, CxOSAException, ParserConfigurationException, SAXException, CxTokenExpiredException {
         SASTResults sastResults = null;
         OSAResults osaResults = null;
+
 
         Logger logi = new Logger() {
             public String getName() {
@@ -294,22 +295,28 @@ public class testi {
         };
         ScanConfiguration config = setConfigi();
 
-        CxRestClient client = new CxRestClient(config, logi);
-        client.login();
+        CxShragaClient client = new CxShragaClient(config, logi);
+        //   CxZipUtils.zipWorkspaceFolder()
+        client.init();
+        //jenkins client.updateSASTZipFile();
 
-        List<Team> teamList = client.getTeamList();
-        List<Query> presetList = client.getPresetList();
-        List<CxNameObj> configList = client.GetConfigurationSetList();
 
-        CxSASTClient sastClient = client.getSASTClient();
-    //    CxOSAClient osaClient = client.getOSAClient();
+        //  List<Team> teamList = client.getTeamList();
+        //List<Query> presetList = client.getPresetList();
+        //List<CxNameObj> configList = client.GetConfigurationSetList();
 
-        CxLinkObj createScanResponse = sastClient.createSASTScan();
-      //  sastClient.cancelSASTScan(createScanResponse.getId());
-    //    CreateOSAScanResponse createOSAScanResponse = osaClient.createOSAScan();
+        CxSASTClient sastClient = client.newSASTClient();
+        CxOSAClient osaClient = client.newOSAClient();
 
-        sastResults = sastClient.getSASTResults(createScanResponse);
-    //    osaResults = osaClient.getOSAResults(createOSAScanResponse.getScanId());
+        int sastScanId = sastClient.createSASTScan();
+        //  sastClient.cancelSASTScan(sastScanId);
+
+        //jenkins OSAUtils.generateOSAScanConfiguration(sasasa)
+        //jenkins client.updateOSAJsonDependencies("fsafsfsfsf");
+        String osaScanId = osaClient.createOSAScan();
+
+        sastResults = sastClient.getSASTResults(sastScanId);
+        osaResults = osaClient.getOSAResults(osaScanId);
 
         client.generateHTMLSummary(sastResults, osaResults);
         client.close();
@@ -319,20 +326,20 @@ public class testi {
 
     private static ScanConfiguration setConfigi() {
         ScanConfiguration config = new ScanConfiguration();
-        config.setSASTEnabled(true);
+        config.setSastEnabled(true);
         config.setCxOrigin("Bamboo");
-        config.setSourceDir("C:\\Users\\galm\\Desktop\\restiDir\\sourciDir");
-        config.setTempDir("C:\\Users\\galm\\Desktop\\restiDir\\TempDir");
+        config.setSourceDir("C:\\Users\\galn\\Desktop\\restiDir\\srcDir");
         config.setReportsDir("C:\\Users\\galm\\Desktop\\restiDir\\reportsDir");
         config.setUsername("admin@cx");
         config.setPassword("Cx123456!");
         //config.setUrl("http://10.31.3.123");
         config.setUrl("http://10.31.1.125");
+        //config.setUrl("http://galn-laptop");
         config.setProjectName("SanityTesmt842");
         config.setPresetName("Default");//TODO why name and id?
-        config.setPresetId(7);
-        config.setFullTeamPath("CxServer");//TODO why name and id?
-        config.setTeamId("00000000-1111-1111-b111-989c9070eb11");
+       // config.setPresetId(7);
+        config.setTeamPath("CxServer");//TODO why name and id?
+      //  config.setTeamId("00000000-1111-1111-b111-989c9070eb11");
         config.setFolderExclusions("");
         config.setFilterPattern(DEFAULT_FILTER_PATTERNS);
         config.setScanTimeoutInMinutes(null);//todo check
@@ -347,7 +354,7 @@ public class testi {
         config.setOsaEnabled(true);
         config.setOsaFilterPattern("");//TODO
         config.setOsaArchiveIncludePatterns(DEFAULT_OSA_ARCHIVE_INCLUDE_PATTERNS);
-        config.setOsaInstallBeforeScan(false);
+        config.setOsaRunInstall(false);
         config.setOsaThresholdsEnabled(false);
         //config.setOsaHighThreshold();
         //config.setOsaMediumThreshold();
@@ -372,7 +379,7 @@ public class testi {
 
 
         String path = "C:\\cxdev\\CxPlugins\\Cx-Client-Common\\src\\main\\resources\\fullRpoertTemplate";
-       // String fullHtml = FileUtils.readFileToString(new File(path));
+        // String fullHtml = FileUtils.readFileToString(new File(path));
 
         StringBuilder contentBuilder = new StringBuilder();
         try {

@@ -1,7 +1,5 @@
 package com.cx.restclient.osa.dto;
 
-import com.cx.restclient.dto.ScanConfiguration;
-
 import java.util.List;
 
 /**

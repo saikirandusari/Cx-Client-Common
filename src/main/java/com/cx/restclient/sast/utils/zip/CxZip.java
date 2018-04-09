@@ -24,7 +24,7 @@ public class CxZip {
         this.maxZipSizeInBytes = maxZipSizeInBytes;
     }
 
-    public File zipWorkspaceFolder(File baseDir, File tempDir, String filterPattern)
+    public File zipWorkspaceFolder(File baseDir, String filterPattern)
             throws InterruptedException, IOException {
         log.info("Zipping workspace: '" + baseDir + "'");
 
@@ -35,7 +35,7 @@ public class CxZip {
             }
         };
 
-        File tempFile = File.createTempFile(tempFileName, ".bin", tempDir);
+        File tempFile = File.createTempFile(tempFileName, ".bin");
         OutputStream fileOutputStream = new FileOutputStream(tempFile);
 
         try {

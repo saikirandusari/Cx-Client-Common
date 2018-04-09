@@ -1,11 +1,10 @@
 package com.cx.restclient.common.summary;
 
-import com.cx.restclient.dto.ScanConfiguration;
+import com.cx.restclient.configuration.ScanConfiguration;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.sast.dto.SASTResults;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tools.ant.taskdefs.Javadoc;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -51,7 +50,7 @@ public abstract class SummaryUtils {
                     .replace(LOW_RESULTS, String.valueOf(sastResults.getLowResults()))
                     .replace(SAST_SUMMARY_RESULTS_LINK, String.valueOf(sastResults.getSastProjectLink()))
                     .replace(SAST_SCAN_RESULTS_LINK, String.valueOf(sastResults.getSastScanLink()))
-                    .replace(THRESHOLD_ENABLED, String.valueOf(config.isThresholdsEnabled()))
+                    .replace(THRESHOLD_ENABLED, String.valueOf(config.getThresholdsEnabled()))
                     .replace(HIGH_THRESHOLD, String.valueOf(config.getHighThreshold()))
                     .replace(MEDIUM_THRESHOLD, String.valueOf(config.getMediumThreshold()))
                     .replace(LOW_THRESHOLD, String.valueOf(config.getLowThreshold()))
@@ -64,7 +63,7 @@ public abstract class SummaryUtils {
             //SAST: fill html with empty values
             ret = ret
                     .replace(SAST_RESULTS_READY, OPTION_FALSE)
-                    .replace(SYNC_MODE, String.valueOf(config.isSynchronous()))
+                    .replace(SYNC_MODE, String.valueOf(config.getSynchronous()))
                     .replace(SAST_SUMMARY_RESULTS_LINK, StringUtils.defaultString(sastResults.getSastProjectLink()))
                     .replaceAll(HIGH_RESULTS, "0")
                     .replace(MEDIUM_RESULTS, "0")
@@ -90,7 +89,7 @@ public abstract class SummaryUtils {
                     .replace(OSA_MEDIUM_RESULTS, String.valueOf(osaResults.getResults().getTotalMediumVulnerabilities()))
                     .replace(OSA_LOW_RESULTS, String.valueOf(osaResults.getResults().getTotalLowVulnerabilities()))
                     .replace(OSA_SUMMARY_RESULTS_LINK, String.valueOf(osaResults.getOsaProjectSummaryLink()))
-                    .replace(OSA_THRESHOLD_ENABLED, String.valueOf(config.isThresholdsEnabled()))
+                    .replace(OSA_THRESHOLD_ENABLED, String.valueOf(config.getThresholdsEnabled()))
                     .replace(OSA_HIGH_THRESHOLD, String.valueOf(config.getOsaHighThreshold()))
                     .replace(OSA_MEDIUM_THRESHOLD, String.valueOf(config.getOsaMediumThreshold()))
                     .replace(OSA_LOW_THRESHOLD, String.valueOf(config.getOsaLowThreshold()))
@@ -121,7 +120,7 @@ public abstract class SummaryUtils {
                     .replace(OSA_START_TIME, "")
                     .replace(OSA_END_TIME, "");
         }
-        ret = ret.replace(SYNC_MODE, String.valueOf(config.isSynchronous()));
+        ret = ret.replace(SYNC_MODE, String.valueOf(config.getSynchronous()));
 
         return ret;
     }

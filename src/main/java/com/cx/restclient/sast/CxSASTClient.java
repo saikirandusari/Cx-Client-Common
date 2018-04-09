@@ -3,15 +3,13 @@ package com.cx.restclient.sast;
 import com.cx.restclient.dto.BaseStatus;
 import com.cx.restclient.dto.Status;
 import com.cx.restclient.common.Waiter;
-import com.cx.restclient.dto.ScanConfiguration;
+import com.cx.restclient.configuration.ScanConfiguration;
 import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.httpClient.exception.CxClientException;
 import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
 import com.cx.restclient.sast.dto.*;
 import com.cx.restclient.sast.exception.CxSASTException;
-import com.cx.restclient.sast.utils.PrintUtils;
 import com.cx.restclient.sast.utils.zip.CxZipUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -26,22 +24,20 @@ import java.io.IOException;
 
 import static com.cx.restclient.httpClient.utils.ClientUtils.convertToJson;
 import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_JSON_V1;
-import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_PDF_V1;
-import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_XML_V1;
 import static com.cx.restclient.sast.utils.SASTParam.*;
-import static com.cx.restclient.sast.utils.ReportsUtils.writePDFReport;
-import static com.cx.restclient.sast.utils.SASTUtils.convertToXMLResult;
 import static com.cx.restclient.sast.utils.SASTUtils.deleteTempZipFile;
 
 /**
  * Created by Galn on 05/02/2018.
  */
 
-public class CxSASTClient implements ICxSASTClient {
+public class CxSASTClient/** implements ICxSASTClient**/ {
 
     private Logger log;
     private CxHttpClient httpClient;
     private ScanConfiguration config;
+    private Integer projectId;
+
     private int reportTimeoutSec = 500;
     private Waiter<ResponseQueueScanStatus> scanWaiter = new Waiter<ResponseQueueScanStatus>("CxSAST Scan", 20000) {
         @Override
@@ -76,39 +72,28 @@ public class CxSASTClient implements ICxSASTClient {
         }
     };
 
-    public CxSASTClient(CxHttpClient client, Logger log, ScanConfiguration config) {
+    public CxSASTClient(CxHttpClient client, Logger log, ScanConfiguration config, Integer projectId) {
         this.log = log;
         this.httpClient = client;
         this.config = config;
+        this.projectId = projectId;
     }
 
     //**------ API  ------**//
 
     //CREATE SAST scan
-    public CxLinkObj createSASTScan() throws CxSASTException, InterruptedException, IOException {
-
+    public int createSASTScan() throws CxSASTException, InterruptedException, IOException {
         log.info("-----------------------------------Create CxSAST Scan:------------------------------------");
-
         CxLinkObj createScanResponse = null;
-
         ScanSettingResponse scanSettingResponse;
         ScanSettingRequest scanSettingRequest = new ScanSettingRequest();
         try {
-            Project project = config.getProject();
 
-            if (project == null) { // Project is new
-                //Create newProject
-                CreateProjectRequest request = new CreateProjectRequest(config.getProjectName(), config.getTeamId(), config.isPublic());
-                project = createNewProject(request);
-                scanSettingRequest.setEngineConfigurationId(1);// default enginConfigId
-
-            } else { //Project already exist
-                scanSettingResponse = getScanSetting(project.getId());
-                scanSettingRequest.setEngineConfigurationId(scanSettingResponse.getEngineConfiguration().getId());
-                scanSettingRequest.setEmailNotifications(scanSettingResponse.getEmailNotifications());
+            scanSettingResponse = getScanSetting(projectId);
+            scanSettingRequest.setEngineConfigurationId(scanSettingResponse.getEngineConfiguration().getId());
+            scanSettingRequest.setEmailNotifications(scanSettingResponse.getEmailNotifications());
                 //TODO scanSettingRequest.setPostScanActionId(scanSettingResponse.getPostScanAction());
-            }
-            int projectId = project.getId();
+
             scanSettingRequest.setProjectId(projectId);
             scanSettingRequest.setPresetId(config.getPresetId());
 
@@ -130,25 +115,25 @@ public class CxSASTClient implements ICxSASTClient {
             }
 
             //Start a new createSASTScan
-            CreateScanRequest scanRequest = new CreateScanRequest(projectId, config.isIncremental(), config.isPublic(), config.isForceScan());
+            CreateScanRequest scanRequest = new CreateScanRequest(projectId, config.getIncremental(), config.getPublic(), config.getForceScan());
             createScanResponse = createScan(scanRequest);
             log.info(String.format("Scan created successfully. CxLink to project state: "+ config.getUrl() + LINK_FORMAT, projectId));
 
         } catch (Exception ex) {
             throw new CxSASTException(ex.getMessage());//TODO!!!!
         }
-        return createScanResponse;
+        return createScanResponse.getId();
     }
 
     //GET SAST Scan + Reports
-    public SASTResults getSASTResults(CxLinkObj createScanResponse) {
+    public SASTResults getSASTResults(int scanId) {
         SASTResults scanResults = new SASTResults();
 
         try {
             log.info("------------------------------------Get CxSAST Results:-----------------------------------");
             //wait for SAST scan to finish
             log.info("Waiting for CxSAST scan to finish.");
-            scanWaiter.waitForScanToFinish(Long.toString(createScanResponse.getId()), config.getScanTimeoutInMinutes(), log);
+            scanWaiter.waitForTaskToFinish(Integer.toString(scanId), config.getScanTimeoutInMinutes(), log);
             log.info("Scan finished. Retrieving scan results");
     /*if (!StringUtils.isEmpty(config.getScanComment())) {
                 Thread.sleep(20000);//Wait for the scan to create
@@ -196,6 +181,12 @@ public class CxSASTClient implements ICxSASTClient {
         return scanResults;
     }
 
+    public SASTResults getLastSASTResults(Integer projectId) {
+
+      //  TODO return lastscanResults;
+        return null;
+    }
+
     //Cancel SAST Scan
     public void cancelSASTScan(long scanId) throws IOException, CxClientException, CxTokenExpiredException {
         log.warn("Scan was canceled");//TODO
@@ -209,12 +200,6 @@ public class CxSASTClient implements ICxSASTClient {
 
 
     //**------ Private Methods  ------**//
-
-    private Project createNewProject(CreateProjectRequest request) throws CxClientException, IOException, CxTokenExpiredException {
-        String json = convertToJson(request);
-        StringEntity entity = new StringEntity(json);
-        return httpClient.postRequest(SAST_SCAN_PROJECT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, Project.class, 201, "create new project: " + request.getName());
-    }
 
     private ScanSettingResponse getScanSetting(long projectId) throws IOException, CxClientException, CxTokenExpiredException {
         return httpClient.getRequest(SAST_GET_SCAN_SETTINGS.replace("{projectId}", Long.toString(projectId)), CONTENT_TYPE_APPLICATION_JSON_V1, ScanSettingResponse.class, 200, "Scan setting", false);
@@ -275,7 +260,7 @@ public class CxSASTClient implements ICxSASTClient {
         CreateReportRequest reportRequest = new CreateReportRequest(scanId, reportType.name());
         CreateReportResponse createReportResponse = createScanReport(reportRequest);
         int reportId = createReportResponse.getReportId();
-        reportWaiter.waitForScanToFinish(Long.toString(reportId), reportTimeoutSec / 60, log);
+        reportWaiter.waitForTaskToFinish(Long.toString(reportId), reportTimeoutSec / 60, log);
         byte[] scanReport = getReport(reportId, contentType);
 
         return scanReport;
@@ -352,7 +337,7 @@ public class CxSASTClient implements ICxSASTClient {
     }
 
     private void printReportProgress() {
-        log.info("Waiting for server to generate pdf report " + (reportTimeoutSec - (System.currentTimeMillis() / 1000)) + " sec left to timeout");
+        log.info("Waiting for server to generate pdf report " + (reportTimeoutSec - (System.currentTimeMillis() / 1000)) + " seconds left for timeout");
     }
 
     private BaseStatus resolveReportStatus(BaseStatus reportStatus) throws CxClientException {

@@ -80,7 +80,7 @@ public abstract class ClientUtils {
         if (response.getStatusLine().getStatusCode() != status) {
             String responseBody = extractResponseBody(response);
             responseBody = responseBody.replace("{", "").replace("}", "").replace(System.getProperty("line.separator"), " ").replace("  ", "");
-            throw new CxClientException(message + ": " + "status code: " + response.getStatusLine() + ". error:" + responseBody);
+            throw new CxClientException(message + ". " + "status code: " + response.getStatusLine() + ". error:" + responseBody);
         }
     }
 

@@ -3,17 +3,17 @@ package com.cx.restclient.sast.dto;
 /**
  * Created by Galn on 14/02/2018.
  */
-public class Query {
-    private long id;
+public class Preset {
+    private int id;
     private String name;
     private String ownerName;
     private Link link;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
