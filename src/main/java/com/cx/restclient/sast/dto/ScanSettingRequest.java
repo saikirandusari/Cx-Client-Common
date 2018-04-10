@@ -6,7 +6,7 @@ package com.cx.restclient.sast.dto;
 public class ScanSettingRequest {
     private int projectId;//TODO int??
     private int presetId;//TODO int??
-    private int engineConfigurationId;
+    private int engineConfigurationId;//TODO int??
     private Integer postScanActionId;
     private EmailNotifications emailNotifications;
 

@@ -3,8 +3,7 @@ package com.cx.restclient.osa.utils;
 /**
  * Created by Galn on 06/02/2018.
  */
-public class CxOSAParam {
-
+public class OSAParam {
     public static final String OSA_SCAN_PROJECT = "osa/inventory";
     public static final String OSA_SCAN_STATUS = "osa/scans/{scanId}";
     public static final String OSA_SCAN_SUMMARY = "osa/reports";

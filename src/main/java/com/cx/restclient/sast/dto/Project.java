@@ -3,7 +3,7 @@ package com.cx.restclient.sast.dto;
 /**
  * Created by Galn on 13/02/2018.
  */
-public class Project { //TODO
+public class Project {
     private int id;
     private String name;
     private String teamId;

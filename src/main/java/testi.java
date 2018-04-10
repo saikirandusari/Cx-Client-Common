@@ -1,16 +1,12 @@
+
 import com.cx.restclient.CxShragaClient;
 import com.cx.restclient.configuration.CxScanConfig;
-import com.cx.restclient.httpClient.exception.CxClientException;
-import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
-import com.cx.restclient.osa.CxOSAClient;
+import com.cx.restclient.dto.ThresholdResult;
 import com.cx.restclient.osa.dto.OSAResults;
-import com.cx.restclient.osa.exception.CxOSAException;
-import com.cx.restclient.sast.CxSASTClient;
 import com.cx.restclient.sast.dto.*;
-import com.cx.restclient.sast.exception.CxSASTException;
 
 import org.slf4j.Logger;
-import org.slf4j.Marker;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -23,7 +19,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 
-import static com.cx.restclient.httpClient.utils.ClientUtils.convertToJson;
+
 
 
 /**
@@ -45,282 +41,35 @@ public class testi {
     private static String DEFAULT_OSA_ARCHIVE_INCLUDE_PATTERNS = "*.zip, *.tgz, *.war, *.ear";
 
 
-    public static void main(String[] args) throws IOException, CxClientException, CxSASTException, InterruptedException, CxOSAException, ParserConfigurationException, SAXException, CxTokenExpiredException {
+    public static void main(String[] args) throws Exception {
         SASTResults sastResults = null;
         OSAResults osaResults = null;
+        Logger logi = LoggerFactory.getLogger("testush");
 
-        Logger logi = new Logger() {
-            public String getName() {
-                return "Bamboo";
-            }
-
-            public boolean isTraceEnabled() {
-                return false;
-            }
-
-            public void trace(String s) {
-
-            }
-
-            public void trace(String s, Object o) {
-
-            }
-
-            public void trace(String s, Object o, Object o1) {
-
-            }
-
-            public void trace(String s, Object... objects) {
-
-            }
-
-            public void trace(String s, Throwable throwable) {
-
-            }
-
-            public boolean isTraceEnabled(Marker marker) {
-                return false;
-            }
-
-            public void trace(Marker marker, String s) {
-
-            }
-
-            public void trace(Marker marker, String s, Object o) {
-
-            }
-
-            public void trace(Marker marker, String s, Object o, Object o1) {
-
-            }
-
-            public void trace(Marker marker, String s, Object... objects) {
-
-            }
-
-            public void trace(Marker marker, String s, Throwable throwable) {
-
-            }
-
-            public boolean isDebugEnabled() {
-                return false;
-            }
-
-            public void debug(String s) {
-
-            }
-
-            public void debug(String s, Object o) {
-
-            }
-
-            public void debug(String s, Object o, Object o1) {
-
-            }
-
-            public void debug(String s, Object... objects) {
-
-            }
-
-            public void debug(String s, Throwable throwable) {
-
-            }
-
-            public boolean isDebugEnabled(Marker marker) {
-                return false;
-            }
-
-            public void debug(Marker marker, String s) {
-
-            }
-
-            public void debug(Marker marker, String s, Object o) {
-
-            }
-
-            public void debug(Marker marker, String s, Object o, Object o1) {
-
-            }
-
-            public void debug(Marker marker, String s, Object... objects) {
-
-            }
-
-            public void debug(Marker marker, String s, Throwable throwable) {
-
-            }
-
-            public boolean isInfoEnabled() {
-                return false;
-            }
-
-            public void info(String s) {
-
-            }
-
-            public void info(String s, Object o) {
-
-            }
-
-            public void info(String s, Object o, Object o1) {
-
-            }
-
-            public void info(String s, Object... objects) {
-
-            }
-
-            public void info(String s, Throwable throwable) {
-
-            }
-
-            public boolean isInfoEnabled(Marker marker) {
-                return false;
-            }
-
-            public void info(Marker marker, String s) {
-
-            }
-
-            public void info(Marker marker, String s, Object o) {
-
-            }
-
-            public void info(Marker marker, String s, Object o, Object o1) {
-
-            }
-
-            public void info(Marker marker, String s, Object... objects) {
-
-            }
-
-            public void info(Marker marker, String s, Throwable throwable) {
-
-            }
-
-            public boolean isWarnEnabled() {
-                return false;
-            }
-
-            public void warn(String s) {
-
-            }
-
-            public void warn(String s, Object o) {
-
-            }
-
-            public void warn(String s, Object... objects) {
-
-            }
-
-            public void warn(String s, Object o, Object o1) {
-
-            }
-
-            public void warn(String s, Throwable throwable) {
-
-            }
-
-            public boolean isWarnEnabled(Marker marker) {
-                return false;
-            }
-
-            public void warn(Marker marker, String s) {
-
-            }
-
-            public void warn(Marker marker, String s, Object o) {
-
-            }
-
-            public void warn(Marker marker, String s, Object o, Object o1) {
-
-            }
-
-            public void warn(Marker marker, String s, Object... objects) {
-
-            }
-
-            public void warn(Marker marker, String s, Throwable throwable) {
-
-            }
-
-            public boolean isErrorEnabled() {
-                return false;
-            }
-
-            public void error(String s) {
-
-            }
-
-            public void error(String s, Object o) {
-
-            }
-
-            public void error(String s, Object o, Object o1) {
-
-            }
-
-            public void error(String s, Object... objects) {
-
-            }
-
-            public void error(String s, Throwable throwable) {
-
-            }
-
-            public boolean isErrorEnabled(Marker marker) {
-                return false;
-            }
-
-            public void error(Marker marker, String s) {
-
-            }
-
-            public void error(Marker marker, String s, Object o) {
-
-            }
-
-            public void error(Marker marker, String s, Object o, Object o1) {
-
-            }
-
-            public void error(Marker marker, String s, Object... objects) {
-
-            }
-
-            public void error(Marker marker, String s, Throwable throwable) {
-
-            }
-        };
         CxScanConfig config = setConfigi();
 
-        CxShragaClient client = new CxShragaClient(config, logi);
-        //   CxZipUtils.zipWorkspaceFolder()
-        client.init();
-        //jenkins client.updateSASTZipFile();
+        CxShragaClient shraga = new CxShragaClient(config, logi);
+        shraga.init();
 
-
-        //  List<Team> teamList = client.getTeamList();
+        // List<Team> teamList = client.getTeamList();
         //List<Query> presetList = client.getPresetList();
         //List<CxNameObj> configList = client.GetConfigurationSetList();
 
-        CxSASTClient sastClient = client.newSASTClient();
-        CxOSAClient osaClient = client.newOSAClient();
+        shraga.createSASTScan();
+        // shraga.cancelSASTScan(sastScanId);
+        shraga.createOSAScan();
 
-        long sastScanId = sastClient.createSASTScan();
-         // sastClient.cancelSASTScan(sastScanId);
 
         //jenkins OSAUtils.generateOSAScanConfiguration(sasasa)
-        //jenkins client.updateOSAJsonDependencies("fsafsfsfsf");
-        String osaScanId = osaClient.createOSAScan();
+        //TODjenkins client.updateOSAJsonDependencies("fsafsfsfsf");
 
-        sastResults = sastClient.getSASTResults(sastScanId);
-        osaResults = osaClient.getOSAResults(osaScanId);
 
-        client.generateHTMLSummary(sastResults, osaResults);
-        client.close();
+        sastResults = shraga.getSASTResults();
+        osaResults = shraga.getOSAResults();
+
+        ThresholdResult thresholdResult = shraga.getThresholdResult();
+        //  shraga.generateHTMLSummary(sastResults, osaResults);
+        shraga.close();
 
     }
 
@@ -329,7 +78,8 @@ public class testi {
         CxScanConfig config = new CxScanConfig();
         config.setSastEnabled(true);
         config.setCxOrigin("Bamboo");
-        config.setSourceDir("C:\\Users\\galn\\Desktop\\restiDir\\srcDir");
+        // config.setSourceDir("C:\\Users\\galn\\Desktop\\restiDir\\srcDir");
+        config.setSourceDir("C:\\Users\\galn\\Desktop\\restiDir\\srcDir\\SAST\\Folder1\\Folder2\\Folder3");
         config.setReportsDir("C:\\Users\\galm\\Desktop\\restiDir\\reportsDir");
         config.setUsername("admin@cx");
         config.setPassword("Cx123456!");
@@ -337,14 +87,14 @@ public class testi {
         config.setUrl("http://10.31.0.152");
         //config.setUrl("http://galn-laptop");
         config.setProjectName("SanityTesmt842");
-        config.setPresetName("Default");//TODO why name and id?
-       // config.setPresetId(7);
-        config.setTeamPath("CxServer");//TODO why name and id?
-      //  config.setTeamId("00000000-1111-1111-b111-989c9070eb11");
+        config.setPresetName("Default");
+        // config.setPresetId(7);
+        config.setTeamPath("CxServer");
+        //  config.setTeamId("00000000-1111-1111-b111-989c9070eb11");
         config.setSastFolderExclusions("");
         config.setSastFilterPattern(DEFAULT_FILTER_PATTERNS);
         config.setSastScanTimeoutInMinutes(null);//todo check
-        config.setScanComment("This is First test of the Common client");
+        config.setScanComment("This is First test of the Common client :) !!!!!!");
         config.setIncremental(false);
         config.setSynchronous(true);
         config.setSastThresholdsEnabled(false);
@@ -362,7 +112,6 @@ public class testi {
         //config.setOsaLowThreshold();
         config.setDenyProject(false);
         config.setPublic(true);
-        config.setForceScan(true);
         //config.setZipFile();
         config.setEngineConfigurationId(null);//TODO what should be the value?
         //config.setOsaDependenciesJson();
@@ -372,8 +121,6 @@ public class testi {
 
 
     public static String generateHtml(SASTResults sastResults, OSAResults osaResults) throws ParserConfigurationException, IOException, SAXException {
-
-
         //-------------------------- sast vars --------------------------------------
         DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         InputSource is = new InputSource();

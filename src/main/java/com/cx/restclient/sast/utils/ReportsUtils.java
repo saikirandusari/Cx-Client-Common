@@ -35,7 +35,7 @@ public abstract class ReportsUtils {
             FileUtils.writeByteArrayToFile(new File(workspace + CX_REPORT_LOCATION, pdfFileName), scanReport);
             log.info("PDF report location: " + workspace + CX_REPORT_LOCATION + File.separator + pdfFileName);
         } catch (Exception e) {
-            log.error("Failed to write PDF report to workspace", e.getMessage());
+            log.error("Failed to write PDF report to workspace: ", e.getMessage());
         }
     }
 

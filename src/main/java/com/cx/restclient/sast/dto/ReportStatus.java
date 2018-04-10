@@ -7,7 +7,7 @@ import com.cx.restclient.dto.BaseStatus;
  */
 public class ReportStatus extends BaseStatus {
     private Link link;
-    private  String contentType;
+    private String contentType;
     private CxValueObj status;
 
     public Link getLink() {

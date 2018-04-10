@@ -1,4 +1,4 @@
-package com.cx.restclient.osa.exception;
+package com.cx.restclient.exception;
 
 /**
  * Created by Galn on 19/03/2018.

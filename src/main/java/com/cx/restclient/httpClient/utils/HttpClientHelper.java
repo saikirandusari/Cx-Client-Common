@@ -1,7 +1,8 @@
 package com.cx.restclient.httpClient.utils;
 
-import com.cx.restclient.httpClient.exception.CxClientException;
-import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
+
+import com.cx.restclient.exception.CxClientException;
+import com.cx.restclient.exception.CxTokenExpiredException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -15,27 +16,25 @@ import java.util.List;
 /**
  * Created by Galn on 06/02/2018.
  */
-public abstract class ClientUtils {
+public abstract class HttpClientHelper {
     public static <T> T convertToObject(HttpResponse response, Class<T> responseType, boolean isCollection) throws IOException, CxClientException {
-        //TODO errorHandling
-        //  if (responseType != null) {
+        //No content
         if (response.getEntity() == null || response.getEntity().getContentLength() == 0 || responseType == null) {
             return null;
         }
-        if (responseType.equals(byte[].class)) { //convert to byte[]
+        ///convert to byte[]
+        if (responseType.equals(byte[].class)) {
             return (T) IOUtils.toByteArray(response.getEntity().getContent());
         }
-        if (isCollection) { //convert to List<T>
+        //convert to List<T>
+        if (isCollection) {
             return convertToCollectionObject(response, TypeFactory.defaultInstance().constructCollectionType(List.class, responseType));
         }
-
-        return convertToStrObject(response, responseType); //convert to T
-        // }
-        // return (T)""; //In cases where is no content in the response TODO
+        //convert to T
+        return convertToStrObject(response, responseType);
     }
 
-
-    public static <T> T convertToStrObject(HttpResponse response, Class<T> valueType) throws CxClientException {
+    private static <T> T convertToStrObject(HttpResponse response, Class<T> valueType) throws CxClientException {
         ObjectMapper mapper = new ObjectMapper();
         String json = "";
         try {
@@ -62,8 +61,7 @@ public abstract class ClientUtils {
         }
     }
 
-
-    public static <T> T convertToCollectionObject(HttpResponse response, JavaType javaType) throws CxClientException {
+    private static <T> T convertToCollectionObject(HttpResponse response, JavaType javaType) throws CxClientException {
         String json = "";
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -74,7 +72,6 @@ public abstract class ClientUtils {
             throw new CxClientException("Failed to parse json response: " + e.getMessage());
         }
     }
-
 
     public static void validateResponse(HttpResponse response, int status, String message) throws CxClientException, IOException, CxTokenExpiredException {
         if (response.getStatusLine().getStatusCode() != status) {

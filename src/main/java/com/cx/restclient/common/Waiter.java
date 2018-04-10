@@ -2,8 +2,8 @@ package com.cx.restclient.common;
 
 import com.cx.restclient.dto.BaseStatus;
 import com.cx.restclient.dto.Status;
-import com.cx.restclient.httpClient.exception.CxClientException;
-import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
+import com.cx.restclient.exception.CxClientException;
+import com.cx.restclient.exception.CxTokenExpiredException;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -16,42 +16,42 @@ public abstract class Waiter<T> {
 
     private int retry = 5;
     private String scanType;
-    private int sleepInterval;
+    private int sleepIntervalSec;
 
     public Waiter(String scanType, int interval) {
         this.scanType = scanType;
-        this.sleepInterval = interval;
+        this.sleepIntervalSec = interval;
     }
 
-    private long startTime;
+    private long startTimeSec; //In miliSeconds!!!!!!!!!!! Or minutes!!! or not!!
+
     protected Status status = null;
 
-    public T waitForTaskToFinish(String taskId, long scanTimeoutInMin, Logger log) throws CxClientException, InterruptedException {
-        startTime = System.currentTimeMillis();
-        long elapsedTime = 0L;
-        long timeout = scanTimeoutInMin * 60000;
+    public T waitForTaskToFinish(String taskId, Integer scanTimeoutSec, Logger log) throws CxClientException, InterruptedException {
+        startTimeSec = System.currentTimeMillis() / 1000;
+        long elapsedTimeSec = 0L;
         status = Status.IN_PROGRESS;
         T obj = null;
 
-        while (status.equals(Status.IN_PROGRESS) && (scanTimeoutInMin <= 0 || elapsedTime < timeout)) {
-            Thread.sleep(sleepInterval);
+        while (status.equals(Status.IN_PROGRESS) && (scanTimeoutSec <= 0 || elapsedTimeSec < scanTimeoutSec)) {
+            Thread.sleep(sleepIntervalSec * 1000);
             try {
                 obj = getStatus(taskId);
                 status = ((BaseStatus) obj).getBaseStatus();
             } catch (Exception e) {
                 log.debug("Failed to get status from " + scanType + ". retrying (" + (retry - 1) + " tries left). Error message: " + e.getMessage());
                 if (retry < 0) { //TODO <= maybe
-                    throw new CxClientException("Failed to get status from SAST scan. Error message: " + e.getMessage());
+                    throw new CxClientException("Failed to get status from " + scanType + ". Error message: " + e.getMessage());
                 }
                 retry--;
             }
-            elapsedTime = (new Date()).getTime() - startTime;
+            elapsedTimeSec = (new Date()).getTime() / 1000 - startTimeSec;
             if (obj != null) { //TODO // FIXME: 21/03/2018
                 printProgress(obj);
             }
         }
-        if(timeout > elapsedTime && !status.equals(Status.SUCCEEDED)){
-            throw new CxClientException("Scan has reached the time limit. (" + scanTimeoutInMin + " minutes).");
+        if (scanTimeoutSec > elapsedTimeSec && !status.equals(Status.SUCCEEDED)) {
+            throw new CxClientException("Scan has reached the time limit. (" + scanTimeoutSec / 60 + " minutes).");
         } //TODO Timeout QA
         return resolveStatus(obj);
 
@@ -71,7 +71,7 @@ public abstract class Waiter<T> {
         this.status = status;
     }
 
-    public long getStartTime() {
-        return startTime;
+    public long getStartTimeSec() {
+        return startTimeSec;
     }
 }

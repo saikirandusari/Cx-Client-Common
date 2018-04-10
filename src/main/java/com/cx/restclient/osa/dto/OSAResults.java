@@ -6,6 +6,7 @@ import java.util.List;
  * Created by Galn on 07/02/2018.
  */
 public class OSAResults {
+    private String osaScanId;
     private OSASummaryResults results;
     private List<Library> osaLibraries;
     private List<CVE> osaVulnerabilities;
@@ -65,11 +66,23 @@ public class OSAResults {
         this.osaProjectSummaryLink = osaProjectSummaryLink;
     }
 
+    public void setOsaProjectSummaryLink(String url, int projectId) {
+        this.osaProjectSummaryLink =  String.format(url + "/CxWebClient/SPA/#/viewer/project/%s", projectId);
+    }
+
     public boolean isOsaResultsReady() {
         return osaResultsReady;
     }
 
     public void setOsaResultsReady(boolean osaResultsReady) {
         this.osaResultsReady = osaResultsReady;
+    }
+
+    public String getOsaScanId() {
+        return osaScanId;
+    }
+
+    public void setOsaScanId(String osaScanId) {
+        this.osaScanId = osaScanId;
     }
 }

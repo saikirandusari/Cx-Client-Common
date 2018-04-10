@@ -9,8 +9,8 @@ import java.util.Map;
  */
 public class CxScanConfig {
 
-    private Boolean sastEnabled;//TODO
-    private Boolean osaEnabled;//TODO
+    private Boolean sastEnabled;
+    private Boolean osaEnabled;
 
     private String cxOrigin;
     private String sourceDir;
@@ -22,7 +22,7 @@ public class CxScanConfig {
     private String teamPath;
     private String teamId;
     private Boolean denyProject = false;
-    private Boolean isPublic = true;//TODO what are the default values
+    private Boolean isPublic = true;
     private Boolean forceScan = false;
     private String presetName;
     private Integer presetId;
@@ -195,7 +195,7 @@ public class CxScanConfig {
     }
 
     public Integer getSastScanTimeoutInMinutes() {
-        return sastScanTimeoutInMinutes;
+        return sastScanTimeoutInMinutes == null ? -1 : sastScanTimeoutInMinutes;
     }
 
     public void setSastScanTimeoutInMinutes(Integer sastScanTimeoutInMinutes) {
@@ -351,12 +351,14 @@ public class CxScanConfig {
     }
 
     public boolean isSASTThresholdEffectivelyEnabled() {
-        return getSastEnabled() && getSastThresholdsEnabled()&& (getSastHighThreshold() != null || getSastMediumThreshold() != null || getSastLowThreshold() != null);
+        return getSastEnabled() && getSastThresholdsEnabled() && (getSastHighThreshold() != null || getSastMediumThreshold() != null || getSastLowThreshold() != null);
     }
 
     public boolean isOSAThresholdEffectivelyEnabled() {
         return getOsaEnabled() && getOsaThresholdsEnabled() && (getOsaHighThreshold() != null || getOsaMediumThreshold() != null || getOsaLowThreshold() != null);
-    }    public void setOsaDependenciesJson(String osaDependenciesJson) {
+    }
+
+    public void setOsaDependenciesJson(String osaDependenciesJson) {
         this.osaDependenciesJson = osaDependenciesJson;
     }
 
