@@ -1,4 +1,4 @@
-package com.cx.restclient.sast.exception;
+package com.cx.restclient.exception;
 
 /**
  * Created by Galn on 05/02/2018.

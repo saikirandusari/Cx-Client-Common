@@ -3,7 +3,7 @@ package com.cx.restclient.common;
 /**
  * Created by Galn on 14/02/2018.
  */
-public class CxPARAM {
+public abstract class CxPARAM {
     public static final String AUTHENTICATION = "auth/identity/connect/token";
     public static final String ORIGIN_HEADER = "cxOrigin";
     public static final String CXPRESETS = "sast/presets";

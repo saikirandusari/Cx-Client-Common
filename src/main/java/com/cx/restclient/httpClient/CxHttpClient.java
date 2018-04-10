@@ -1,13 +1,14 @@
 package com.cx.restclient.httpClient;
 
 import com.cx.restclient.dto.TokenLoginResponse;
-import com.cx.restclient.httpClient.exception.CxClientException;
-import com.cx.restclient.httpClient.exception.CxTokenExpiredException;
+import com.cx.restclient.exception.CxClientException;
+import com.cx.restclient.exception.CxTokenExpiredException;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
@@ -16,13 +17,17 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.cx.restclient.common.CxPARAM.AUTHENTICATION;
 import static com.cx.restclient.common.CxPARAM.ORIGIN_HEADER;
-import static com.cx.restclient.httpClient.utils.ClientUtils.*;
-import static com.cx.restclient.httpClient.utils.PARAM.CONTENT_TYPE_APPLICATION_JSON;
+import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON;
+import static com.cx.restclient.httpClient.utils.HttpClientHelper.*;
 
 /**
  * Created by Galn on 05/02/2018.
@@ -32,10 +37,11 @@ public class CxHttpClient {
     private Logger log;
     private HttpClient apacheClient;
     private TokenLoginResponse token;
-    private String rootPath = "{hostName}/CxRestAPI/";
+    private String basePathParam = "CxRestAPI";
+    private String rootPath;
     private final String username;
     private final String password;
-    private String cxOrigin; //TODO good as defualt??
+    private String cxOrigin;
 
 
     private final HttpRequestInterceptor requestFilter = new HttpRequestInterceptor() {
@@ -49,10 +55,10 @@ public class CxHttpClient {
     };
 
 
-    public CxHttpClient(String hostname, String username, String password, String origin) {
+    public CxHttpClient(URL hostname, String username, String password, String origin) throws URISyntaxException, MalformedURLException {
         this.username = username;
         this.password = password;
-        this.rootPath = rootPath.replace("{hostName}", hostname);
+        this.rootPath = new URL(hostname, basePathParam).toString();
         this.cxOrigin = origin;
         //create httpclient
         apacheClient = HttpClientBuilder.create().addInterceptorFirst(requestFilter).build();
@@ -71,7 +77,6 @@ public class CxHttpClient {
     private UrlEncodedFormEntity generateUrlEncodedFormEntity() throws UnsupportedEncodingException {
         List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
         parameters.add(new BasicNameValuePair("username", username));
-        //TODO parameters.add(new BasicNameValuePair("password", Base64.encodeToString(md.digest(password.getBytes()), Base64.DEFAULT).trim()));
         parameters.add(new BasicNameValuePair("password", password));
         parameters.add(new BasicNameValuePair("grant_type", "password"));
         parameters.add(new BasicNameValuePair("scope", "sast_rest_api"));
@@ -82,7 +87,6 @@ public class CxHttpClient {
     }
 
     //GET REQUEST
-
     public <T> T getRequest(String relPath, String contentType, Class<T> responseType, Integer expectStatus, String failedMsg, boolean isCollection) throws IOException, CxClientException, CxTokenExpiredException {
         HttpGet get = new HttpGet(rootPath + relPath);
         return request(get, contentType, null, responseType, expectStatus, "get " + failedMsg, isCollection, true);
@@ -102,11 +106,9 @@ public class CxHttpClient {
 
 
     private <T> T request(HttpRequestBase httpMethod, String contentType, HttpEntity entity, Class<T> responseType, Integer expectStatus, String failedMsg, boolean isCollection, boolean retry) throws IOException, CxClientException, CxTokenExpiredException {
-
         if (contentType != null) {
             httpMethod.addHeader("Content-type", contentType);
         }
-
         if (entity != null && httpMethod instanceof HttpEntityEnclosingRequestBase) {
             ((HttpEntityEnclosingRequestBase) httpMethod).setEntity(entity);
         }
@@ -116,9 +118,6 @@ public class CxHttpClient {
             response = apacheClient.execute(httpMethod);
             if (response.getStatusLine().getStatusCode() == 401) { //Token expired
                 throw new CxTokenExpiredException(extractResponseBody(response));
-            }
-            if (response.getStatusLine().getStatusCode() == 404){
-                return null;
             }
 
             if (expectStatus != null) {
@@ -138,7 +137,6 @@ public class CxHttpClient {
             HttpClientUtils.closeQuietly(response);
         }
     }
-
 
     public void close() {
         HttpClientUtils.closeQuietly(apacheClient);
