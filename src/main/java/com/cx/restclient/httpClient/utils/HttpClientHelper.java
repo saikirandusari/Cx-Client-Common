@@ -19,7 +19,7 @@ import java.util.List;
 public abstract class HttpClientHelper {
     public static <T> T convertToObject(HttpResponse response, Class<T> responseType, boolean isCollection) throws IOException, CxClientException {
         //No content
-        if (response.getEntity() == null || response.getEntity().getContentLength() == 0 || responseType == null) {
+        if (responseType == null || response.getEntity() == null || response.getEntity().getContentLength() == 0) {
             return null;
         }
         ///convert to byte[]

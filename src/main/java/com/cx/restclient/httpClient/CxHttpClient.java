@@ -8,7 +8,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.HttpClientUtils;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
@@ -18,7 +17,6 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,11 +32,10 @@ import static com.cx.restclient.httpClient.utils.HttpClientHelper.*;
  */
 public class CxHttpClient {
 
-    private Logger log;
+    private Logger logi;
     private HttpClient apacheClient;
     private TokenLoginResponse token;
-    private String basePathParam = "CxRestAPI";
-    private String rootPath;
+    private String rootUri;
     private final String username;
     private final String password;
     private String cxOrigin;
@@ -54,23 +51,19 @@ public class CxHttpClient {
         }
     };
 
-
-    public CxHttpClient(URL hostname, String username, String password, String origin) throws URISyntaxException, MalformedURLException {
+    public CxHttpClient(String hostname, String username, String password, String origin, Logger logi) throws URISyntaxException, MalformedURLException {
+        this.logi = logi;
         this.username = username;
         this.password = password;
-        this.rootPath = new URL(hostname, basePathParam).toString();
+        this.rootUri = new URL(new URL(hostname), "CxRestAPI").toString(); //TODO qa pass with special charrrr
         this.cxOrigin = origin;
         //create httpclient
         apacheClient = HttpClientBuilder.create().addInterceptorFirst(requestFilter).build();
     }
 
-    public void setLogger(Logger log) {
-        this.log = log;
-    }
-
     public void login() throws CxClientException, IOException, CxTokenExpiredException {
         UrlEncodedFormEntity requestEntity = generateUrlEncodedFormEntity();
-        HttpPost post = new HttpPost(rootPath + AUTHENTICATION);
+        HttpPost post = new HttpPost(rootUri + AUTHENTICATION);
         token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, 200, "authenticate", false, false);
     }
 
@@ -87,49 +80,48 @@ public class CxHttpClient {
     }
 
     //GET REQUEST
-    public <T> T getRequest(String relPath, String contentType, Class<T> responseType, Integer expectStatus, String failedMsg, boolean isCollection) throws IOException, CxClientException, CxTokenExpiredException {
-        HttpGet get = new HttpGet(rootPath + relPath);
+    public <T> T getRequest(String relPath, String contentType, Class<T> responseType, int expectStatus, String failedMsg, boolean isCollection) throws IOException, CxClientException, CxTokenExpiredException {
+        HttpGet get = new HttpGet(rootUri + relPath);
         return request(get, contentType, null, responseType, expectStatus, "get " + failedMsg, isCollection, true);
     }
 
     //POST REQUEST
     public <T> T postRequest(String relPath, String contentType, HttpEntity entity, Class<T> responseType, int expectStatus, String failedMsg) throws CxClientException, IOException, CxTokenExpiredException {
-        HttpPost post = new HttpPost(rootPath + relPath);
+        HttpPost post = new HttpPost(rootUri + relPath);
         return request(post, contentType, entity, responseType, expectStatus, failedMsg, false, true);
     }
 
     //PATCH REQUEST
     public void patchRequest(String relPath, String contentType, HttpEntity entity, int expectStatus, String failedMsg) throws CxClientException, IOException, CxTokenExpiredException {
-        HttpPatch patch = new HttpPatch(rootPath + relPath);
+        HttpPatch patch = new HttpPatch(rootUri + relPath);
         request(patch, contentType, entity, null, expectStatus, failedMsg, false, true);
     }
 
 
-    private <T> T request(HttpRequestBase httpMethod, String contentType, HttpEntity entity, Class<T> responseType, Integer expectStatus, String failedMsg, boolean isCollection, boolean retry) throws IOException, CxClientException, CxTokenExpiredException {
+    private <T> T request(HttpRequestBase httpMethod, String contentType, HttpEntity entity, Class<T> responseType, int expectStatus, String failedMsg, boolean isCollection, boolean retry) throws IOException, CxClientException, CxTokenExpiredException {
         if (contentType != null) {
             httpMethod.addHeader("Content-type", contentType);
         }
-        if (entity != null && httpMethod instanceof HttpEntityEnclosingRequestBase) {
+        if (entity != null && httpMethod instanceof HttpEntityEnclosingRequestBase) { //Entity for Post methods
             ((HttpEntityEnclosingRequestBase) httpMethod).setEntity(entity);
         }
         HttpResponse response = null;
 
         try {
             response = apacheClient.execute(httpMethod);
+
             if (response.getStatusLine().getStatusCode() == 401) { //Token expired
                 throw new CxTokenExpiredException(extractResponseBody(response));
             }
+            validateResponse(response, expectStatus, "Failed to " + failedMsg);
 
-            if (expectStatus != null) {
-                validateResponse(response, expectStatus, "Failed to " + failedMsg);
-            }
             //extract response as object and return the link
             return convertToObject(response, responseType, isCollection);
         } catch (CxTokenExpiredException ex) {
             if (retry) {
-                // log.warn("token expired");//TODO
+                logi.warn("token expired");//TODO
                 login();
-                request(httpMethod, contentType, entity, responseType, expectStatus, failedMsg, isCollection, false);
+                return request(httpMethod, contentType, entity, responseType, expectStatus, failedMsg, isCollection, false);
             }
             throw ex;
         } finally {

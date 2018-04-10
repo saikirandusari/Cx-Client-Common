@@ -278,7 +278,7 @@ class CxSASTClient/** implements ICxSASTClient**/
 
     //Report Waiter - overload methods
     private ReportStatus getReportStatus(String reportId) throws CxClientException, IOException, CxTokenExpiredException {
-        ReportStatus reportStatus = httpClient.getRequest(SAST_GET_REPORT_STATUS.replace("{reportId}", reportId), CONTENT_TYPE_APPLICATION_JSON_V1, ReportStatus.class, null, " report status", false);
+        ReportStatus reportStatus = httpClient.getRequest(SAST_GET_REPORT_STATUS.replace("{reportId}", reportId), CONTENT_TYPE_APPLICATION_JSON_V1, ReportStatus.class, 200, " report status", false);
 
         String currentStatus = reportStatus.getStatus().getValue();
         if (currentStatus.equals(ReportStatusEnum.INPROCESS.value())) {

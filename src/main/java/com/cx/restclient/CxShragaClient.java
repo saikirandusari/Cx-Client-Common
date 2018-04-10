@@ -44,7 +44,7 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
     public CxShragaClient(CxScanConfig config, Logger log) throws URISyntaxException, MalformedURLException {
         this.config = config;
         this.log = log;
-        this.httpClient = new CxHttpClient(new URL(config.getUrl()), config.getUsername(), config.getPassword(), config.getCxOrigin());
+        this.httpClient = new CxHttpClient(config.getUrl(), config.getUsername(), config.getPassword(), config.getCxOrigin());
         sastClient = new CxSASTClient(httpClient, log, config);
         osaClient = new CxOSAClient(httpClient, log, config);
     }
