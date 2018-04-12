@@ -19,7 +19,7 @@ public class OSAScanStatus extends BaseStatus {
     private String origin;
     private OSAScanState state;
     private List<String> sharedSourceLocationPaths;
-private Status status;
+    private Status status;
 
     @Override
     public String getBaseId() {

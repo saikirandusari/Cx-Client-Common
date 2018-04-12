@@ -14,7 +14,7 @@ public class CxScanConfig {
 
     private String cxOrigin;
     private String sourceDir;
-    private String reportsDir;
+    private File reportsDir;
     private String username;
     private String password;
     private String url;
@@ -82,11 +82,11 @@ public class CxScanConfig {
         this.sourceDir = sourceDir;
     }
 
-    public String getReportsDir() {
+    public File getReportsDir() {
         return reportsDir;
     }
 
-    public void setReportsDir(String reportsDir) {
+    public void setReportsDir(File reportsDir) {
         this.reportsDir = reportsDir;
     }
 

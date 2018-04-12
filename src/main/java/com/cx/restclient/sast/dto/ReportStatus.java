@@ -1,22 +1,15 @@
 package com.cx.restclient.sast.dto;
 
 import com.cx.restclient.dto.BaseStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Created by Galn on 07/03/2018.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportStatus extends BaseStatus {
-    private Link link;
     private String contentType;
     private CxValueObj status;
-
-    public Link getLink() {
-        return link;
-    }
-
-    public void setLink(Link link) {
-        this.link = link;
-    }
 
     public String getContentType() {
         return contentType;

@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Severity {
-    Integer Id;
-    String name;
+    private Integer Id;
+    private String name;
 
     public String getName() {
         return name;

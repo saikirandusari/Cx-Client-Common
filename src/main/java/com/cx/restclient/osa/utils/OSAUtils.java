@@ -2,15 +2,21 @@ package com.cx.restclient.osa.utils;
 
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.osa.dto.OSASummaryResults;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+
+import static com.cx.restclient.common.CxPARAM.CX_REPORT_LOCATION;
 
 /**
  * Created by Galn on 07/02/2018.
@@ -87,7 +93,6 @@ public abstract class OSAUtils {
         return ret;
     }
 
-
     public static void printOSAResultsToConsole(OSAResults osaResults, Logger log) {
         OSASummaryResults osaSummaryResults = osaResults.getResults();
         log.info("----------------------------Checkmarx Scan Results(CxOSA):-------------------------------");
@@ -112,6 +117,17 @@ public abstract class OSAUtils {
         log.info("-----------------------------------------------------------------------------------------");
     }
 
-
-
+    public static void writeJsonToFile(String name, Object jsonObj, File workDirectory,Logger log) throws IOException {
+      try {
+          ObjectMapper objectMapper = new ObjectMapper();
+          String now = new SimpleDateFormat("dd_MM_yyyy-HH_mm_ss").format(new Date());
+          String fileName = name + "_" + now + ".json";
+          File jsonFile = new File(workDirectory + CX_REPORT_LOCATION, fileName);
+          String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObj);
+          FileUtils.writeStringToFile(jsonFile, json);
+          log.info(name + " json location: " + workDirectory + CX_REPORT_LOCATION + File.separator + fileName);
+      }catch (Exception ex){
+          //TODO
+      }
+    }
 }

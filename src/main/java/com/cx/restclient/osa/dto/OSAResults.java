@@ -26,7 +26,7 @@ public class OSAResults {
         setOsaResultsReady(true);
     }
 
-      public List<Library> getOsaLibraries() {
+    public List<Library> getOsaLibraries() {
         return osaLibraries;
     }
 
@@ -66,8 +66,8 @@ public class OSAResults {
         this.osaProjectSummaryLink = osaProjectSummaryLink;
     }
 
-    public void setOsaProjectSummaryLink(String url, int projectId) {
-        this.osaProjectSummaryLink =  String.format(url + "/CxWebClient/SPA/#/viewer/project/%s", projectId);
+    public void setOsaProjectSummaryLink(String url, long projectId) {
+        this.osaProjectSummaryLink = String.format(url + "/CxWebClient/SPA/#/viewer/project/%s", projectId);
     }
 
     public boolean isOsaResultsReady() {

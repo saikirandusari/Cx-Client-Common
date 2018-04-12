@@ -1,13 +1,14 @@
 package com.cx.restclient.sast.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Galn on 14/02/2018.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Preset {
     private int id;
     private String name;
-    private String ownerName;
-    private Link link;
 
     public int getId() {
         return id;
@@ -23,21 +24,5 @@ public class Preset {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
-    }
-
-    public Link getLink() {
-        return link;
-    }
-
-    public void setLink(Link link) {
-        this.link = link;
     }
 }

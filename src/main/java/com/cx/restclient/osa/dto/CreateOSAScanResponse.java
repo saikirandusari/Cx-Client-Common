@@ -14,7 +14,6 @@ public class CreateOSAScanResponse {
     public String getScanId() {
         return scanId;
     }
-
     public void setScanId(String scanId) {
         this.scanId = scanId;
     }

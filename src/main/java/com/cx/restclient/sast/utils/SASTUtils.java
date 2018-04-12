@@ -2,6 +2,7 @@ package com.cx.restclient.sast.utils;
 
 import com.cx.restclient.sast.dto.CxXMLResults;
 import com.cx.restclient.sast.dto.SASTResults;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
@@ -11,6 +12,11 @@ import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static com.cx.restclient.common.CxPARAM.CX_REPORT_LOCATION;
+import static com.cx.restclient.sast.utils.SASTParam.PDF_REPORT_NAME;
 
 /**
  * Created by Galn on 07/02/2018.
@@ -40,7 +46,7 @@ public abstract class SASTUtils {
         return reportObj;
     }
 
-    public static void printSastResultsToConsole(SASTResults scanResults, Logger logger) {
+    public static void printSASTResultsToConsole(SASTResults scanResults, Logger logger) {
 
         String highNew = scanResults.getSastNewHighCount() > 0 ? " (" + scanResults.getSastNewHighCount() + " new)" : "";
         String mediumNew = scanResults.getSastNewMediumCount() > 0 ? " (" + scanResults.getSastNewMediumCount() + " new)" : "";
@@ -55,5 +61,17 @@ public abstract class SASTUtils {
         logger.info("");
         logger.info("Scan results location: " + scanResults.getSastScanLink());
         logger.info("------------------------------------------------------------------------------------------\n");
+    }
+
+    //PDF Report
+    public static void writePDFReport(byte[] scanReport, File workspace, Logger log)  {
+        try {
+            String now = new SimpleDateFormat("dd_MM_yyyy-HH_mm_ss").format(new Date());
+            String pdfFileName = PDF_REPORT_NAME + "_" + now + ".pdf";
+            FileUtils.writeByteArrayToFile(new File(workspace + CX_REPORT_LOCATION, pdfFileName), scanReport);
+            log.info("PDF report location: " + workspace + CX_REPORT_LOCATION + File.separator + pdfFileName);
+        } catch (Exception e) {
+            log.error("Failed to write PDF report to workspace: ", e.getMessage());
+        }
     }
 }

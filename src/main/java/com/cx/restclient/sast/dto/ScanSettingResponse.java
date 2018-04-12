@@ -1,16 +1,51 @@
 package com.cx.restclient.sast.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by: dorg.
  * Date: 05/03/2018.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ScanSettingResponse {
 
-    private CxLinkObj project;
-    private CxLinkObj preset;
-    private CxLinkObj engineConfiguration;
-    private CxLinkObj postScanAction;
+    private CxID project;
+    private CxID preset;
+    private CxID engineConfiguration;
+    private CxID postScanAction;
     private EmailNotifications emailNotifications;
+
+    public CxID getProject() {
+        return project;
+    }
+
+    public void setProject(CxID project) {
+        this.project = project;
+    }
+
+    public CxID getPreset() {
+        return preset;
+    }
+
+    public void setPreset(CxID preset) {
+        this.preset = preset;
+    }
+
+    public CxID getEngineConfiguration() {
+        return engineConfiguration;
+    }
+
+    public void setEngineConfiguration(CxID engineConfiguration) {
+        this.engineConfiguration = engineConfiguration;
+    }
+
+    public CxID getPostScanAction() {
+        return postScanAction;
+    }
+
+    public void setPostScanAction(CxID postScanAction) {
+        this.postScanAction = postScanAction;
+    }
 
     public EmailNotifications getEmailNotifications() {
         return emailNotifications;
@@ -18,37 +53,5 @@ public class ScanSettingResponse {
 
     public void setEmailNotifications(EmailNotifications emailNotifications) {
         this.emailNotifications = emailNotifications;
-    }
-
-    public CxLinkObj getPostScanAction() {
-        return postScanAction;
-    }
-
-    public void setPostScanAction(CxLinkObj postScanAction) {
-        this.postScanAction = postScanAction;
-    }
-
-    public CxLinkObj getEngineConfiguration() {
-        return engineConfiguration;
-    }
-
-    public void setEngineConfiguration(CxLinkObj engineConfiguration) {
-        this.engineConfiguration = engineConfiguration;
-    }
-
-    public CxLinkObj getPreset() {
-        return preset;
-    }
-
-    public void setPreset(CxLinkObj preset) {
-        this.preset = preset;
-    }
-
-    public CxLinkObj getProject() {
-        return project;
-    }
-
-    public void setProject(CxLinkObj project) {
-        this.project = project;
     }
 }

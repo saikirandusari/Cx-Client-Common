@@ -55,7 +55,7 @@ public class CxHttpClient {
         this.logi = logi;
         this.username = username;
         this.password = password;
-        this.rootUri = new URL(new URL(hostname), "CxRestAPI").toString(); //TODO qa pass with special charrrr
+        this.rootUri = new URL(new URL(hostname), "CxRestAPI/").toString(); //TODO qa pass with special charrrr
         this.cxOrigin = origin;
         //create httpclient
         apacheClient = HttpClientBuilder.create().addInterceptorFirst(requestFilter).build();

@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OSAScanState {
 
-    int id;
-    String name;
-    String failureReason;
+    private int id;
+    private String name;
+    private String failureReason;
 
     public int getId() {
         return id;

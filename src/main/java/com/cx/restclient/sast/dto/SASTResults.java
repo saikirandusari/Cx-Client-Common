@@ -1,5 +1,7 @@
 package com.cx.restclient.sast.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 import static com.cx.restclient.sast.utils.SASTParam.PROJECT_LINK_FORMAT;

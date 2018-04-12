@@ -1,8 +1,11 @@
 package com.cx.restclient.sast.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Galn on 05/02/2018.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateScanRequest {
     private long projectId;//TODO int??
     private boolean isIncremental;

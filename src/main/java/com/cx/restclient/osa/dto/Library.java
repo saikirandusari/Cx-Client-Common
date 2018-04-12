@@ -8,16 +8,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Library {
 
-    String id;//:"36b32b00-9ee6-4e2f-85c9-3f03f26519a9",
-    String  name;//:"lib-name",
-    String version;//:"lib-version",
-    int highVulnerabilityCount;//:1,
-    int mediumVulnerabilityCount;//:1,
-    int lowVulnerabilityCount;//:1,
-    String newestVersion;//:"1.0.0",
-    String newestVersionReleaseDate;//:"2016-12-19T10:16:19.1206743Z",
-    int numberOfVersionsSinceLastUpdate;//":10,
-    int confidenceLevel;//":100
+    private String id;//:"36b32b00-9ee6-4e2f-85c9-3f03f26519a9",
+    private String name;//:"lib-name",
+    private String version;//:"lib-version",
+    private int highVulnerabilityCount;//:1,
+    private int mediumVulnerabilityCount;//:1,
+    private int lowVulnerabilityCount;//:1,
+    private String newestVersion;//:"1.0.0",
+    private String newestVersionReleaseDate;//:"2016-12-19T10:16:19.1206743Z",
+    private int numberOfVersionsSinceLastUpdate;//":10,
+    private int confidenceLevel;//":100
 
 
     public String getId() {

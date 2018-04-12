@@ -1,36 +1,39 @@
 package com.cx.restclient.sast.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Galn on 05/02/2018.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ScanSettingRequest {
-    private int projectId;//TODO int??
-    private int presetId;//TODO int??
-    private int engineConfigurationId;//TODO int??
+    private long projectId;
+    private long presetId;//TODO int??
+    private long engineConfigurationId;//TODO int??
     private Integer postScanActionId;
     private EmailNotifications emailNotifications;
 
-    public int getProjectId() {
+    public long getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(int projectId) {
+    public void setProjectId(long projectId) {
         this.projectId = projectId;
     }
 
-    public int getPresetId() {
+    public long getPresetId() {
         return presetId;
     }
 
-    public void setPresetId(int presetId) {
+    public void setPresetId(long presetId) {
         this.presetId = presetId;
     }
 
-    public int getEngineConfigurationId() {
+    public long getEngineConfigurationId() {
         return engineConfigurationId;
     }
 
-    public void setEngineConfigurationId(int engineConfigurationId) {
+    public void setEngineConfigurationId(long engineConfigurationId) {
         this.engineConfigurationId = engineConfigurationId;
     }
 

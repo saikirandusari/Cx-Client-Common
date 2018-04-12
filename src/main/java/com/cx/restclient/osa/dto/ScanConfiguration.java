@@ -92,7 +92,7 @@ public class ScanConfiguration {
         this.tempDir = tempDir;
     }
 
-     public String getUsername() {
+    public String getUsername() {
         return username;
     }
 
@@ -157,7 +157,7 @@ public class ScanConfiguration {
     }
 
     public Integer getScanTimeoutInMinutes() {
-        if(scanTimeoutInMinutes == null){
+        if (scanTimeoutInMinutes == null) {
             scanTimeoutInMinutes = -1;
         }
         return scanTimeoutInMinutes;

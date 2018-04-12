@@ -1,11 +1,13 @@
 package com.cx.restclient.sast.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Galn on 12/02/2018.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateReportResponse {
     private int reportId;
-    private Links links;
 
     public int getReportId() {
         return reportId;
@@ -15,11 +17,4 @@ public class CreateReportResponse {
         this.reportId = reportId;
     }
 
-    public Links getLinks() {
-        return links;
-    }
-
-    public void setLinks(Links links) {
-        this.links = links;
-    }
 }

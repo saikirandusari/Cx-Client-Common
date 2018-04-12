@@ -1,14 +1,16 @@
 package com.cx.restclient.sast.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Galn on 29/03/2018.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SASTStatisticsResponse {
     private int highSeverity;
     private int mediumSeverity;
     private int lowSeverity;
     private int infoSeverity;
-    private String statisticsCalculationDate;
 
     public int getHighSeverity() {
         return highSeverity;
@@ -40,13 +42,5 @@ public class SASTStatisticsResponse {
 
     public void setInfoSeverity(int infoSeverity) {
         this.infoSeverity = infoSeverity;
-    }
-
-    public String getStatisticsCalculationDate() {
-        return statisticsCalculationDate;
-    }
-
-    public void setStatisticsCalculationDate(String statisticsCalculationDate) {
-        this.statisticsCalculationDate = statisticsCalculationDate;
     }
 }

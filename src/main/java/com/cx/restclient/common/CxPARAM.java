@@ -1,5 +1,7 @@
 package com.cx.restclient.common;
 
+import java.io.File;
+
 /**
  * Created by Galn on 14/02/2018.
  */
@@ -13,4 +15,7 @@ public abstract class CxPARAM {
 
     public static final String OPTION_TRUE = "true";
     public static final String OPTION_FALSE = "false";
+
+    public static final String CX_REPORT_LOCATION = File.separator + "Checkmarx" + File.separator + "Reports";
+
 }

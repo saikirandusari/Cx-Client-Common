@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class State {
 
-    Integer id;
-    String actionType;
-    String name;
+    private Integer id;
+    private String actionType;
+    private String name;
 
     public Integer getId() {
         return id;

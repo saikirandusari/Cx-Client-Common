@@ -14,12 +14,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.StringReader;
-
-
+import java.io.*;
 
 
 /**
@@ -64,7 +59,8 @@ public class testi {
         //TODjenkins client.updateOSAJsonDependencies("fsafsfsfsf");
 
 
-        sastResults = shraga.getSASTResults();
+      //  sastResults = shraga.getSASTResults();
+        sastResults = shraga.getLastSASTResults();
         osaResults = shraga.getOSAResults();
 
         ThresholdResult thresholdResult = shraga.getThresholdResult();
@@ -80,7 +76,7 @@ public class testi {
         config.setCxOrigin("Bamboo");
         // config.setSourceDir("C:\\Users\\galn\\Desktop\\restiDir\\srcDir");
         config.setSourceDir("C:\\Users\\galn\\Desktop\\restiDir\\srcDir\\SAST\\Folder1\\Folder2\\Folder3");
-        config.setReportsDir("C:\\Users\\galm\\Desktop\\restiDir\\reportsDir");
+        config.setReportsDir(new File("C:\\Users\\galm\\Desktop\\restiDir\\reportsDir"));
         config.setUsername("admin@cx");
         config.setPassword("Cx123456!");
         //config.setUrl("http://10.31.3.123");
@@ -89,7 +85,7 @@ public class testi {
         config.setProjectName("SanityTesmt842");
         config.setPresetName("Default");
         // config.setPresetId(7);
-        config.setTeamPath("CxServer");
+        config.setTeamPath("\\CxServer");
         //  config.setTeamId("00000000-1111-1111-b111-989c9070eb11");
         config.setSastFolderExclusions("");
         config.setSastFilterPattern(DEFAULT_FILTER_PATTERNS);

@@ -8,18 +8,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CVE {
 
-    String id;
-    String cveName;
-    double score;
-    Severity severity;
-    String publishDate;//:"2016-11-07T10:16:06.1206743Z",
-    String url;//:"http://cv1",
-    String description;//:null,
-    String recommendations;//:"recommendation 1",
-    String sourceFileName;//:"SourceFileName 1",
-    String libraryId;//:"36b32b00-9ee6-4e2f-85c9-3f03f26519a9"
-    State state;
-    Integer commentsAmount;
+    private String id;
+    private String cveName;
+    private double score;
+    private Severity severity;
+    private String publishDate;//:"2016-11-07T10:16:06.1206743Z",
+    private String url;//:"http://cv1",
+    private String description;//:null,
+    private String recommendations;//:"recommendation 1",
+    private String sourceFileName;//:"SourceFileName 1",
+    private String libraryId;//:"36b32b00-9ee6-4e2f-85c9-3f03f26519a9"
+    private State state;
+    private Integer commentsAmount;
 
     public String getLibraryId() {
         return libraryId;

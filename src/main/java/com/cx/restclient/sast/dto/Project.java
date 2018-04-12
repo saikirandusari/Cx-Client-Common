@@ -1,22 +1,22 @@
 package com.cx.restclient.sast.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Galn on 13/02/2018.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Project {
-    private int id;
+    private long id;
     private String name;
     private String teamId;
     private boolean isPublic;
-    private Link link;
-    private SourceSettingsLink sourceSettingsLink;
 
-
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -42,21 +42,5 @@ public class Project {
 
     public void setIsPublic(boolean isPublic) {
         this.isPublic = isPublic;
-    }
-
-    public Link getLink() {
-        return link;
-    }
-
-    public void setLink(Link link) {
-        this.link = link;
-    }
-
-    public SourceSettingsLink getSourceSettingsLink() {
-        return sourceSettingsLink;
-    }
-
-    public void setSourceSettingsLink(SourceSettingsLink sourceSettingsLink) {
-        this.sourceSettingsLink = sourceSettingsLink;
     }
 }

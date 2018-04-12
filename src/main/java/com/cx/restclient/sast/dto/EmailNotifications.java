@@ -1,11 +1,13 @@
 package com.cx.restclient.sast.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 /**
  * Created by Galn on 05/02/2018.
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EmailNotifications {
     private List<String> failedScan;
     private List<String> beforeScan;

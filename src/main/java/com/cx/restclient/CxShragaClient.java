@@ -17,12 +17,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 
 import static com.cx.restclient.common.CxPARAM.*;
-import static com.cx.restclient.httpClient.utils.HttpClientHelper.convertToJson;
 import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON_V1;
+import static com.cx.restclient.httpClient.utils.HttpClientHelper.convertToJson;
 import static com.cx.restclient.sast.utils.SASTParam.SAST_ENGINE_CONFIG;
 import static com.cx.restclient.sast.utils.SASTParam.SAST_GET_PROJECT;
 
@@ -33,18 +32,18 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
     private CxHttpClient httpClient;
     private Logger log;
     private CxScanConfig config;
-    private Integer projectId;
+    private long projectId;
 
     private CxSASTClient sastClient;
     private CxOSAClient osaClient;
-    private SASTResults sastResults;
-    private OSAResults osaResults;
+    private SASTResults sastResults = new SASTResults();
+    private OSAResults osaResults = new OSAResults();
 
 
     public CxShragaClient(CxScanConfig config, Logger log) throws URISyntaxException, MalformedURLException {
         this.config = config;
         this.log = log;
-        this.httpClient = new CxHttpClient(config.getUrl(), config.getUsername(), config.getPassword(), config.getCxOrigin());
+        this.httpClient = new CxHttpClient(config.getUrl(), config.getUsername(), config.getPassword(), config.getCxOrigin(), log);
         sastClient = new CxSASTClient(httpClient, log, config);
         osaClient = new CxOSAClient(httpClient, log, config);
     }
@@ -84,6 +83,11 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         return sastResults;
     }
 
+    public SASTResults getLastSASTResults() throws Exception {
+        return sastClient.getLastSASTResults(projectId);
+    }
+
+
     public OSAResults getOSAResults() throws Exception {
         osaResults = osaClient.getOSAResults(osaResults.getOsaScanId());
         return osaResults;
@@ -102,22 +106,9 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         return SummaryUtils.generateSummary(sastResults, osaResults, config, log);
     }
 
-    // public resolveBuild(){
-    //  if (config.getSastEnabled()){
-    //assert if expected exception is thrown  OR when vulnerabilities under threshold
-    //   StringBuilder res = new StringBuilder("");
-    //    if (configUtil.assertVulnerabilities(scanResults, osaSummaryResults, res, config) || sastWaitException != null || osaException != null) {
-    //     printUtils.printBuildFailure(res, sastWaitException, osaException, loggerAdapter, log);
-    //     return taskResultBuilder.failed().build();
-    //  }
-
-    // }
-    // }
-//
     public void close() {
         httpClient.close();
     }
-
 
     //HELP config  Methods
     public void login() throws IOException, CxClientException, CxTokenExpiredException {
@@ -214,14 +205,9 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
     public void updateOSAJsonDependencies(String osaDependenciesJson) {
         config.setOsaDependenciesJson(osaDependenciesJson);
     } //TODO j need it?>
-    // private List<Project> getAllProjects() throws IOException, CxClientException {
-    // String projectNamePath = SAST_GET_PROJECT.replace("{name}", projectName).replace("{teamId}", teamId);
-    //  return httpClient.getRequest(projectNamePath, CONTENT_TYPE_APPLICATION_JSON_V1, TypeFactory.defaultInstance().constructCollectionType(List.class,Project.class), 200, " Project by projectId and teamId");
-    //  }
 
-    //Util function
+    //Util methods
     private boolean isThresholdExceeded(SASTResults sastResults, OSAResults osaResults, StringBuilder res, CxScanConfig config) {
-
         boolean thresholdExceeded = false;
         if (config.isSASTThresholdEffectivelyEnabled() && sastResults != null) {
             thresholdExceeded = isSeverityExceeded(sastResults.getSastHighResults(), config.getSastHighThreshold(), res, "high", "CxSAST ");
