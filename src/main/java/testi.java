@@ -64,6 +64,7 @@ public class testi {
         osaResults = shraga.getOSAResults();
 
         ThresholdResult thresholdResult = shraga.getThresholdResult();
+        shraga.generateHTMLSummary();
         //  shraga.generateHTMLSummary(sastResults, osaResults);
         shraga.close();
 
@@ -93,19 +94,19 @@ public class testi {
         config.setScanComment("This is First test of the Common client :) !!!!!!");
         config.setIncremental(false);
         config.setSynchronous(true);
-        config.setSastThresholdsEnabled(false);
-        //config.setHighThreshold();
-        //config.setMediumThreshold();
-        //config.setLowThreshold();
+        config.setSastThresholdsEnabled(true);
+        config.setSastHighThreshold(1);
+        config.setSastMediumThreshold(2);
+        config.setSastLowThreshold(2);
         config.setGeneratePDFReport(true);
         config.setOsaEnabled(true);
         config.setOsaFilterPattern("");//TODO
         config.setOsaArchiveIncludePatterns(DEFAULT_OSA_ARCHIVE_INCLUDE_PATTERNS);
         config.setOsaRunInstall(false);
-        config.setOsaThresholdsEnabled(false);
-        //config.setOsaHighThreshold();
-        //config.setOsaMediumThreshold();
-        //config.setOsaLowThreshold();
+        config.setOsaThresholdsEnabled(true);
+        config.setOsaHighThreshold(1);
+        config.setOsaMediumThreshold(2);
+        config.setOsaLowThreshold(7);
         config.setDenyProject(false);
         config.setPublic(true);
         //config.setZipFile();

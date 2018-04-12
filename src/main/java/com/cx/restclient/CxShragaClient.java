@@ -20,6 +20,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import static com.cx.restclient.common.CxPARAM.*;
+import static com.cx.restclient.common.ShragaUtils.isThresholdExceeded;
+import static com.cx.restclient.common.summary.SummaryUtils.generateSummaryPOC;
 import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON_V1;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.convertToJson;
 import static com.cx.restclient.sast.utils.SASTParam.SAST_ENGINE_CONFIG;
@@ -99,12 +101,11 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         return new ThresholdResult(isFail, res.toString());
     }
 
-    public String generateHTMLSummary(SASTResults sastResults, OSAResults osaResults) {
-        if (config.getCxOrigin().equals("Jenkins")) {
-            return SummaryUtils.generateJellySummary(sastResults, osaResults, log);
-        }
-        return SummaryUtils.generateSummary(sastResults, osaResults, config, log);
+    public String generateHTMLSummary() throws IOException {
+        return generateSummaryPOC(sastResults, osaResults, config);
     }
+
+
 
     public void close() {
         httpClient.close();
@@ -206,29 +207,5 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         config.setOsaDependenciesJson(osaDependenciesJson);
     } //TODO j need it?>
 
-    //Util methods
-    private boolean isThresholdExceeded(SASTResults sastResults, OSAResults osaResults, StringBuilder res, CxScanConfig config) {
-        boolean thresholdExceeded = false;
-        if (config.isSASTThresholdEffectivelyEnabled() && sastResults != null) {
-            thresholdExceeded = isSeverityExceeded(sastResults.getSastHighResults(), config.getSastHighThreshold(), res, "high", "CxSAST ");
-            thresholdExceeded |= isSeverityExceeded(sastResults.getSastMediumResults(), config.getSastMediumThreshold(), res, "medium", "CxSAST ");
-            thresholdExceeded |= isSeverityExceeded(sastResults.getSastLowResults(), config.getSastLowThreshold(), res, "low", "CxSAST ");
-        }
-        if (config.isOSAThresholdEffectivelyEnabled() && osaResults != null) {
-            thresholdExceeded |= isSeverityExceeded(osaResults.getResults().getTotalHighVulnerabilities(), config.getOsaHighThreshold(), res, "high", "CxOSA ");
-            thresholdExceeded |= isSeverityExceeded(osaResults.getResults().getTotalMediumVulnerabilities(), config.getOsaMediumThreshold(), res, "medium", "CxOSA ");
-            thresholdExceeded |= isSeverityExceeded(osaResults.getResults().getTotalLowVulnerabilities(), config.getOsaLowThreshold(), res, "low", "CxOSA ");
-        }
-        return thresholdExceeded;
-    }
-
-    private boolean isSeverityExceeded(int result, Integer threshold, StringBuilder res, String severity, String severityType) {
-        boolean fail = false;
-        if (threshold != null && result > threshold) {
-            res.append(severityType).append(severity).append(" severity results are above threshold. Results: ").append(result).append(". Threshold: ").append(threshold).append("\n");
-            fail = true;
-        }
-        return fail;
-    }
-}
+ }
 

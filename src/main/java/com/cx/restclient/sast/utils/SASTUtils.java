@@ -48,16 +48,16 @@ public abstract class SASTUtils {
 
     public static void printSASTResultsToConsole(SASTResults scanResults, Logger logger) {
 
-        String highNew = scanResults.getSastNewHighCount() > 0 ? " (" + scanResults.getSastNewHighCount() + " new)" : "";
-        String mediumNew = scanResults.getSastNewMediumCount() > 0 ? " (" + scanResults.getSastNewMediumCount() + " new)" : "";
-        String lowNew = scanResults.getSastNewLowCount() > 0 ? " (" + scanResults.getSastNewLowCount() + " new)" : "";
-        String infoNew = scanResults.getSastNewInfoCount() > 0 ? " (" + scanResults.getSastNewInfoCount() + " new)" : "";
+        String highNew = scanResults.getNewHighCount() > 0 ? " (" + scanResults.getNewHighCount() + " new)" : "";
+        String mediumNew = scanResults.getNewMediumCount() > 0 ? " (" + scanResults.getNewMediumCount() + " new)" : "";
+        String lowNew = scanResults.getNewLowCount() > 0 ? " (" + scanResults.getNewLowCount() + " new)" : "";
+        String infoNew = scanResults.getNewInfoCount() > 0 ? " (" + scanResults.getNewInfoCount() + " new)" : "";
 
         logger.info("----------------------------Checkmarx Scan Results(CxSAST):-------------------------------");
-        logger.info("High severity results: " + scanResults.getSastHighResults() + highNew);
-        logger.info("Medium severity results: " + scanResults.getSastMediumResults() + mediumNew);
-        logger.info("Low severity results: " + scanResults.getSastLowResults() + lowNew);
-        logger.info("Information severity results: " + scanResults.getSastInfoResults() + infoNew);
+        logger.info("High severity results: " + scanResults.getHighResults() + highNew);
+        logger.info("Medium severity results: " + scanResults.getMediumResults() + mediumNew);
+        logger.info("Low severity results: " + scanResults.getLowResults() + lowNew);
+        logger.info("Information severity results: " + scanResults.getInfoResults() + infoNew);
         logger.info("");
         logger.info("Scan results location: " + scanResults.getSastScanLink());
         logger.info("------------------------------------------------------------------------------------------\n");

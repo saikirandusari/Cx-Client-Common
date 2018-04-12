@@ -1,7 +1,5 @@
 package com.cx.restclient.sast.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.List;
 
 import static com.cx.restclient.sast.utils.SASTParam.PROJECT_LINK_FORMAT;
@@ -16,15 +14,15 @@ public class SASTResults {
     private long scanId;
 
     private boolean sastResultsReady = false;
-    private int sastHighResults;
-    private int sastMediumResults;
-    private int sastLowResults;
-    private int sastInfoResults;
+    private int highResults = 0;
+    private int mediumResults = 0;
+    private int lowResults = 0;
+    private int infoResults = 0;
 
-    private int sastNewHighCount = 0;
-    private int sastNewMediumCount = 0;
-    private int sastNewLowCount = 0;
-    private int sastNewInfoCount = 0;
+    private int newHighCount = 0;
+    private int newMediumCount = 0;
+    private int newLowCount = 0;
+    private int newInfoCount = 0;
 
     private String sastScanLink;
     private String sastProjectLink;
@@ -59,16 +57,16 @@ public class SASTResults {
                     Severity sev = Severity.valueOf(result.getSeverity());
                     switch (sev) {
                         case High:
-                            sastNewHighCount++;
+                            newHighCount++;
                             break;
                         case Medium:
-                            sastNewMediumCount++;
+                            newMediumCount++;
                             break;
                         case Low:
-                            sastNewLowCount++;
+                            newLowCount++;
                             break;
                         case Info:
-                            sastNewInfoCount++;
+                            newInfoCount++;
                             break;
                     }
                 }
@@ -79,10 +77,10 @@ public class SASTResults {
 
     public void setResults(long scanId, SASTStatisticsResponse statisticsResults, String url, long projectId) {
         setScanId(scanId);
-        setSastHighResults(statisticsResults.getHighSeverity());
-        setSastMediumResults(statisticsResults.getMediumSeverity());
-        setSastLowResults(statisticsResults.getLowSeverity());
-        setSastInfoResults(statisticsResults.getInfoSeverity());
+        setHighResults(statisticsResults.getHighSeverity());
+        setMediumResults(statisticsResults.getMediumSeverity());
+        setLowResults(statisticsResults.getLowSeverity());
+        setInfoResults(statisticsResults.getInfoSeverity());
         setSastScanLink(url, scanId, projectId);
         setSastProjectLink(url, projectId);
         setSastResultsReady(true);
@@ -96,68 +94,68 @@ public class SASTResults {
         this.scanId = scanId;
     }
 
-    public int getSastHighResults() {
-        return sastHighResults;
+    public int getHighResults() {
+        return highResults;
     }
 
-    public void setSastHighResults(int sastHighResults) {
-        this.sastHighResults = sastHighResults;
+    public void setHighResults(int highResults) {
+        this.highResults = highResults;
     }
 
-    public int getSastMediumResults() {
-        return sastMediumResults;
+    public int getMediumResults() {
+        return mediumResults;
     }
 
-    public void setSastMediumResults(int sastMediumResults) {
-        this.sastMediumResults = sastMediumResults;
+    public void setMediumResults(int mediumResults) {
+        this.mediumResults = mediumResults;
     }
 
-    public int getSastLowResults() {
-        return sastLowResults;
+    public int getLowResults() {
+        return lowResults;
     }
 
-    public void setSastLowResults(int sastLowResults) {
-        this.sastLowResults = sastLowResults;
+    public void setLowResults(int lowResults) {
+        this.lowResults = lowResults;
     }
 
-    public int getSastInfoResults() {
-        return sastInfoResults;
+    public int getInfoResults() {
+        return infoResults;
     }
 
-    public void setSastInfoResults(int sastInfoResults) {
-        this.sastInfoResults = sastInfoResults;
+    public void setInfoResults(int infoResults) {
+        this.infoResults = infoResults;
     }
 
-    public int getSastNewHighCount() {
-        return sastNewHighCount;
+    public int getNewHighCount() {
+        return newHighCount;
     }
 
-    public void setSastNewHighCount(int sastNewHighCount) {
-        this.sastNewHighCount = sastNewHighCount;
+    public void setNewHighCount(int newHighCount) {
+        this.newHighCount = newHighCount;
     }
 
-    public int getSastNewMediumCount() {
-        return sastNewMediumCount;
+    public int getNewMediumCount() {
+        return newMediumCount;
     }
 
-    public void setSastNewMediumCount(int sastNewMediumCount) {
-        this.sastNewMediumCount = sastNewMediumCount;
+    public void setNewMediumCount(int newMediumCount) {
+        this.newMediumCount = newMediumCount;
     }
 
-    public int getSastNewLowCount() {
-        return sastNewLowCount;
+    public int getNewLowCount() {
+        return newLowCount;
     }
 
-    public void setSastNewLowCount(int sastNewLowCount) {
-        this.sastNewLowCount = sastNewLowCount;
+    public void setNewLowCount(int newLowCount) {
+        this.newLowCount = newLowCount;
     }
 
-    public int getSastNewInfoCount() {
-        return sastNewInfoCount;
+    public int getNewInfoCount() {
+        return newInfoCount;
     }
 
-    public void setSastNewInfoCount(int sastNewInfoCount) {
-        this.sastNewInfoCount = sastNewInfoCount;
+    public void setNewInfoCount(int newInfoCount) {
+        this.newInfoCount = newInfoCount;
     }
 
     public String getSastScanLink() {
@@ -246,5 +244,9 @@ public class SASTResults {
 
     public void setSynchronous(Boolean synchronous) {
         isSynchronous = synchronous;
+    }
+
+    public boolean hasNewResults() {
+        return newHighCount + newMediumCount + newLowCount > 0;
     }
 }
