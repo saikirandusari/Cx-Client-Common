@@ -1,23 +1,26 @@
 package com.cx.restclient.common.summary;
 
+import com.cx.restclient.common.ShragaUtils;
 import com.cx.restclient.configuration.CxScanConfig;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.osa.dto.OSASummaryResults;
 import com.cx.restclient.sast.dto.SASTResults;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.Version;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
-import static com.cx.restclient.common.CxPARAM.OPTION_FALSE;
-import static com.cx.restclient.common.CxPARAM.OPTION_TRUE;
 import static com.cx.restclient.common.ShragaUtils.isThresholdExceeded;
-import static com.cx.restclient.common.summary.SummaryConst.*;
 
 
 /**
@@ -57,36 +60,132 @@ public abstract class SummaryUtils {
     public static final String OSA_VUL_LIB_PH = "<!--vulnerable-libraries-->";
 
 
-    /*public static void main(String[] args) throws IOException {
+//    public static void main(String[] args) throws Exception {
+//
+//        SASTResults sastResults = new SASTResults();
+//        sastResults.setHigh(3);
+//        sastResults.setMedium(2);
+//        sastResults.setLow(2);
+//        sastResults.setNewLow(1);
+//        sastResults.setSastResultsReady(true);
+//        OSAResults osaResults = new OSAResults();
+//        OSASummaryResults osaSummaryResults = new OSASummaryResults();
+//        osaSummaryResults.setTotalHighVulnerabilities(3);
+//        osaSummaryResults.setTotalMediumVulnerabilities(2);
+//        osaSummaryResults.setTotalLowVulnerabilities(7);
+//        osaSummaryResults.setVulnerableAndOutdated(666);
+//        osaSummaryResults.setNonVulnerableLibraries(777);
+//
+//        osaResults.setResults(osaSummaryResults);
+//        osaResults.setOsaResultsReady(true);
+//
+//
+//        CxScanConfig config = new CxScanConfig();
+//        config.setSastEnabled(true);
+//        config.setOsaEnabled(true);
+////        config.setSastThresholdsEnabled(true);
+//        config.setSastHighThreshold(2);
+//        config.setSastMediumThreshold(2);
+//        config.setSastLowThreshold(1);
+//        config.setOsaThresholdsEnabled(true);
+//        config.setOsaHighThreshold(1);
+//        config.setOsaMediumThreshold(8);
+//        config.setOsaLowThreshold(8);
+//        generateSummary(sastResults, osaResults, config);
+//    }
 
-        SASTResults sastResults = new SASTResults();
-        sastResults.setHighResults(3);
-        sastResults.setMediumResults(2);
-        sastResults.setLowResults(1);
-        sastResults.setNewLowCount(1);
-        sastResults.setSastResultsReady(true);
-        OSAResults osaResults = new OSAResults();
-        OSASummaryResults osaSummaryResults = new OSASummaryResults();
-        osaSummaryResults.setTotalHighVulnerabilities(3);
-        osaSummaryResults.setTotalMediumVulnerabilities(2);
-        osaSummaryResults.setTotalLowVulnerabilities(7);
-        osaResults.setResults(osaSummaryResults);
-        osaResults.setOsaResultsReady(true);
+
+    public static String generateSummary(SASTResults sastResults, OSAResults osaResults, CxScanConfig config) throws IOException, TemplateException {
+
+        Configuration cfg = new Configuration(new Version("2.3.23"));
+        cfg.setClassForTemplateLoading(SummaryUtils.class, "/com/cx/report/");
+
+        Template template = cfg.getTemplate("report.ftl");
+
+        Map<String, Object> templateData = new HashMap<String, Object>();
+        templateData.put("config", config);
+        templateData.put("sast", sastResults);
+        templateData.put("osa", osaResults);
+
+        //calculated params:
+
+        //sast:
+        boolean sastThresholdExceeded = ShragaUtils.isThresholdExceeded(sastResults, null, new StringBuilder(), config);
+        templateData.put("sastThresholdExceeded", sastThresholdExceeded);
+
+        //calculate sast bars:
+        float maxCount = Math.max(sastResults.getHigh(), Math.max(sastResults.getMedium(), sastResults.getLow()));
+        float sastBarNorm = maxCount * 10f/9f;
+
+        //sast high bars
+        float sastHighTotalHeight = (float)sastResults.getHigh() / sastBarNorm * 238f;
+        float sastHighNewHeight = calculateNewBarHeight(sastResults.getNewHigh(), sastResults.getHigh(), sastHighTotalHeight);
+        float sastHighRecurrentHeight = sastHighTotalHeight - sastHighNewHeight;
+        templateData.put("sastHighTotalHeight", sastHighTotalHeight);
+        templateData.put("sastHighNewHeight", sastHighNewHeight);
+        templateData.put("sastHighRecurrentHeight", sastHighRecurrentHeight);
+
+        //sast medium bars
+        float sastMediumTotalHeight = (float)sastResults.getMedium() / sastBarNorm * 238f;
+        float sastMediumNewHeight = calculateNewBarHeight(sastResults.getNewMedium(), sastResults.getMedium(), sastMediumTotalHeight);
+        float sastMediumRecurrentHeight = sastMediumTotalHeight - sastMediumNewHeight;
+        templateData.put("sastMediumTotalHeight", sastMediumTotalHeight);
+        templateData.put("sastMediumNewHeight", sastMediumNewHeight);
+        templateData.put("sastMediumRecurrentHeight", sastMediumRecurrentHeight);
+
+        //sast low bars
+        float sastLowTotalHeight = (float)sastResults.getLow() / sastBarNorm * 238f;
+        float sastLowNewHeight = calculateNewBarHeight(sastResults.getNewLow(), sastResults.getLow(), sastLowTotalHeight);
+        float sastLowRecurrentHeight = sastLowTotalHeight - sastLowNewHeight;
+        templateData.put("sastLowTotalHeight", sastLowTotalHeight);
+        templateData.put("sastLowNewHeight", sastLowNewHeight);
+        templateData.put("sastLowRecurrentHeight", sastLowRecurrentHeight);
 
 
-        CxScanConfig config = new CxScanConfig();
-        config.setSastEnabled(true);
-        config.setOsaEnabled(true);
-        config.setSastThresholdsEnabled(true);
-        config.setSastHighThreshold(8);
-        config.setSastMediumThreshold(2);
-        config.setSastLowThreshold(1);
-        config.setOsaThresholdsEnabled(true);
-        config.setOsaHighThreshold(8);
-        config.setOsaMediumThreshold(8);
-        config.setOsaLowThreshold(8);
-        generateSummaryPOC(sastResults, osaResults, config, null);
-    }*/
+        //osa:
+        boolean osaThresholdExceeded = ShragaUtils.isThresholdExceeded(null, osaResults, new StringBuilder(), config);
+        templateData.put("osaThresholdExceeded", osaThresholdExceeded);
+
+        //calculate osa bars:
+        OSASummaryResults osaSummaryResults = osaResults.getResults();
+        int osaHigh = osaSummaryResults.getTotalHighVulnerabilities();
+        int osaMedium = osaSummaryResults.getTotalMediumVulnerabilities();
+        int osaLow = osaSummaryResults.getTotalLowVulnerabilities();
+        float osaMaxCount = Math.max(osaHigh, Math.max(osaMedium, osaLow));
+        float osaBarNorm = osaMaxCount * 10f/9f;
+
+        float osaHighTotalHeight = (float) osaHigh / osaBarNorm * 238f;
+        float osaMediumTotalHeight = (float) osaMedium / osaBarNorm * 238f;
+        float osaLowTotalHeight = (float) osaLow / osaBarNorm * 238f;
+
+        templateData.put("osaHighTotalHeight", osaHighTotalHeight);
+        templateData.put("osaMediumTotalHeight", osaMediumTotalHeight);
+        templateData.put("osaLowTotalHeight", osaLowTotalHeight);
+
+
+
+
+        StringWriter writer = new StringWriter();
+        template.process(templateData, writer);
+        String reportHtml = writer.toString();
+
+        return reportHtml;
+    }
+
+
+
+    private static float calculateNewBarHeight(int newCount, int count, float totalHeight) {
+        int minimalVisibilityHeight = 5;
+        //new high
+        float highNewHeightPx = (float)newCount / (float)count * totalHeight;
+        //if new height is between 1 and 9 - give it a minimum height and if theres enough spce in total height
+        if (isNewNeedChange(totalHeight, highNewHeightPx, minimalVisibilityHeight)) {
+            highNewHeightPx = minimalVisibilityHeight;
+        }
+
+        return highNewHeightPx;
+    }
+
 
     public static String generateSummaryPOC(SASTResults sastResults, OSAResults osaResults, CxScanConfig config) throws IOException {
 
@@ -178,18 +277,18 @@ public abstract class SummaryUtils {
         }
         sastChart = resolveSASTChartThreshold(results, config, sastChart);
         sastChart = sastChart.
-                replace(SAST_HIGH_PH, String.valueOf(results.getHighResults())).
-                replace(SAST_MEDIUM_PH, String.valueOf(results.getMediumResults())).
-                replace(SAST_LOW_PH, String.valueOf(results.getLowResults()));
+                replace(SAST_HIGH_PH, String.valueOf(results.getHigh())).
+                replace(SAST_MEDIUM_PH, String.valueOf(results.getMedium())).
+                replace(SAST_LOW_PH, String.valueOf(results.getLow()));
 
         return sastChart;
     }
 
     private static String resolveSASTChartBar(SASTResults results, String template) {
-        float maxHeight = Math.max(results.getHighResults(), Math.max(results.getMediumResults(), results.getLowResults())) * 10f / 9f;
-        template = resolveBarStyle(results.getHighResults(), results.getNewHighCount(), maxHeight, "high", template);
-        template = resolveBarStyle(results.getMediumResults(), results.getNewMediumCount(), maxHeight, "medium", template);
-        template = resolveBarStyle(results.getLowResults(), results.getNewLowCount(), maxHeight, "low", template);
+        float maxHeight = Math.max(results.getHigh(), Math.max(results.getMedium(), results.getLow())) * 10f / 9f;
+        template = resolveBarStyle(results.getHigh(), results.getNewHigh(), maxHeight, "high", template);
+        template = resolveBarStyle(results.getMedium(), results.getNewMedium(), maxHeight, "medium", template);
+        template = resolveBarStyle(results.getLow(), results.getNewLow(), maxHeight, "low", template);
 
         return template;
     }
@@ -272,9 +371,9 @@ public abstract class SummaryUtils {
 
     private static String resolveSASTChartThreshold(SASTResults sastResults, CxScanConfig config, String template) {
         if (config.isSASTThresholdEffectivelyEnabled()) {
-            template = resolveBySeverity(sastResults.getHighResults(), config.getSastHighThreshold(), "high", template);
-            template = resolveBySeverity(sastResults.getMediumResults(), config.getSastMediumThreshold(), "medium", template);
-            template = resolveBySeverity(sastResults.getLowResults(), config.getSastLowThreshold(), "low", template);
+            template = resolveBySeverity(sastResults.getHigh(), config.getSastHighThreshold(), "high", template);
+            template = resolveBySeverity(sastResults.getMedium(), config.getSastMediumThreshold(), "medium", template);
+            template = resolveBySeverity(sastResults.getLow(), config.getSastLowThreshold(), "low", template);
 
             boolean isThresholdExceeded = isThresholdExceeded(sastResults, null, new StringBuilder(), config);
        /* TODO newwww if (isThresholdForNewResultExceeded) {

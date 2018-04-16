@@ -13,9 +13,9 @@ public abstract class ShragaUtils {
     public static boolean isThresholdExceeded(SASTResults sastResults, OSAResults osaResults, StringBuilder res, CxScanConfig config) {
         boolean thresholdExceeded = false;
         if (config.isSASTThresholdEffectivelyEnabled() && sastResults != null) {
-            thresholdExceeded = isSeverityExceeded(sastResults.getHighResults(), config.getSastHighThreshold(), res, "high", "CxSAST ");
-            thresholdExceeded |= isSeverityExceeded(sastResults.getMediumResults(), config.getSastMediumThreshold(), res, "medium", "CxSAST ");
-            thresholdExceeded |= isSeverityExceeded(sastResults.getLowResults(), config.getSastLowThreshold(), res, "low", "CxSAST ");
+            thresholdExceeded = isSeverityExceeded(sastResults.getHigh(), config.getSastHighThreshold(), res, "high", "CxSAST ");
+            thresholdExceeded |= isSeverityExceeded(sastResults.getMedium(), config.getSastMediumThreshold(), res, "medium", "CxSAST ");
+            thresholdExceeded |= isSeverityExceeded(sastResults.getLow(), config.getSastLowThreshold(), res, "low", "CxSAST ");
         }
         if (config.isOSAThresholdEffectivelyEnabled() && osaResults != null) {
             thresholdExceeded |= isSeverityExceeded(osaResults.getResults().getTotalHighVulnerabilities(), config.getOsaHighThreshold(), res, "high", "CxOSA ");

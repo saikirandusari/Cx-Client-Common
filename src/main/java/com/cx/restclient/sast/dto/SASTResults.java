@@ -14,15 +14,15 @@ public class SASTResults {
     private long scanId;
 
     private boolean sastResultsReady = false;
-    private int highResults = 0;
-    private int mediumResults = 0;
-    private int lowResults = 0;
-    private int infoResults = 0;
+    private int high = 0;
+    private int medium = 0;
+    private int low = 0;
+    private int info = 0;
 
-    private int newHighCount = 0;
-    private int newMediumCount = 0;
-    private int newLowCount = 0;
-    private int newInfoCount = 0;
+    private int newHigh = 0;
+    private int newMedium = 0;
+    private int newLow = 0;
+    private int newInfo = 0;
 
     private String sastScanLink;
     private String sastProjectLink;
@@ -30,12 +30,13 @@ public class SASTResults {
     private String scanStart;
     private String scanTime;
     private String filesScanned;
-    private String linesOfCodeScanned;
+    private String LOC;
     private List<CxXMLResults.Query> queryList;
 
     private byte[] PDFReport;
 
-    private Boolean isSynchronous;
+    private boolean isSynchronous;
+    private boolean thresholdfExceeded;
 
     private enum Severity {
         High, Medium, Low, Info;
@@ -44,7 +45,7 @@ public class SASTResults {
     public void setScanDetailedReport(CxXMLResults reportObj) {
         this.scanStart = reportObj.getScanStart();
         this.scanTime = reportObj.getScanTime();
-        this.linesOfCodeScanned = reportObj.getLinesOfCodeScanned();
+        this.LOC = reportObj.getLinesOfCodeScanned();
         this.filesScanned = reportObj.getFilesScanned();
 
         for (CxXMLResults.Query q : reportObj.getQuery()) {
@@ -57,16 +58,16 @@ public class SASTResults {
                     Severity sev = Severity.valueOf(result.getSeverity());
                     switch (sev) {
                         case High:
-                            newHighCount++;
+                            newHigh++;
                             break;
                         case Medium:
-                            newMediumCount++;
+                            newMedium++;
                             break;
                         case Low:
-                            newLowCount++;
+                            newLow++;
                             break;
                         case Info:
-                            newInfoCount++;
+                            newInfo++;
                             break;
                     }
                 }
@@ -77,10 +78,10 @@ public class SASTResults {
 
     public void setResults(long scanId, SASTStatisticsResponse statisticsResults, String url, long projectId) {
         setScanId(scanId);
-        setHighResults(statisticsResults.getHighSeverity());
-        setMediumResults(statisticsResults.getMediumSeverity());
-        setLowResults(statisticsResults.getLowSeverity());
-        setInfoResults(statisticsResults.getInfoSeverity());
+        setHigh(statisticsResults.getHighSeverity());
+        setMedium(statisticsResults.getMediumSeverity());
+        setLow(statisticsResults.getLowSeverity());
+        setInfo(statisticsResults.getInfoSeverity());
         setSastScanLink(url, scanId, projectId);
         setSastProjectLink(url, projectId);
         setSastResultsReady(true);
@@ -94,68 +95,68 @@ public class SASTResults {
         this.scanId = scanId;
     }
 
-    public int getHighResults() {
-        return highResults;
+    public int getHigh() {
+        return high;
     }
 
-    public void setHighResults(int highResults) {
-        this.highResults = highResults;
+    public void setHigh(int high) {
+        this.high = high;
     }
 
-    public int getMediumResults() {
-        return mediumResults;
+    public int getMedium() {
+        return medium;
     }
 
-    public void setMediumResults(int mediumResults) {
-        this.mediumResults = mediumResults;
+    public void setMedium(int medium) {
+        this.medium = medium;
     }
 
-    public int getLowResults() {
-        return lowResults;
+    public int getLow() {
+        return low;
     }
 
-    public void setLowResults(int lowResults) {
-        this.lowResults = lowResults;
+    public void setLow(int low) {
+        this.low = low;
     }
 
-    public int getInfoResults() {
-        return infoResults;
+    public int getInfo() {
+        return info;
     }
 
-    public void setInfoResults(int infoResults) {
-        this.infoResults = infoResults;
+    public void setInfo(int info) {
+        this.info = info;
     }
 
-    public int getNewHighCount() {
-        return newHighCount;
+    public int getNewHigh() {
+        return newHigh;
     }
 
-    public void setNewHighCount(int newHighCount) {
-        this.newHighCount = newHighCount;
+    public void setNewHigh(int newHigh) {
+        this.newHigh = newHigh;
     }
 
-    public int getNewMediumCount() {
-        return newMediumCount;
+    public int getNewMedium() {
+        return newMedium;
     }
 
-    public void setNewMediumCount(int newMediumCount) {
-        this.newMediumCount = newMediumCount;
+    public void setNewMedium(int newMedium) {
+        this.newMedium = newMedium;
     }
 
-    public int getNewLowCount() {
-        return newLowCount;
+    public int getNewLow() {
+        return newLow;
     }
 
-    public void setNewLowCount(int newLowCount) {
-        this.newLowCount = newLowCount;
+    public void setNewLow(int newLow) {
+        this.newLow = newLow;
     }
 
-    public int getNewInfoCount() {
-        return newInfoCount;
+    public int getNewInfo() {
+        return newInfo;
     }
 
-    public void setNewInfoCount(int newInfoCount) {
-        this.newInfoCount = newInfoCount;
+    public void setNewInfo(int newInfo) {
+        this.newInfo = newInfo;
     }
 
     public String getSastScanLink() {
@@ -214,12 +215,12 @@ public class SASTResults {
         this.sastResultsReady = sastResultsReady;
     }
 
-    public String getLinesOfCodeScanned() {
-        return linesOfCodeScanned;
+    public String getLOC() {
+        return LOC;
     }
 
-    public void setLinesOfCodeScanned(String linesOfCodeScanned) {
-        this.linesOfCodeScanned = linesOfCodeScanned;
+    public void setLOC(String LOC) {
+        this.LOC = LOC;
     }
 
     public void setQueryList(List<CxXMLResults.Query> queryList) {
@@ -238,15 +239,17 @@ public class SASTResults {
         this.PDFReport = PDFReport;
     }
 
-    public Boolean getSynchronous() {
+    public boolean getSynchronous() {
         return isSynchronous;
     }
 
-    public void setSynchronous(Boolean synchronous) {
+    public void setSynchronous(boolean synchronous) {
         isSynchronous = synchronous;
     }
 
     public boolean hasNewResults() {
-        return newHighCount + newMediumCount + newLowCount > 0;
+        return newHigh + newMedium + newLow > 0;
     }
+
+
 }

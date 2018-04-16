@@ -48,16 +48,16 @@ public abstract class SASTUtils {
 
     public static void printSASTResultsToConsole(SASTResults scanResults, Logger logger) {
 
-        String highNew = scanResults.getNewHighCount() > 0 ? " (" + scanResults.getNewHighCount() + " new)" : "";
-        String mediumNew = scanResults.getNewMediumCount() > 0 ? " (" + scanResults.getNewMediumCount() + " new)" : "";
-        String lowNew = scanResults.getNewLowCount() > 0 ? " (" + scanResults.getNewLowCount() + " new)" : "";
-        String infoNew = scanResults.getNewInfoCount() > 0 ? " (" + scanResults.getNewInfoCount() + " new)" : "";
+        String highNew = scanResults.getNewHigh() > 0 ? " (" + scanResults.getNewHigh() + " new)" : "";
+        String mediumNew = scanResults.getNewMedium() > 0 ? " (" + scanResults.getNewMedium() + " new)" : "";
+        String lowNew = scanResults.getNewLow() > 0 ? " (" + scanResults.getNewLow() + " new)" : "";
+        String infoNew = scanResults.getNewInfo() > 0 ? " (" + scanResults.getNewInfo() + " new)" : "";
 
         logger.info("----------------------------Checkmarx Scan Results(CxSAST):-------------------------------");
-        logger.info("High severity results: " + scanResults.getHighResults() + highNew);
-        logger.info("Medium severity results: " + scanResults.getMediumResults() + mediumNew);
-        logger.info("Low severity results: " + scanResults.getLowResults() + lowNew);
-        logger.info("Information severity results: " + scanResults.getInfoResults() + infoNew);
+        logger.info("High severity results: " + scanResults.getHigh() + highNew);
+        logger.info("Medium severity results: " + scanResults.getMedium() + mediumNew);
+        logger.info("Low severity results: " + scanResults.getLow() + lowNew);
+        logger.info("Information severity results: " + scanResults.getInfo() + infoNew);
         logger.info("");
         logger.info("Scan results location: " + scanResults.getSastScanLink());
         logger.info("------------------------------------------------------------------------------------------\n");

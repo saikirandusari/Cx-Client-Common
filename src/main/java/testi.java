@@ -144,7 +144,7 @@ public class testi {
 
 
         boolean isSastFullReady = (sastResults.getScanStart() != null && sastResults.getScanTime() != null
-                && sastResults.getFilesScanned() != null && sastResults.getLinesOfCodeScanned() != null);
+                && sastResults.getFilesScanned() != null && sastResults.getLOC() != null);
 
 
         String thresholdExceededStr = "<div class=\"threshold-exceeded\">" +
