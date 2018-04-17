@@ -1,6 +1,12 @@
 package com.cx.restclient.sast.dto;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import static com.cx.restclient.sast.utils.SASTParam.PROJECT_LINK_FORMAT;
 import static com.cx.restclient.sast.utils.SASTParam.SCAN_LINK_FORMAT;
@@ -29,6 +35,9 @@ public class SASTResults {
 
     private String scanStart;
     private String scanTime;
+    private String scanStartTime;
+    private String scanEndTime;
+
     private String filesScanned;
     private String LOC;
     private List<CxXMLResults.Query> queryList;
@@ -36,7 +45,6 @@ public class SASTResults {
     private byte[] PDFReport;
 
     private boolean isSynchronous;
-    private boolean thresholdfExceeded;
 
     private enum Severity {
         High, Medium, Low, Info;
@@ -45,6 +53,7 @@ public class SASTResults {
     public void setScanDetailedReport(CxXMLResults reportObj) {
         this.scanStart = reportObj.getScanStart();
         this.scanTime = reportObj.getScanTime();
+        setScanStartEndDates(this.scanStart, this.scanTime);
         this.LOC = reportObj.getLinesOfCodeScanned();
         this.filesScanned = reportObj.getFilesScanned();
 
@@ -199,6 +208,22 @@ public class SASTResults {
         this.scanTime = scanTime;
     }
 
+    public String getScanStartTime() {
+        return scanStartTime;
+    }
+
+    public void setScanStartTime(String scanStartTime) {
+        this.scanStartTime = scanStartTime;
+    }
+
+    public String getScanEndTime() {
+        return scanEndTime;
+    }
+
+    public void setScanEndTime(String scanEndTime) {
+        this.scanEndTime = scanEndTime;
+    }
+
     public String getFilesScanned() {
         return filesScanned;
     }
@@ -249,6 +274,61 @@ public class SASTResults {
 
     public boolean hasNewResults() {
         return newHigh + newMedium + newLow > 0;
+    }
+
+    private void setScanStartEndDates(String scanStart, String scanTime) {
+
+        try {
+            //turn strings to date objects
+            Date scanStartDate = createStartDate(scanStart);
+            Date scanTimeDate = createTimeDate(scanTime);
+            Date scanEndDate = createEndDate(scanStartDate, scanTimeDate);
+
+            //turn dates back to strings
+            String scanStartDateFormatted = formatToDisplayDate(scanStartDate);
+            String scanEndDateFormatted = formatToDisplayDate(scanEndDate);
+
+            //set sast scan result object with formatted strings
+            this.scanStartTime = scanStartDateFormatted;
+            this.scanEndTime = scanEndDateFormatted;
+
+        } catch (Exception ignored) {
+            //ignored
+        }
+
+    }
+
+    private String formatToDisplayDate(Date date) {
+        //"26/2/17 12:17"
+        String displayDatePattern = "dd/MM/yy HH:mm";
+        Locale locale = Locale.ENGLISH;
+
+        return new SimpleDateFormat(displayDatePattern, locale).format(date);
+    }
+
+    private Date createStartDate(String scanStart) throws ParseException {
+        //"Sunday, February 26, 2017 12:17:09 PM"
+        String oldPattern = "EEEE, MMMM dd, yyyy hh:mm:ss a";
+        Locale locale = Locale.ENGLISH;
+
+        DateFormat oldDateFormat = new SimpleDateFormat(oldPattern, locale);
+
+        return oldDateFormat.parse(scanStart);
+    }
+
+    private Date createTimeDate(String scanTime) throws ParseException {
+        //"00h:00m:30s"
+        String oldPattern = "HH'h':mm'm':ss's'";
+
+        DateFormat oldTimeFormat = new SimpleDateFormat(oldPattern);
+        oldTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        return oldTimeFormat.parse(scanTime);
+    }
+
+    private Date createEndDate(Date scanStartDate, Date scanTimeDate) {
+        long time /*no c*/ = scanStartDate.getTime() + scanTimeDate.getTime();
+        return new Date(time);
     }
 
 

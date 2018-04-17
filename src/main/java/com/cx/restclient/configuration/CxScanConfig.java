@@ -9,8 +9,8 @@ import java.util.Map;
  */
 public class CxScanConfig {
 
-    private Boolean sastEnabled;
-    private Boolean osaEnabled;
+    private Boolean sastEnabled = false;
+    private Boolean osaEnabled = false;
 
     private String cxOrigin;
     private String sourceDir;
