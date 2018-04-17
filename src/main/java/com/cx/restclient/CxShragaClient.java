@@ -21,7 +21,6 @@ import java.util.List;
 
 import static com.cx.restclient.common.CxPARAM.*;
 import static com.cx.restclient.common.ShragaUtils.isThresholdExceeded;
-import static com.cx.restclient.common.summary.SummaryUtils.generateSummaryPOC;
 import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON_V1;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.convertToJson;
 import static com.cx.restclient.sast.utils.SASTParam.SAST_ENGINE_CONFIG;
@@ -101,8 +100,8 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         return new ThresholdResult(isFail, res.toString());
     }
 
-    public String generateHTMLSummary() throws IOException {
-        return generateSummaryPOC(sastResults, osaResults, config);
+    public String generateHTMLSummary() throws Exception {
+        return SummaryUtils.generateSummary(sastResults, osaResults, config);
     }
 
 

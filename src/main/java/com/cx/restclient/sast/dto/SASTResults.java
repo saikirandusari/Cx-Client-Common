@@ -32,6 +32,7 @@ public class SASTResults {
 
     private String sastScanLink;
     private String sastProjectLink;
+    private String sastPDFLink;
 
     private String scanStart;
     private String scanTime;
@@ -190,6 +191,14 @@ public class SASTResults {
 
     public void setSastProjectLink(String url, long projectId) {
         this.sastProjectLink = String.format(url + PROJECT_LINK_FORMAT, projectId);
+    }
+
+    public String getSastPDFLink() {
+        return sastPDFLink;
+    }
+
+    public void setSastPDFLink(String sastPDFLink) {
+        this.sastPDFLink = sastPDFLink;
     }
 
     public String getScanStart() {
