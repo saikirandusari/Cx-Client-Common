@@ -68,7 +68,7 @@
         width: 50%;
     }
 
-    .cx-report .results-report .sast-summary.chart-large .top-of-chart {
+    .cx-report .results-report .chart-large .top-of-chart {
         max-width: 709px;
     }
 
@@ -79,7 +79,7 @@
         width: 100%;
     }
 
-    .cx-report .results-report .sast-summary.chart-large .new-bar-title-container {
+    .cx-report .results-report .chart-large .new-bar-title-container {
         margin-left: 25%;
     }
 
@@ -99,7 +99,7 @@
         position: absolute;
     }
 
-    .cx-report .results-report .sast-summary.chart-large .bar-title-wrapper {
+    .cx-report .results-report .chart-large .bar-title-wrapper {
         width: 100%;
     }
 
@@ -249,28 +249,28 @@
         padding: 0 8px;
     }
 
-    .cx-report .results-report .sast-summary.chart-large .title-links {
+    .cx-report .results-report .chart-large .title-links {
         max-width: 100%;
     }
 
-    .cx-report .results-report .sast-summary.chart-large {
+    .cx-report .results-report .chart-large {
         width: 100%;
         margin-bottom: 50px;
         margin-left: 24%;
         max-width: 709px;
     }
 
-    .cx-report .results-report .sast-summary.chart-large .chart {
+    .cx-report .results-report .chart-large .chart {
         max-width: 709px;
         margin-right: auto;
         margin-left: auto;
     }
 
-    .cx-report .results-report .sast-summary.chart-large .chart li span {
+    .cx-report .results-report .chart-large .chart li span {
         max-width: 53px;
     }
 
-    .cx-report .results-report .sast-summary.chart-large .chart .bar-title-container {
+    .cx-report .results-report .chart-large .chart .bar-title-container {
         margin-left: 27%;
         padding-top: 21px;
         display: inline-flex;
@@ -279,7 +279,7 @@
         color: #444444;
     }
 
-    .cx-report .results-report .sast-summary.chart-large .chart .bar-title {
+    .cx-report .results-report .chart-large .chart .bar-title {
         text-align: center;
         width: 100%;
     }
@@ -317,7 +317,7 @@
         animation: draw 1s ease-in-out;
     }
 
-    .cx-report .results-report .sast-summary.chart-large .chart .bar-count {
+    .cx-report .results-report .chart-large .chart .bar-count {
         /*width: 53px;*/
     }
 
@@ -335,7 +335,7 @@
         position: absolute;
     }
 
-    .cx-report .results-report .sast-summary.chart-large .bar-title-icon {
+    .cx-report .results-report .chart-large .bar-title-icon {
         width: 30px;
     }
 
@@ -839,7 +839,7 @@
             <div id="summary-results" class="summary-results">
 
             <#if config.sastEnabled>
-                <div class="sast-summary" id="sast-summary">
+                <div class="sast-summary <#if !config.osaEnabled>chart-large</#if>" id="sast-summary">
                     <div class="summary-report-title sast">
                         <div class="summary-title-text sast">CxSAST Vulnerabilities Status</div>
                         <#if sast.sastResultsReady>
@@ -1209,7 +1209,7 @@
             </#if>
 
             <#if config.osaEnabled>
-                <div class="osa-summary" id="osa-summary">
+                <div class="osa-summary <#if !config.sastEnabled>chart-large</#if>" id="osa-summary">
                     <div class="summary-report-title osa">
                         <div class="summary-title-text osa">CxOSA Vulnerabilities & Libraries</div>
                         <#if osa.osaResultsReady>
