@@ -79,7 +79,6 @@ class CxOSAClient /**implements ICxOSAClient **/
     public OSAResults getOSAResults(String scanId) throws CxClientException, IOException, CxOSAException, InterruptedException, CxTokenExpiredException {
         log.info("-------------------------------------Get CxOSA Results:-----------------------------------");
         log.info("Waiting for OSA scan to finish");
-        log.info("Waiting for OSA scan to finish");
         OSAScanStatus osaScanStatus = osaWaiter.waitForTaskToFinish(scanId, -1, log);
         log.info("OSA scan finished successfully. Retrieving OSA scan results");
 

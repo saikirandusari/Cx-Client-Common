@@ -10,6 +10,7 @@ import com.cx.restclient.exception.CxTokenExpiredException;
 import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.sast.dto.*;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
 
@@ -51,6 +52,7 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
 
     //API Scans methods
     public void init() throws CxClientException, IOException, CxTokenExpiredException {
+        log.info("Initializing Cx client");
         login();
         if (config.getSastEnabled()) {
             resolvePreset();
@@ -105,14 +107,12 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
     }
 
 
-
     public void close() {
         httpClient.close();
     }
 
     //HELP config  Methods
     public void login() throws IOException, CxClientException, CxTokenExpiredException {
-
         // perform login to server
         log.info("Logging into the Checkmarx service.");
         //loginToServer();
@@ -189,7 +189,15 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
 
     private List<Project> getProjectByName(String projectName, String teamId) throws IOException, CxClientException, CxTokenExpiredException {
         String projectNamePath = SAST_GET_PROJECT.replace("{name}", projectName).replace("{teamId}", teamId);
-        return (List<Project>) httpClient.getRequest(projectNamePath, CONTENT_TYPE_APPLICATION_JSON_V1, Project.class, 200, "project by name: " + projectName, true);
+        List<Project> projects = null;
+        try {
+            projects = (List<Project>) httpClient.getRequest(projectNamePath, CONTENT_TYPE_APPLICATION_JSON_V1, Project.class, 200, "project by name: " + projectName, true);
+        } catch (HttpResponseException ex) {
+            if (ex.getStatusCode() != 404) {
+                throw ex;
+            }
+        }
+        return projects;
     }
 
     private Project createNewProject(CreateProjectRequest request) throws CxClientException, IOException, CxTokenExpiredException {
@@ -206,5 +214,5 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         config.setOsaDependenciesJson(osaDependenciesJson);
     } //TODO j need it?>
 
- }
+}
 

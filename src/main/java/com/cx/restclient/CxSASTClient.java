@@ -115,7 +115,7 @@ class CxSASTClient/** implements ICxSASTClient**/
             //Start a new createSASTScan
             CreateScanRequest scanRequest = new CreateScanRequest(projectId, config.getIncremental(), config.getPublic(), config.getForceScan());
             createScanResponse = createScan(scanRequest);
-            log.info(String.format("Scan created successfully. Link to project state: " + config.getUrl() + LINK_FORMAT, projectId));
+            log.info(String.format("SAST Scan created successfully. Link to project state: " + config.getUrl() + LINK_FORMAT, projectId));
 
         } catch (Exception ex) {
             throw new CxSASTException(ex.getMessage());//TODO!!!!
@@ -150,7 +150,6 @@ class CxSASTClient/** implements ICxSASTClient**/
                     writePDFReport(pdfReport, config.getReportsDir(), log);
                 }
             }
-
         } catch (Exception e) {
             int i = 0;
             ++i;

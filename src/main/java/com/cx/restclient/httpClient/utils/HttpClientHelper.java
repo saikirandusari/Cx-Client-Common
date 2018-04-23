@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpResponseException;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -77,7 +78,7 @@ public abstract class HttpClientHelper {
         if (response.getStatusLine().getStatusCode() != status) {
             String responseBody = extractResponseBody(response);
             responseBody = responseBody.replace("{", "").replace("}", "").replace(System.getProperty("line.separator"), " ").replace("  ", "");
-            throw new CxClientException(message + ". " + "status code: " + response.getStatusLine() + ". error:" + responseBody);
+            throw new HttpResponseException(response.getStatusLine().getStatusCode(), message + ". " + "status code: " + response.getStatusLine() + ". error:" + responseBody);
         }
     }
 
