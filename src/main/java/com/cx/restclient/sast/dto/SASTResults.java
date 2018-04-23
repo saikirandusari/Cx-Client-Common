@@ -45,8 +45,6 @@ public class SASTResults {
 
     private byte[] PDFReport;
 
-    private boolean isSynchronous;
-
     private enum Severity {
         High, Medium, Low, Info;
     }
@@ -83,7 +81,7 @@ public class SASTResults {
                 }
             }
         }
-        this.queryList = reportObj.getQuery();//todo qa
+        this.queryList = reportObj.getQuery();
     }
 
     public void setResults(long scanId, SASTStatisticsResponse statisticsResults, String url, long projectId) {
@@ -271,14 +269,6 @@ public class SASTResults {
 
     public void setPDFReport(byte[] PDFReport) {
         this.PDFReport = PDFReport;
-    }
-
-    public boolean getSynchronous() {
-        return isSynchronous;
-    }
-
-    public void setSynchronous(boolean synchronous) {
-        isSynchronous = synchronous;
     }
 
     public boolean hasNewResults() {

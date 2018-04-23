@@ -1,10 +1,7 @@
-
 import com.cx.restclient.CxShragaClient;
 import com.cx.restclient.configuration.CxScanConfig;
-import com.cx.restclient.dto.ThresholdResult;
 import com.cx.restclient.osa.dto.OSAResults;
-import com.cx.restclient.sast.dto.*;
-
+import com.cx.restclient.sast.dto.SASTResults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -38,7 +35,9 @@ public class testi {
 
     public static void main(String[] args) throws Exception {
         SASTResults sastResults = null;
+        SASTResults lastSastResults = null;
         OSAResults osaResults = null;
+        OSAResults lastOsaResults = null;
         Logger logi = LoggerFactory.getLogger("testush");
 
         CxScanConfig config = setConfigi();
@@ -48,23 +47,25 @@ public class testi {
 
         // List<Team> teamList = client.getTeamList();
         //List<Query> presetList = client.getPresetList();
-        //List<CxNameObj> configList = client.GetConfigurationSetList();
+      // List<CxNameObj> configList = shraga.GetConfigurationSetList();
 
         shraga.createSASTScan();
         // shraga.cancelSASTScan(sastScanId);
-        shraga.createOSAScan();
+     //   shraga.createOSAScan();
 
 
         //jenkins OSAUtils.generateOSAScanConfiguration(sasasa)
         //TODjenkins client.updateOSAJsonDependencies("fsafsfsfsf");
 
 
-      //  sastResults = shraga.getSASTResults();
-        sastResults = shraga.getLastSASTResults();
-        osaResults = shraga.getOSAResults();
+    //   sas
+        // tResults = shraga.getSASTResults();
+        lastSastResults = shraga.getLastSASTResults();
+       // osaResults = shraga.getOSAResults();
+        lastOsaResults = shraga.getLastOSAResults();
 
-        ThresholdResult thresholdResult = shraga.getThresholdResult();
-        shraga.generateHTMLSummary();
+       // ThresholdResult thresholdResult = shraga.getThresholdResult();
+        String s = shraga.generateHTMLSummary(lastSastResults, lastOsaResults);
         //  shraga.generateHTMLSummary(sastResults, osaResults);
         shraga.close();
 
@@ -75,15 +76,15 @@ public class testi {
         CxScanConfig config = new CxScanConfig();
         config.setSastEnabled(true);
         config.setCxOrigin("Bamboo");
-        // config.setSourceDir("C:\\Users\\galn\\Desktop\\restiDir\\srcDir");
-        config.setSourceDir("C:\\Users\\galn\\Desktop\\restiDir\\srcDir\\SAST\\Folder1\\Folder2\\Folder3");
+       config.setSourceDir("C:\\Users\\galn\\Desktop\\restiDir\\srcDir");
+       // config.setSourceDir("C:\\Users\\galn\\Desktop\\restiDir\\srcDir\\SAST\\Folder1\\Folder2\\Folder3");
         config.setReportsDir(new File("C:\\Users\\galm\\Desktop\\restiDir\\reportsDir"));
         config.setUsername("admin@cx");
         config.setPassword("Cx123456!");
         //config.setUrl("http://10.31.3.123");
-        config.setUrl("http://10.31.0.152");
-        //config.setUrl("http://galn-laptop");
-        config.setProjectName("SanityTesmt842");
+        //config.setUrl("http://10.31.0.152");
+        config.setUrl("http://galn-laptop");
+        config.setProjectName("Sdg5");
         config.setPresetName("Default");
         // config.setPresetId(7);
         config.setTeamPath("\\CxServer");
@@ -92,7 +93,7 @@ public class testi {
         config.setSastFilterPattern(DEFAULT_FILTER_PATTERNS);
         config.setSastScanTimeoutInMinutes(null);//todo check
         config.setScanComment("This is First test of the Common client :) !!!!!!");
-        config.setIncremental(false);
+        config.setIncremental(true);
         config.setSynchronous(true);
         config.setSastThresholdsEnabled(true);
         config.setSastHighThreshold(1);
@@ -110,7 +111,6 @@ public class testi {
         config.setDenyProject(false);
         config.setPublic(true);
         //config.setZipFile();
-        config.setEngineConfigurationId(null);//TODO what should be the value?
         //config.setOsaDependenciesJson();
 
         return config;

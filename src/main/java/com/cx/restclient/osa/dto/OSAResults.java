@@ -28,6 +28,10 @@ public class OSAResults {
     public OSAResults() {
     }
 
+    public OSAResults(String osaScanId) {
+        this.osaScanId = osaScanId;
+    }
+
     public void setResults(OSASummaryResults osaSummaryResults, List<Library> osaLibraries, List<CVE> osaVulnerabilities, OSAScanStatus osaScanStatus) {
         setResults(osaSummaryResults);
         setOsaLibraries(osaLibraries);

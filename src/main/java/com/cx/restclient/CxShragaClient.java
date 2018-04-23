@@ -96,6 +96,10 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         return osaResults;
     }
 
+    public OSAResults getLastOSAResults() throws Exception {
+        return osaClient.getLastOSAResults(projectId);
+    }
+
     public ThresholdResult getThresholdResult() {
         StringBuilder res = new StringBuilder("");
         boolean isFail = isThresholdExceeded(sastResults, osaResults, res, config);
@@ -103,6 +107,10 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
     }
 
     public String generateHTMLSummary() throws Exception {
+        return SummaryUtils.generateSummary(sastResults, osaResults, config);
+    }
+
+    public String generateHTMLSummary(SASTResults sastResults, OSAResults osaResults) throws Exception {
         return SummaryUtils.generateSummary(sastResults, osaResults, config);
     }
 
@@ -126,7 +134,7 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
                 return team.getId();
             }
         }
-        throw new CxClientException("Could not resolve team ID from teamName: " + teamName); //TODO
+        throw new CxClientException("Could not resolve team ID from team name: " + teamName);
     }
 
     public int getPresetIdByName(String presetName) throws CxClientException, IOException, CxTokenExpiredException {
@@ -137,7 +145,7 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
             }
         }
 
-        throw new CxClientException("Could not resolve preset ID from preset Name: " + presetName); //TODO
+        throw new CxClientException("Could not resolve preset ID from preset name: " + presetName);
     }
 
     public List<Team> getTeamList() throws IOException, CxClientException, CxTokenExpiredException {
@@ -205,14 +213,5 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         StringEntity entity = new StringEntity(json);
         return httpClient.postRequest(CREATE_PROJECT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, Project.class, 201, "create new project: " + request.getName());
     }
-
-    public void updateSASTZipFile(File zipFile) {
-        config.setZipFile(zipFile);
-    } //TODO j need it??
-
-    public void updateOSAJsonDependencies(String osaDependenciesJson) {
-        config.setOsaDependenciesJson(osaDependenciesJson);
-    } //TODO j need it?>
-
-}
+ }
 

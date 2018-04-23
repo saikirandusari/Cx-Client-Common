@@ -55,7 +55,7 @@ public class CxHttpClient {
         this.logi = logi;
         this.username = username;
         this.password = password;
-        this.rootUri = new URL(new URL(hostname), "CxRestAPI/").toString(); //TODO qa pass with special charrrr
+        this.rootUri = new URL(new URL(hostname), "CxRestAPI/").toString();
         this.cxOrigin = origin;
         //create httpclient
         apacheClient = HttpClientBuilder.create().addInterceptorFirst(requestFilter).build();
@@ -119,7 +119,7 @@ public class CxHttpClient {
             return convertToObject(response, responseType, isCollection);
         } catch (CxTokenExpiredException ex) {
             if (retry) {
-                logi.warn("token expired");//TODO
+                logi.warn("Access token expired, requesting a new token");
                 login();
                 return request(httpMethod, contentType, entity, responseType, expectStatus, failedMsg, isCollection, false);
             }

@@ -32,7 +32,7 @@ class CxOSAClient /**implements ICxOSAClient **/
     private Logger log;
     private CxScanConfig config;
     private OSAResults osaResults = new OSAResults();
-    private Waiter<OSAScanStatus> osaWaiter = new Waiter<OSAScanStatus>("CxOSA", 20) {
+    private Waiter<OSAScanStatus> osaWaiter = new Waiter<OSAScanStatus>("CxOSA scan", 20) {
         @Override
         public OSAScanStatus getStatus(String id) throws CxClientException, IOException, CxTokenExpiredException {
             return getOSAScanStatus(id);
@@ -96,7 +96,6 @@ class CxOSAClient /**implements ICxOSAClient **/
     }
 
     private OSAResults retrieveOSAResults(OSAResults results, OSAScanStatus osaScanStatus) throws CxClientException, IOException, CxTokenExpiredException {
-
         String scanId = results.getOsaScanId();
         OSASummaryResults osaSummaryResults = getOSAScanSummaryResults(scanId);
         List<Library> osaLibraries = getOSALibraries(scanId);
@@ -106,14 +105,17 @@ class CxOSAClient /**implements ICxOSAClient **/
         return results;
     }
 
-    public OSAResults getOSALastResults() throws CxClientException, IOException, CxOSAException, InterruptedException, CxTokenExpiredException {
+    public OSAResults getLastOSAResults(long projectId) throws CxClientException, IOException, CxOSAException, InterruptedException, CxTokenExpiredException {
         log.info("----------------------------------Get CxOSA Last Results:--------------------------------");
-        OSAScanStatus osaScanStatus = getOSALastOSAStatus();
-        String lastScanId = osaScanStatus.getBaseId();
-        OSAResults lastResults = new OSAResults();
-        lastResults.setOsaScanId(lastScanId);
 
-        return retrieveOSAResults(lastResults, osaScanStatus);
+        List<OSAScanStatus> scanList = getOSALastOSAStatus(projectId);
+        for (OSAScanStatus s : scanList) {
+            if (Status.SUCCEEDED.value().equals(s.getState().getName())) {
+                OSAResults lastResults = new OSAResults(s.getBaseId());
+                return retrieveOSAResults(lastResults,s);
+            }
+        }
+        return null;
     }
 
     //Private Methods
@@ -138,8 +140,8 @@ class CxOSAClient /**implements ICxOSAClient **/
         return httpClient.getRequest(relativePath, CONTENT_TYPE_APPLICATION_JSON_V1, OSASummaryResults.class, 200, "OSA scan summary results", false);
     }
 
-    private OSAScanStatus getOSALastOSAStatus() throws CxClientException, IOException, CxTokenExpiredException {
-        return httpClient.getRequest(OSA_LAST_SCAN, CONTENT_TYPE_APPLICATION_JSON_V1, OSAScanStatus.class, 200, " last OSA scan ID", false); //TODO
+    private List<OSAScanStatus> getOSALastOSAStatus(long projectId) throws CxClientException, IOException, CxTokenExpiredException {
+        return (List<OSAScanStatus>)httpClient.getRequest(OSA_SCANS + PROJECT_ID_QUERY_PARAM + projectId, CONTENT_TYPE_APPLICATION_JSON_V1, OSAScanStatus.class, 200, " last OSA scan ID", true);
     }
 
     private List<Library> getOSALibraries(String scanId) throws CxClientException, IOException, CxTokenExpiredException {

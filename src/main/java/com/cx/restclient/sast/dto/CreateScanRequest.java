@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateScanRequest {
-    private long projectId;//TODO int??
+    private long projectId;
     private boolean isIncremental;
     private boolean isPublic;
     private boolean forceScan;

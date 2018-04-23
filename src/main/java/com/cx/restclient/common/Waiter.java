@@ -40,21 +40,20 @@ public abstract class Waiter<T> {
                 status = ((BaseStatus) obj).getBaseStatus();
             } catch (Exception e) {
                 log.debug("Failed to get status from " + scanType + ". retrying (" + (retry - 1) + " tries left). Error message: " + e.getMessage());
-                if (retry < 0) { //TODO <= maybe
+                if (retry <= 0) {
                     throw new CxClientException("Failed to get status from " + scanType + ". Error message: " + e.getMessage());
                 }
                 retry--;
+                continue;
             }
             elapsedTimeSec = (new Date()).getTime() / 1000 - startTimeSec;
-            if (obj != null) { //TODO // FIXME: 21/03/2018
-                printProgress(obj);
-            }
-        }
-        if (scanTimeoutSec > elapsedTimeSec && !status.equals(Status.SUCCEEDED)) {
-            throw new CxClientException("Scan has reached the time limit. (" + scanTimeoutSec / 60 + " minutes).");
-        } //TODO Timeout QA
-        return resolveStatus(obj);
+            printProgress(obj);
 
+        }
+        if (scanTimeoutSec < elapsedTimeSec) {
+            throw new CxClientException("Waiting for " +scanType +" has reached the time limit. (" + scanTimeoutSec / 60 + " minutes).");
+        }
+        return resolveStatus(obj);
     }
 
     public abstract T getStatus(String id) throws CxClientException, IOException, CxTokenExpiredException;

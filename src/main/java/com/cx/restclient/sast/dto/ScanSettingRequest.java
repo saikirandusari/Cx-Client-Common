@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ScanSettingRequest {
     private long projectId;
-    private long presetId;//TODO int??
-    private long engineConfigurationId;//TODO int??
+    private long presetId;
+    private long engineConfigurationId;
     private Integer postScanActionId;
     private EmailNotifications emailNotifications;
 

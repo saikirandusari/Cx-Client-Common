@@ -38,7 +38,7 @@ public class CxScanConfig {
     private Integer sastLowThreshold;
     private Boolean generatePDFReport = false;
     private File zipFile;
-    private Integer engineConfigurationId; //TODO what are the default values
+    private Integer engineConfigurationId = 1;
 
     private String osaFilterPattern;
     private String osaArchiveIncludePatterns;
