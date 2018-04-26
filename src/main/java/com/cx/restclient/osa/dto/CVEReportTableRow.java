@@ -1,6 +1,8 @@
 package com.cx.restclient.osa.dto;
 
-public class CVEReportTableRow {
+import java.io.Serializable;
+
+public class CVEReportTableRow implements Serializable {
 
     private String name;
     private String severity;

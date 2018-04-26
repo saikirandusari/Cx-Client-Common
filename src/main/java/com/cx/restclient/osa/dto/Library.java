@@ -2,11 +2,13 @@ package com.cx.restclient.osa.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+
 /**
  * Created by zoharby on 09/01/2017.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Library {
+public class Library implements Serializable {
 
     private String id;//:"36b32b00-9ee6-4e2f-85c9-3f03f26519a9",
     private String name;//:"lib-name",

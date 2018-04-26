@@ -2,6 +2,7 @@
 package com.cx.restclient.sast.dto;
 
 import javax.xml.bind.annotation.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -783,7 +784,7 @@ public class CxXMLResults
     @XmlType(name = "", propOrder = {
         "result"
     })
-    public static class Query {
+    public static class Query implements Serializable {
         @Override
         public String toString() {
             return "{" +
@@ -1225,7 +1226,7 @@ public class CxXMLResults
         @XmlType(name = "", propOrder = {
             "path"
         })
-        public static class Result {
+        public static class Result implements Serializable {
 
             @XmlElement(name = "Path", required = true)
             protected Path path;
@@ -1632,7 +1633,7 @@ public class CxXMLResults
             @XmlType(name = "", propOrder = {
                 "pathNode"
             })
-            public static class Path {
+            public static class Path implements Serializable {
 
                 @XmlElement(name = "PathNode")
                 protected List<PathNode> pathNode;
@@ -1803,7 +1804,7 @@ public class CxXMLResults
                     "length",
                     "snippet"
                 })
-                public static class PathNode {
+                public static class PathNode implements Serializable {
 
                     @XmlElement(name = "FileName", required = true)
                     protected String fileName;
@@ -2017,7 +2018,7 @@ public class CxXMLResults
                     @XmlType(name = "", propOrder = {
                         "line"
                     })
-                    public static class Snippet {
+                    public static class Snippet implements Serializable {
 
                         @XmlElement(name = "Line", required = true)
                         protected Line line;
@@ -2072,7 +2073,7 @@ public class CxXMLResults
                             "number",
                             "code"
                         })
-                        public static class Line {
+                        public static class Line implements Serializable {
 
                             @XmlElement(name = "Number")
                             protected String number;

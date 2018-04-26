@@ -2,11 +2,13 @@ package com.cx.restclient.osa.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+
 /**
  * Created by zoharby on 09/01/2017.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CVE {
+public class CVE implements Serializable {
 
     private String id;
     private String cveName;

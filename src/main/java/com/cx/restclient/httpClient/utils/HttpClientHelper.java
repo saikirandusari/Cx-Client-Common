@@ -78,7 +78,7 @@ public abstract class HttpClientHelper {
         if (response.getStatusLine().getStatusCode() != status) {
             String responseBody = extractResponseBody(response);
             responseBody = responseBody.replace("{", "").replace("}", "").replace(System.getProperty("line.separator"), " ").replace("  ", "");
-            throw new HttpResponseException(response.getStatusLine().getStatusCode(), message + ". " + "status code: " + response.getStatusLine() + ". error:" + responseBody);
+            throw new HttpResponseException(response.getStatusLine().getStatusCode(), message + ". " + " status code: " + response.getStatusLine().getStatusCode() + ". error message: " + responseBody);
         }
     }
 

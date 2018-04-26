@@ -14,10 +14,8 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import static com.cx.restclient.common.CxPARAM.*;
@@ -26,6 +24,7 @@ import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLIC
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.convertToJson;
 import static com.cx.restclient.sast.utils.SASTParam.SAST_ENGINE_CONFIG;
 import static com.cx.restclient.sast.utils.SASTParam.SAST_GET_PROJECT;
+import static com.cx.restclient.sast.utils.SASTParam.SAST_GET_All_PROJECTS;
 
 /**
  * Created by Galn on 05/02/2018.
@@ -38,16 +37,22 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
 
     private CxSASTClient sastClient;
     private CxOSAClient osaClient;
-    private SASTResults sastResults = new SASTResults();
-    private OSAResults osaResults = new OSAResults();
+    private long sastScanId;
+    private String osaScanId;
+    private SASTResults sastResults;
+    private OSAResults osaResults;
 
 
-    public CxShragaClient(CxScanConfig config, Logger log) throws URISyntaxException, MalformedURLException {
+    public CxShragaClient(CxScanConfig config, Logger log) throws MalformedURLException {
         this.config = config;
         this.log = log;
         this.httpClient = new CxHttpClient(config.getUrl(), config.getUsername(), config.getPassword(), config.getCxOrigin(), log);
         sastClient = new CxSASTClient(httpClient, log, config);
         osaClient = new CxOSAClient(httpClient, log, config);
+    }
+
+    public CxShragaClient(String serverUrl, String username, String password, String origin, Logger log) throws MalformedURLException {
+        this(new CxScanConfig(serverUrl, username, password, origin),log);
     }
 
     //API Scans methods
@@ -62,18 +67,12 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
     }
 
     public long createSASTScan() throws CxSASTException, InterruptedException, IOException {
-        long sastScanId = sastClient.createSASTScan(projectId);
-        sastResults.setScanId(sastScanId);
-        sastResults.setSastProjectLink(config.getUrl(), projectId);
-
+        sastScanId = sastClient.createSASTScan(projectId);
         return sastScanId;
     }
 
     public String createOSAScan() throws IOException, InterruptedException, CxClientException, CxTokenExpiredException {
-        String osaScanId = osaClient.createOSAScan(projectId);
-        osaResults.setOsaScanId(osaScanId);
-        osaResults.setOsaProjectSummaryLink(config.getUrl(), projectId);
-
+        osaScanId = osaClient.createOSAScan(projectId);
         return osaScanId;
     }
 
@@ -81,23 +80,24 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         sastClient.cancelSASTScan(sastResults.getScanId());
     }
 
-    public SASTResults getSASTResults() throws Exception {
-        sastResults = sastClient.getSASTResults(sastResults.getScanId(), projectId);
+    public SASTResults waitForSASTResults() throws Exception {
+        sastResults = sastClient.waitForSASTResults(sastScanId, projectId);
         return sastResults;
     }
 
-    public SASTResults getLastSASTResults() throws Exception {
-        return sastClient.getLastSASTResults(projectId);
+    public SASTResults getLatestSASTResults() throws Exception {
+        sastResults = sastClient.getLatestSASTResults(projectId);
+        return sastResults;
     }
 
-
-    public OSAResults getOSAResults() throws Exception {
-        osaResults = osaClient.getOSAResults(osaResults.getOsaScanId());
+    public OSAResults waitForOSAResults() throws Exception {
+        osaResults = osaClient.getOSAResults(osaScanId, projectId);
         return osaResults;
     }
 
-    public OSAResults getLastOSAResults() throws Exception {
-        return osaClient.getLastOSAResults(projectId);
+    public OSAResults getLatestOSAResults() throws Exception {
+        osaResults = osaClient.getLatestOSAResults(projectId);
+        return osaResults;
     }
 
     public ThresholdResult getThresholdResult() {
@@ -156,13 +156,9 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         return (List<Preset>) httpClient.getRequest(CXPRESETS, CONTENT_TYPE_APPLICATION_JSON_V1, Preset.class, 200, "preset list", true);
     }
 
-    public List<CxNameObj> GetConfigurationSetList() throws IOException, CxClientException, CxTokenExpiredException {
+    public List<CxNameObj> getConfigurationSetList() throws IOException, CxClientException, CxTokenExpiredException {
         return (List<CxNameObj>) httpClient.getRequest(SAST_ENGINE_CONFIG, CONTENT_TYPE_APPLICATION_JSON_V1, CxNameObj.class, 200, "engine configurations", true);
     }
-
-   /* public File zipItJenkins() throws IOException, InterruptedException {
-        return CxZipUtils.zipWorkspaceFolder(config, MAX_ZIP_SIZE_BYTES, log);
-    }*/
 
     //Private methods
     private void resolveTeam() throws CxClientException, IOException, CxTokenExpiredException {
@@ -200,6 +196,18 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         List<Project> projects = null;
         try {
             projects = (List<Project>) httpClient.getRequest(projectNamePath, CONTENT_TYPE_APPLICATION_JSON_V1, Project.class, 200, "project by name: " + projectName, true);
+        } catch (HttpResponseException ex) {
+            if (ex.getStatusCode() != 404) {
+                throw ex;
+            }
+        }
+        return projects;
+    }
+
+    public List<Project> getAllProjects() throws IOException, CxClientException, CxTokenExpiredException {
+        List<Project> projects = null;
+        try {
+            projects = (List<Project>) httpClient.getRequest(SAST_GET_All_PROJECTS, CONTENT_TYPE_APPLICATION_JSON_V1, Project.class, 200, "all projects", true);
         } catch (HttpResponseException ex) {
             if (ex.getStatusCode() != 404) {
                 throw ex;

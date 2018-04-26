@@ -1,5 +1,6 @@
 package com.cx.restclient.osa.utils;
 
+import com.cx.restclient.common.ShragaUtils;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.osa.dto.OSASummaryResults;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,10 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import static com.cx.restclient.common.CxPARAM.CX_REPORT_LOCATION;
 
@@ -23,13 +21,23 @@ import static com.cx.restclient.common.CxPARAM.CX_REPORT_LOCATION;
  */
 public abstract class OSAUtils {
 
-    public static void writeToOsaListToTemp(String osaDependenciesJson, Logger log) {
+    private static final String[] SUPPORTED_EXTENSIONS = {"jar", "war", "ear", "aar", "dll", "exe", "msi", "nupkg", "egg", "whl", "tar.gz", "gem", "deb", "udeb",
+            "dmg", "drpm", "rpm", "pkg.tar.xz", "swf", "swc", "air", "apk", "zip", "gzip", "tar.bz2", "tgz", "c", "cc", "cp", "cpp", "css", "c++", "h", "hh", "hpp",
+            "hxx", "h++", "m", "mm", "pch", "java", "c#", "cs", "csharp", "go", "goc", "js", "plx", "pm", "ph", "cgi", "fcgi", "psgi", "al", "perl", "t", "p6m", "p6l", "nqp,6pl", "6pm",
+            "p6", "php", "py", "rb", "swift", "clj", "cljx", "cljs", "cljc"};
+
+    private static final String INCLUDE_ALL_EXTENSIONS = "**/**";
+
+    public static final String DEFAULT_ARCHIVE_INCLUDES = "**/.*jar,**/*.war,**/*.ear,**/*.sca,**/*.gem,**/*.whl,**/*.egg,**/*.tar,**/*.tar.gz,**/*.tgz,**/*.zip,**/*.rar";
+
+
+    public static void writeToOsaListToFile(File dir, String osaDependenciesJson, Logger log) {
         try {
-            File temp = new File(FileUtils.getTempDirectory(), "CxOSAFileList.json");
-            FileUtils.writeStringToFile(temp, osaDependenciesJson, Charset.defaultCharset());
-            log.info("OSA file list saved to file: ["+temp.getAbsolutePath()+"]");
+            File file = new File(dir, "OSADependencies.json");
+            FileUtils.writeStringToFile(file, osaDependenciesJson, Charset.defaultCharset());
+            log.info("OSA dependencies saved to file: ["+file.getAbsolutePath()+"]");
         } catch (Exception e) {
-            log.info("Failed to write OSA file list to temp directory: " + e.getMessage());
+            log.info("Failed to write OSA dependencies to file: " + e.getMessage());
         }
 
     }
@@ -38,35 +46,30 @@ public abstract class OSAUtils {
         return String.format( url + "/CxWebClient/SPA/#/viewer/project/%s", projectId);
     }
 
-    public static Properties generateOSAScanConfiguration(String filterPatterns, String archiveIncludes, String scanFolder, boolean installBeforeScan) {
+    public static Properties generateOSAScanConfiguration(String folderExclusions, String filterPatterns, String archiveIncludes, String scanFolder, boolean installBeforeScan, Logger log) {
         Properties ret = new Properties();
         filterPatterns = StringUtils.defaultString(filterPatterns);
         archiveIncludes = StringUtils.defaultString(archiveIncludes);
 
-        List<String> inclusions = new ArrayList<String>();
-        List<String> exclusions = new ArrayList<String>();
-        String[] filters = filterPatterns.split("\\s*,\\s*"); //split by comma and trim (spaces + newline)
-        for (String filter : filters) {
-            if (StringUtils.isNotEmpty(filter)) {
-                if (!filter.startsWith("!")) {
-                    inclusions.add(filter);
-                } else if (filter.length() > 1) {
-                    filter = filter.substring(1); // Trim the "!"
-                    exclusions.add(filter);
-                }
-            }
-        }
+        Map<String, List<String>> stringListMap = ShragaUtils.generateIncludesExcludesPatternLists(folderExclusions, filterPatterns, log);
+
+        List<String> inclusions = stringListMap.get(ShragaUtils.INCLUDES_LIST);
+        List<String> exclusions = stringListMap.get(ShragaUtils.EXCLUDES_LIST);
 
         String includesString = StringUtils.join(inclusions, ",");
         String excludesString = StringUtils.join(exclusions, ",");
 
         if (StringUtils.isNotEmpty(includesString)) {
             ret.put("includes", includesString);
+        } else {
+            ret.put("includes",INCLUDE_ALL_EXTENSIONS);
         }
 
         if (StringUtils.isNotEmpty(excludesString)) {
             ret.put("excludes", excludesString);
         }
+
+        ret.put("acceptExtensionsList", SUPPORTED_EXTENSIONS);
 
         if (StringUtils.isNotEmpty(archiveIncludes)) {
             String[] archivePatterns = archiveIncludes.split("\\s*,\\s*"); //split by comma and trim (spaces + newline)
@@ -78,7 +81,7 @@ public abstract class OSAUtils {
             archiveIncludes = StringUtils.join(archivePatterns, ",");
             ret.put("archiveIncludes", archiveIncludes);
         } else {
-            ret.put("archiveIncludes", "**/.*jar,**/*.war,**/*.ear,**/*.sca,**/*.gem,**/*.whl,**/*.egg,**/*.tar,**/*.tar.gz,**/*.tgz,**/*.zip,**/*.rar");
+            ret.put("archiveIncludes",DEFAULT_ARCHIVE_INCLUDES);
         }
 
         ret.put("archiveExtractionDepth", "4");
@@ -117,7 +120,7 @@ public abstract class OSAUtils {
         log.info("-----------------------------------------------------------------------------------------");
     }
 
-    public static void writeJsonToFile(String name, Object jsonObj, File workDirectory,Logger log) throws IOException {
+    public static void writeJsonToFile(String name, Object jsonObj, File workDirectory, Logger log) {
       try {
           ObjectMapper objectMapper = new ObjectMapper();
           String now = new SimpleDateFormat("dd_MM_yyyy-HH_mm_ss").format(new Date());

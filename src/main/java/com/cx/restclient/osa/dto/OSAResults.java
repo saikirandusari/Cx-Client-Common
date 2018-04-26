@@ -1,5 +1,6 @@
 package com.cx.restclient.osa.dto;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.Map;
 /**
  * Created by Galn on 07/02/2018.
  */
-public class OSAResults {
+public class OSAResults implements Serializable{
     private String osaScanId;
     private OSASummaryResults results;
     private List<Library> osaLibraries;
@@ -32,13 +33,14 @@ public class OSAResults {
         this.osaScanId = osaScanId;
     }
 
-    public void setResults(OSASummaryResults osaSummaryResults, List<Library> osaLibraries, List<CVE> osaVulnerabilities, OSAScanStatus osaScanStatus) {
+    public void setResults(OSASummaryResults osaSummaryResults, List<Library> osaLibraries, List<CVE> osaVulnerabilities, OSAScanStatus osaScanStatus, String url, long projectId) {
         setResults(osaSummaryResults);
         setOsaLibraries(osaLibraries);
         setOsaVulnerabilities(osaVulnerabilities);
         setOsaCVEReportTable(osaVulnerabilities, osaLibraries);
         setDates(osaScanStatus);
         setOsaScanStatus(osaScanStatus);
+        setOsaProjectSummaryLink(url, projectId);
         setOsaResultsReady(true);
     }
 

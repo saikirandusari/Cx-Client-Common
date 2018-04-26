@@ -24,7 +24,7 @@ public class CxZip {
         this.maxZipSizeInBytes = maxZipSizeInBytes;
     }
 
-    public File zipWorkspaceFolder(File baseDir, String filterPattern)
+    public File zipWorkspaceFolder(File baseDir, String[] includes, String[] excludes)
             throws InterruptedException, IOException {
         log.info("Zipping workspace: '" + baseDir + "'");
 
@@ -39,7 +39,7 @@ public class CxZip {
         OutputStream fileOutputStream = new FileOutputStream(tempFile);
 
         try {
-            new Zipper(log).zip(baseDir, filterPattern, fileOutputStream, maxZipSizeInBytes, zipListener);
+            new Zipper(log).zip(baseDir, includes, excludes, fileOutputStream, maxZipSizeInBytes, zipListener);
         } catch (Zipper.MaxZipSizeReached e) {
             tempFile.delete();
             throw new IOException("Reached maximum upload size limit of " + FileUtils.byteCountToDisplaySize(maxZipSizeInBytes));

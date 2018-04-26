@@ -23,7 +23,7 @@ public abstract class Waiter<T> {
         this.sleepIntervalSec = interval;
     }
 
-    private long startTimeSec; //In miliSeconds!!!!!!!!!!! Or minutes!!! or not!!
+    private long startTimeSec;
 
     protected Status status = null;
 
@@ -50,7 +50,7 @@ public abstract class Waiter<T> {
             printProgress(obj);
 
         }
-        if (scanTimeoutSec < elapsedTimeSec) {
+        if (scanTimeoutSec  > 0 && scanTimeoutSec < elapsedTimeSec) {
             throw new CxClientException("Waiting for " +scanType +" has reached the time limit. (" + scanTimeoutSec / 60 + " minutes).");
         }
         return resolveStatus(obj);

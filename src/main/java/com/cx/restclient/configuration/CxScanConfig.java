@@ -2,12 +2,15 @@ package com.cx.restclient.configuration;
 
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Created by galn on 21/12/2016.
  */
-public class CxScanConfig {
+public class CxScanConfig implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Boolean sastEnabled = false;
     private Boolean osaEnabled = false;
@@ -40,6 +43,7 @@ public class CxScanConfig {
     private File zipFile;
     private Integer engineConfigurationId = 1;
 
+    private String osaFolderExclusions;
     private String osaFilterPattern;
     private String osaArchiveIncludePatterns;
     private Boolean osaRunInstall = false;
@@ -49,6 +53,16 @@ public class CxScanConfig {
     private Integer osaLowThreshold;
     private Map<String, String> osaFsaConfig; //for MAVEN
     private String osaDependenciesJson;
+
+    public CxScanConfig() {
+    }
+
+    public CxScanConfig(String url, String username, String password, String cxOrigin) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        this.cxOrigin = cxOrigin;
+    }
 
     public Boolean getSastEnabled() {
         return sastEnabled;
@@ -284,6 +298,14 @@ public class CxScanConfig {
 
     public String getOsaFilterPattern() {
         return osaFilterPattern;
+    }
+
+    public String getOsaFolderExclusions() {
+        return osaFolderExclusions;
+    }
+
+    public void setOsaFolderExclusions(String osaFolderExclusions) {
+        this.osaFolderExclusions = osaFolderExclusions;
     }
 
     public void setOsaFilterPattern(String osaFilterPattern) {

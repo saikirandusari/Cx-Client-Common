@@ -51,7 +51,7 @@ public class CxHttpClient {
         }
     };
 
-    public CxHttpClient(String hostname, String username, String password, String origin, Logger logi) throws URISyntaxException, MalformedURLException {
+    public CxHttpClient(String hostname, String username, String password, String origin, Logger logi) throws MalformedURLException {
         this.logi = logi;
         this.username = username;
         this.password = password;

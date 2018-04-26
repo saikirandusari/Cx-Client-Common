@@ -3,6 +3,13 @@ package com.cx.restclient.common;
 import com.cx.restclient.configuration.CxScanConfig;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.sast.dto.SASTResults;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by: dorg.
@@ -32,6 +39,75 @@ public abstract class ShragaUtils {
             fail = true;
         }
         return fail;
+    }
+
+
+    public static Map<String, List<String>> generateIncludesExcludesPatternLists(String folderExclusions, String filterPattern, Logger log) {
+
+        String excludeFoldersPattern = processExcludeFolders(folderExclusions, log);
+        String combinedPatterns = "";
+
+        if (StringUtils.isEmpty(filterPattern) && StringUtils.isEmpty(excludeFoldersPattern)) {
+            combinedPatterns = "";
+        } else if (!StringUtils.isEmpty(filterPattern) && StringUtils.isEmpty(excludeFoldersPattern)) {
+            combinedPatterns =  filterPattern;
+        } else if (StringUtils.isEmpty(filterPattern) && !StringUtils.isEmpty(excludeFoldersPattern)) {
+            combinedPatterns =  excludeFoldersPattern;
+        } else {
+            combinedPatterns =  filterPattern + "," + excludeFoldersPattern;
+        }
+
+
+        return convertPatternsToLists(combinedPatterns);
+
+
+    }
+
+    public static String processExcludeFolders(String folderExclusions, Logger log) {
+        if (StringUtils.isEmpty(folderExclusions)) {
+            return "";
+        }
+
+        StringBuilder result = new StringBuilder();
+        String[] patterns = StringUtils.split(folderExclusions, ",\n");
+        for (String p : patterns) {
+            p = p.trim();
+            if (p.length() > 0) {
+                result.append("!**/");
+                result.append(p);
+                result.append("/**,");
+            }
+        }
+
+        log.info("Exclude folders converted to: '" + result.toString() + "'");
+        return result.toString();
+    }
+
+
+    public static final String INCLUDES_LIST = "includes";
+    public static final String EXCLUDES_LIST = "excludes";
+    public static Map<String, List<String>> convertPatternsToLists(String filterPatterns) {
+
+        filterPatterns = StringUtils.defaultString(filterPatterns);
+        List<String> inclusions = new ArrayList<String>();
+        List<String> exclusions = new ArrayList<String>();
+        String[] filters = filterPatterns.replace("\n", "").replace("\r", "").split("\\s*,\\s*"); //split by comma and trim (spaces + newline)
+        for (String filter : filters) {
+            if (StringUtils.isNotEmpty(filter)) {
+                if (!filter.startsWith("!")) {
+                    inclusions.add(filter);
+                } else if (filter.length() > 1) {
+                    filter = filter.substring(1); // Trim the "!"
+                    exclusions.add(filter);
+                }
+            }
+        }
+
+        Map<String, List<String>> ret = new HashMap<String, List<String>>();
+        ret.put(INCLUDES_LIST, inclusions);
+        ret.put(EXCLUDES_LIST, exclusions);
+
+        return ret;
     }
 
 }

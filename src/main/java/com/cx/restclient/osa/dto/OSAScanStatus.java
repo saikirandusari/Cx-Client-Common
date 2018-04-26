@@ -4,6 +4,7 @@ import com.cx.restclient.dto.BaseStatus;
 import com.cx.restclient.dto.Status;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  * Date: 06/10/2016.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OSAScanStatus extends BaseStatus {
+public class OSAScanStatus extends BaseStatus implements Serializable {
 
     private String id;
     private String startAnalyzeTime;

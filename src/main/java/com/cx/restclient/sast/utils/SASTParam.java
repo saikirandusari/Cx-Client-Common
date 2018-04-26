@@ -12,6 +12,7 @@ public class SASTParam {
     public static final String SAST_SCAN = "sast/scans/{scanId}"; //Get Scan status (by scan ID)
     public static final String SAST_QUEUE_SCAN_STATUS = "sast/scansQueue/{scanId}";
     public static final String SAST_GET_PROJECT = "projects?projectname={name}&teamid={teamId}";// Get  project)
+    public static final String SAST_GET_All_PROJECTS = "projects";// Get  project)
     public static final String SAST_ZIP_ATTACHMENTS = "projects/{projectId}/sourceCode/attachments";//Attach ZIP file
     public static final String SAST_GET_PROJECT_SCANS = "sast/scans?projectId={projectId}";
 

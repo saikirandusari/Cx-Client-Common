@@ -1,5 +1,6 @@
 package com.cx.restclient.sast.dto;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,7 +16,7 @@ import static com.cx.restclient.sast.utils.SASTParam.SCAN_LINK_FORMAT;
 /**
  * Created by Galn on 05/02/2018.
  */
-public class SASTResults {
+public class SASTResults implements Serializable {
 
     private long scanId;
 
@@ -43,6 +44,7 @@ public class SASTResults {
     private String LOC;
     private List<CxXMLResults.Query> queryList;
 
+    private byte[] rawXMLReport;
     private byte[] PDFReport;
 
     private enum Severity {
@@ -261,6 +263,14 @@ public class SASTResults {
 
     public List<CxXMLResults.Query> getQueryList() {
         return queryList;
+    }
+
+    public byte[] getRawXMLReport() {
+        return rawXMLReport;
+    }
+
+    public void setRawXMLReport(byte[] rawXMLReport) {
+        this.rawXMLReport = rawXMLReport;
     }
 
     public byte[] getPDFReport() {

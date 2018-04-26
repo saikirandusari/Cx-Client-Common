@@ -31,7 +31,6 @@ class CxOSAClient /**implements ICxOSAClient **/
     private CxHttpClient httpClient;
     private Logger log;
     private CxScanConfig config;
-    private OSAResults osaResults = new OSAResults();
     private Waiter<OSAScanStatus> osaWaiter = new Waiter<OSAScanStatus>("CxOSA scan", 20) {
         @Override
         public OSAScanStatus getStatus(String id) throws CxClientException, IOException, CxTokenExpiredException {
@@ -67,23 +66,30 @@ class CxOSAClient /**implements ICxOSAClient **/
 
     private String resolveOSADependencies() {
         log.info("Scanning for CxOSA compatible files");
-        Properties scannerProperties = OSAUtils.generateOSAScanConfiguration(config.getOsaFilterPattern(),
-                config.getOsaArchiveIncludePatterns(), config.getSourceDir(), config.getOsaRunInstall());
+        Properties scannerProperties = OSAUtils.generateOSAScanConfiguration(
+                config.getOsaFolderExclusions(),
+                config.getOsaFilterPattern(),
+                config.getOsaArchiveIncludePatterns(),
+                config.getSourceDir(),
+                config.getOsaRunInstall(),
+                log);
+
         ComponentScan componentScan = new ComponentScan(scannerProperties);
         String osaDependenciesJson = componentScan.scan();
-        OSAUtils.writeToOsaListToTemp(osaDependenciesJson, log);
+        OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
 
         return osaDependenciesJson;
     }
 
-    public OSAResults getOSAResults(String scanId) throws CxClientException, IOException, CxOSAException, InterruptedException, CxTokenExpiredException {
+    public OSAResults getOSAResults(String scanId, long projectId) throws CxClientException, IOException, CxOSAException, InterruptedException, CxTokenExpiredException {
         log.info("-------------------------------------Get CxOSA Results:-----------------------------------");
         log.info("Waiting for OSA scan to finish");
         OSAScanStatus osaScanStatus = osaWaiter.waitForTaskToFinish(scanId, -1, log);
         log.info("OSA scan finished successfully. Retrieving OSA scan results");
 
         log.info("Creating OSA reports");
-        retrieveOSAResults(osaResults, osaScanStatus);
+        OSAResults osaResults = retrieveOSAResults(scanId, osaScanStatus, projectId);
+        OSAUtils.printOSAResultsToConsole(osaResults, log);
 
         if (config.getReportsDir() != null) {
             writeJsonToFile(OSA_SUMMARY_NAME, osaResults.getResults(), config.getReportsDir(), log);
@@ -91,28 +97,25 @@ class CxOSAClient /**implements ICxOSAClient **/
             writeJsonToFile(OSA_VULNERABILITIES_NAME, osaResults.getOsaVulnerabilities(), config.getReportsDir(), log);
         }
 
-        OSAUtils.printOSAResultsToConsole(osaResults, log);
         return osaResults;
     }
 
-    private OSAResults retrieveOSAResults(OSAResults results, OSAScanStatus osaScanStatus) throws CxClientException, IOException, CxTokenExpiredException {
-        String scanId = results.getOsaScanId();
+    private OSAResults retrieveOSAResults(String scanId, OSAScanStatus osaScanStatus, long projectId) throws CxClientException, IOException, CxTokenExpiredException {
         OSASummaryResults osaSummaryResults = getOSAScanSummaryResults(scanId);
         List<Library> osaLibraries = getOSALibraries(scanId);
         List<CVE> osaVulnerabilities = getOSAVulnerabilities(scanId);
-
-        results.setResults(osaSummaryResults, osaLibraries, osaVulnerabilities, osaScanStatus);
+        OSAResults results = new OSAResults();
+        results.setOsaScanId(scanId);
+        results.setResults(osaSummaryResults, osaLibraries, osaVulnerabilities, osaScanStatus, config.getUrl(), projectId);
         return results;
     }
 
-    public OSAResults getLastOSAResults(long projectId) throws CxClientException, IOException, CxOSAException, InterruptedException, CxTokenExpiredException {
+    public OSAResults getLatestOSAResults(long projectId) throws CxClientException, IOException, CxOSAException, InterruptedException, CxTokenExpiredException {
         log.info("----------------------------------Get CxOSA Last Results:--------------------------------");
-
         List<OSAScanStatus> scanList = getOSALastOSAStatus(projectId);
         for (OSAScanStatus s : scanList) {
             if (Status.SUCCEEDED.value().equals(s.getState().getName())) {
-                OSAResults lastResults = new OSAResults(s.getBaseId());
-                return retrieveOSAResults(lastResults,s);
+                return retrieveOSAResults(s.getId(), s, projectId);
             }
         }
         return null;
@@ -122,9 +125,8 @@ class CxOSAClient /**implements ICxOSAClient **/
     private String sendOSAScan(String osaDependenciesJson, long projectId) throws CxClientException, IOException, CxTokenExpiredException {
         log.info("Sending OSA scan request");
         CreateOSAScanResponse osaScan = sendOSARequest(projectId, osaDependenciesJson);
-        String osaProjectSummaryLink = OSAUtils.composeProjectOSASummaryLink(config.getUrl(), projectId);
-        osaResults.setOsaProjectSummaryLink(osaProjectSummaryLink);
-        log.info("OSA scan created successfully. Link to project state: " + osaProjectSummaryLink);
+        String summaryLink = OSAUtils.composeProjectOSASummaryLink(config.getUrl(), projectId);
+        log.info("OSA scan created successfully. Link to project state: " + summaryLink);
 
         return osaScan.getScanId();
     }

@@ -2,12 +2,14 @@ package com.cx.restclient.osa.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+
 /**
  * Created by: Dorg.
  * Date: 15/03/2017.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OSAScanState {
+public class OSAScanState implements Serializable {
 
     private int id;
     private String name;

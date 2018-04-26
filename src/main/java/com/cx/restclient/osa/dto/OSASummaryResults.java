@@ -2,12 +2,14 @@ package com.cx.restclient.osa.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+
 /**
  * Created by: Dorg.
  * Date: 09/10/2016.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OSASummaryResults {
+public class OSASummaryResults implements Serializable {
 
     private int totalLibraries;
     private int highVulnerabilityLibraries;
