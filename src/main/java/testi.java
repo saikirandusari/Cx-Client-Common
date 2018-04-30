@@ -1,5 +1,7 @@
 import com.cx.restclient.CxShragaClient;
 import com.cx.restclient.configuration.CxScanConfig;
+import com.cx.restclient.exception.CxClientException;
+import com.cx.restclient.exception.CxTokenExpiredException;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.sast.dto.SASTResults;
 import org.slf4j.Logger;
@@ -34,6 +36,26 @@ public class testi {
 
 
     public static void main(String[] args) throws Exception {
+
+
+        try {
+            tt();
+        } catch (CxTokenExpiredException e) {
+            System.out.println("i did it i did it: " + e.getMessage());
+
+        }
+
+        try {
+            pp();
+        } catch (CxTokenExpiredException e) {
+            System.out.println(":( " + e.getMessage());
+
+        }
+
+        if(true) {
+            return;
+        }
+
         SASTResults sastResults = null;
         SASTResults lastSastResults = null;
         OSAResults osaResults = null;
@@ -44,10 +66,19 @@ public class testi {
 
         CxShragaClient shraga = new CxShragaClient(config, logi);
         shraga.init();
+        String osaScan = shraga.createOSAScan();
+
+        System.out.println("osa scanId: " + osaScan);
+
+
+
+        shraga.login();
+        shraga.getAllProjects();
+        shraga.init();
 
         // List<Team> teamList = client.getTeamList();
         //List<Query> presetList = client.getPresetList();
-      // List<CxNameObj> configList = shraga.GetConfigurationSetList();
+      // List<CxNameObj> configList = shraga.getConfigurationSetList();
 
         shraga.createSASTScan();
         // shraga.cancelSASTScan(sastScanId);
@@ -59,10 +90,10 @@ public class testi {
 
 
     //   sas
-        // tResults = shraga.getSASTResults();
-        lastSastResults = shraga.getLastSASTResults();
-       // osaResults = shraga.getOSAResults();
-        lastOsaResults = shraga.getLastOSAResults();
+        // tResults = shraga.waitForSASTResults();
+        lastSastResults = shraga.getLatestSASTResults();
+       // osaResults = shraga.waitForOSAResults();
+        lastOsaResults = shraga.getLatestOSAResults();
 
        // ThresholdResult thresholdResult = shraga.getThresholdResult();
         String s = shraga.generateHTMLSummary(lastSastResults, lastOsaResults);
@@ -72,18 +103,27 @@ public class testi {
     }
 
 
+    public static void tt() throws CxClientException {
+        throw new CxTokenExpiredException("kuku");
+    }
+
+    public static void pp() throws CxClientException {
+        throw new CxClientException("kuku");
+    }
+
+
     private static CxScanConfig setConfigi() {
         CxScanConfig config = new CxScanConfig();
-        config.setSastEnabled(true);
+        config.setSastEnabled(false);
         config.setCxOrigin("Bamboo");
-       config.setSourceDir("C:\\Users\\galn\\Desktop\\restiDir\\srcDir");
+       config.setSourceDir("C:\\Users\\dorg\\Desktop\\JavaAllSeverities");
        // config.setSourceDir("C:\\Users\\galn\\Desktop\\restiDir\\srcDir\\SAST\\Folder1\\Folder2\\Folder3");
-        config.setReportsDir(new File("C:\\Users\\galm\\Desktop\\restiDir\\reportsDir"));
+        config.setReportsDir(new File("C:\\Users\\dorg\\Desktop\\reports"));
         config.setUsername("admin@cx");
         config.setPassword("Cx123456!");
         //config.setUrl("http://10.31.3.123");
         //config.setUrl("http://10.31.0.152");
-        config.setUrl("http://galn-laptop");
+        config.setUrl("http://localhost");
         config.setProjectName("Sdg5");
         config.setPresetName("Default");
         // config.setPresetId(7);

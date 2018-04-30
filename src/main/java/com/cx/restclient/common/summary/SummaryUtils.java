@@ -32,7 +32,7 @@ public abstract class SummaryUtils {
 
         //sast:
         if(config.getSastEnabled() && sastResults.isSastResultsReady()) {
-            boolean sastThresholdExceeded = ShragaUtils.isThresholdExceeded(sastResults, null, new StringBuilder(), config);
+            boolean sastThresholdExceeded = ShragaUtils.isThresholdExceeded(config, sastResults, null, new StringBuilder());
             templateData.put("sastThresholdExceeded", sastThresholdExceeded);
 
             //calculate sast bars:
@@ -66,7 +66,7 @@ public abstract class SummaryUtils {
 
         //osa:
         if(config.getOsaEnabled() && osaResults.isOsaResultsReady()) {
-            boolean osaThresholdExceeded = ShragaUtils.isThresholdExceeded(null, osaResults, new StringBuilder(), config);
+            boolean osaThresholdExceeded = ShragaUtils.isThresholdExceeded(config, null, osaResults, new StringBuilder());
             templateData.put("osaThresholdExceeded", osaThresholdExceeded);
 
             //calculate osa bars:

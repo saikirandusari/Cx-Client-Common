@@ -3,7 +3,6 @@ package com.cx.restclient.common;
 import com.cx.restclient.dto.BaseStatus;
 import com.cx.restclient.dto.Status;
 import com.cx.restclient.exception.CxClientException;
-import com.cx.restclient.exception.CxTokenExpiredException;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -41,7 +40,7 @@ public abstract class Waiter<T> {
             } catch (Exception e) {
                 log.debug("Failed to get status from " + scanType + ". retrying (" + (retry - 1) + " tries left). Error message: " + e.getMessage());
                 if (retry <= 0) {
-                    throw new CxClientException("Failed to get status from " + scanType + ". Error message: " + e.getMessage());
+                    throw new CxClientException("Failed to get status from " + scanType + ". Error message: " + e.getMessage(), e);
                 }
                 retry--;
                 continue;
@@ -56,7 +55,7 @@ public abstract class Waiter<T> {
         return resolveStatus(obj);
     }
 
-    public abstract T getStatus(String id) throws CxClientException, IOException, CxTokenExpiredException;
+    public abstract T getStatus(String id) throws CxClientException, IOException;
 
     public abstract void printProgress(T status);
 

@@ -2,13 +2,12 @@ package com.cx.restclient.httpClient.utils;
 
 
 import com.cx.restclient.exception.CxClientException;
-import com.cx.restclient.exception.CxTokenExpiredException;
+import com.cx.restclient.exception.CxHTTPClientException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpResponseException;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -37,55 +36,48 @@ public abstract class HttpClientHelper {
 
     private static <T> T convertToStrObject(HttpResponse response, Class<T> valueType) throws CxClientException {
         ObjectMapper mapper = new ObjectMapper();
-        String json = "";
         try {
             if (response.getEntity() == null) {
                 return null;
             }
-            json = IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset());
+            String json = IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset());
             return mapper.readValue(json, valueType);
 
         } catch (IOException e) {
-            // log.debug("Failed to parse json response: [" + json + "]", e);
             throw new CxClientException("Failed to parse json response: " + e.getMessage());
         }
     }
 
     public static String convertToJson(Object o) throws CxClientException {
         ObjectMapper mapper = new ObjectMapper();
-        String json = "";
         try {
             return mapper.writeValueAsString(o);
         } catch (Exception e) {
-            // log.debug("Failed convert object to json: [" + json + "]", e);
             throw new CxClientException("Failed convert object to json: " + e.getMessage());
         }
     }
 
     private static <T> T convertToCollectionObject(HttpResponse response, JavaType javaType) throws CxClientException {
-        String json = "";
         ObjectMapper mapper = new ObjectMapper();
         try {
-            json = IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset());
+            String json = IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset());
             return mapper.readValue(json, javaType);
         } catch (IOException e) {
-            // log.debug("Failed to parse json response: [" + json + "]", e);
-            throw new CxClientException("Failed to parse json response: " + e.getMessage());
+            throw new CxClientException("Failed to parse json response: " + e.getMessage(), e);
         }
     }
 
-    public static void validateResponse(HttpResponse response, int status, String message) throws CxClientException, IOException, CxTokenExpiredException {
+    public static void validateResponse(HttpResponse response, int status, String message) throws CxHTTPClientException {
         if (response.getStatusLine().getStatusCode() != status) {
             String responseBody = extractResponseBody(response);
             responseBody = responseBody.replace("{", "").replace("}", "").replace(System.getProperty("line.separator"), " ").replace("  ", "");
-            throw new HttpResponseException(response.getStatusLine().getStatusCode(), message + ". " + " status code: " + response.getStatusLine().getStatusCode() + ". error message: " + responseBody);
+            throw new CxHTTPClientException(response.getStatusLine().getStatusCode(), message + ". " + " status code: " + response.getStatusLine().getStatusCode() + ". error message: " + responseBody);
         }
     }
 
     public static String extractResponseBody(HttpResponse response) {
         try {
-            String str = IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset());
-            return str;
+            return IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset());
         } catch (Exception e) {
             return "";
         }

@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,7 @@ public class CxHttpClient {
         apacheClient = HttpClientBuilder.create().addInterceptorFirst(requestFilter).build();
     }
 
-    public void login() throws CxClientException, IOException, CxTokenExpiredException {
+    public void login() throws IOException, CxClientException {
         UrlEncodedFormEntity requestEntity = generateUrlEncodedFormEntity();
         HttpPost post = new HttpPost(rootUri + AUTHENTICATION);
         token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, 200, "authenticate", false, false);
@@ -80,25 +79,24 @@ public class CxHttpClient {
     }
 
     //GET REQUEST
-    public <T> T getRequest(String relPath, String contentType, Class<T> responseType, int expectStatus, String failedMsg, boolean isCollection) throws IOException, CxClientException, CxTokenExpiredException {
+    public <T> T getRequest(String relPath, String contentType, Class<T> responseType, int expectStatus, String failedMsg, boolean isCollection) throws IOException, CxClientException {
         HttpGet get = new HttpGet(rootUri + relPath);
         return request(get, contentType, null, responseType, expectStatus, "get " + failedMsg, isCollection, true);
     }
 
     //POST REQUEST
-    public <T> T postRequest(String relPath, String contentType, HttpEntity entity, Class<T> responseType, int expectStatus, String failedMsg) throws CxClientException, IOException, CxTokenExpiredException {
+    public <T> T postRequest(String relPath, String contentType, HttpEntity entity, Class<T> responseType, int expectStatus, String failedMsg) throws IOException, CxClientException {
         HttpPost post = new HttpPost(rootUri + relPath);
         return request(post, contentType, entity, responseType, expectStatus, failedMsg, false, true);
     }
 
     //PATCH REQUEST
-    public void patchRequest(String relPath, String contentType, HttpEntity entity, int expectStatus, String failedMsg) throws CxClientException, IOException, CxTokenExpiredException {
+    public void patchRequest(String relPath, String contentType, HttpEntity entity, int expectStatus, String failedMsg) throws IOException, CxClientException {
         HttpPatch patch = new HttpPatch(rootUri + relPath);
         request(patch, contentType, entity, null, expectStatus, failedMsg, false, true);
     }
 
-
-    private <T> T request(HttpRequestBase httpMethod, String contentType, HttpEntity entity, Class<T> responseType, int expectStatus, String failedMsg, boolean isCollection, boolean retry) throws IOException, CxClientException, CxTokenExpiredException {
+    private <T> T request(HttpRequestBase httpMethod, String contentType, HttpEntity entity, Class<T> responseType, int expectStatus, String failedMsg, boolean isCollection, boolean retry) throws IOException, CxClientException {
         if (contentType != null) {
             httpMethod.addHeader("Content-type", contentType);
         }

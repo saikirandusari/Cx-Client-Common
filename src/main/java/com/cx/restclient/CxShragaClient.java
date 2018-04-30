@@ -5,8 +5,7 @@ import com.cx.restclient.configuration.CxScanConfig;
 import com.cx.restclient.dto.Team;
 import com.cx.restclient.dto.ThresholdResult;
 import com.cx.restclient.exception.CxClientException;
-import com.cx.restclient.exception.CxSASTException;
-import com.cx.restclient.exception.CxTokenExpiredException;
+import com.cx.restclient.exception.CxHTTPClientException;
 import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.sast.dto.*;
@@ -29,7 +28,8 @@ import static com.cx.restclient.sast.utils.SASTParam.SAST_GET_All_PROJECTS;
 /**
  * Created by Galn on 05/02/2018.
  */
-public class CxShragaClient /*implements ICxShragaClient*/ {
+public class CxShragaClient {
+
     private CxHttpClient httpClient;
     private Logger log;
     private CxScanConfig config;
@@ -56,7 +56,7 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
     }
 
     //API Scans methods
-    public void init() throws CxClientException, IOException, CxTokenExpiredException {
+    public void init() throws CxClientException, IOException {
         log.info("Initializing Cx client");
         login();
         if (config.getSastEnabled()) {
@@ -66,43 +66,43 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         resolveProject();
     }
 
-    public long createSASTScan() throws CxSASTException, InterruptedException, IOException {
+    public long createSASTScan() throws IOException, CxClientException {
         sastScanId = sastClient.createSASTScan(projectId);
         return sastScanId;
     }
 
-    public String createOSAScan() throws IOException, InterruptedException, CxClientException, CxTokenExpiredException {
+    public String createOSAScan() throws IOException, CxClientException {
         osaScanId = osaClient.createOSAScan(projectId);
         return osaScanId;
     }
 
-    public void cancelSASTScan() throws IOException, CxClientException, CxTokenExpiredException {
+    public void cancelSASTScan() throws IOException, CxClientException {
         sastClient.cancelSASTScan(sastResults.getScanId());
     }
 
-    public SASTResults waitForSASTResults() throws Exception {
+    public SASTResults waitForSASTResults() throws InterruptedException, CxClientException, IOException {
         sastResults = sastClient.waitForSASTResults(sastScanId, projectId);
         return sastResults;
     }
 
-    public SASTResults getLatestSASTResults() throws Exception {
+    public SASTResults getLatestSASTResults() throws InterruptedException, CxClientException, IOException {
         sastResults = sastClient.getLatestSASTResults(projectId);
         return sastResults;
     }
 
-    public OSAResults waitForOSAResults() throws Exception {
+    public OSAResults waitForOSAResults() throws InterruptedException, CxClientException, IOException {
         osaResults = osaClient.getOSAResults(osaScanId, projectId);
         return osaResults;
     }
 
-    public OSAResults getLatestOSAResults() throws Exception {
+    public OSAResults getLatestOSAResults() throws InterruptedException, CxClientException, IOException {
         osaResults = osaClient.getLatestOSAResults(projectId);
         return osaResults;
     }
 
     public ThresholdResult getThresholdResult() {
         StringBuilder res = new StringBuilder("");
-        boolean isFail = isThresholdExceeded(sastResults, osaResults, res, config);
+        boolean isFail = isThresholdExceeded(config, sastResults, osaResults, res);
         return new ThresholdResult(isFail, res.toString());
     }
 
@@ -120,14 +120,13 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
     }
 
     //HELP config  Methods
-    public void login() throws IOException, CxClientException, CxTokenExpiredException {
+    public void login() throws IOException, CxClientException {
         // perform login to server
         log.info("Logging into the Checkmarx service.");
-        //loginToServer();
         httpClient.login();
     }
 
-    public String getTeamIdByName(String teamName) throws CxClientException, IOException, CxTokenExpiredException {
+    public String getTeamIdByName(String teamName) throws CxClientException, IOException {
         List<Team> allTeams = getTeamList();
         for (Team team : allTeams) {
             if ((team.getFullName()).equalsIgnoreCase(teamName)) { //TODO caseSenesitive- checkkk and REMOVE The WA "\"
@@ -137,7 +136,7 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         throw new CxClientException("Could not resolve team ID from team name: " + teamName);
     }
 
-    public int getPresetIdByName(String presetName) throws CxClientException, IOException, CxTokenExpiredException {
+    public int getPresetIdByName(String presetName) throws CxClientException, IOException {
         List<Preset> allPresets = getPresetList();
         for (Preset preset : allPresets) {
             if (preset.getName().equalsIgnoreCase(presetName)) { //TODO caseSenesitive- checkkk
@@ -148,34 +147,34 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         throw new CxClientException("Could not resolve preset ID from preset name: " + presetName);
     }
 
-    public List<Team> getTeamList() throws IOException, CxClientException, CxTokenExpiredException {
+    public List<Team> getTeamList() throws IOException, CxClientException {
         return (List<Team>) httpClient.getRequest(CXTEAMS, CONTENT_TYPE_APPLICATION_JSON_V1, Team.class, 200, "team list", true);
     }
 
-    public List<Preset> getPresetList() throws IOException, CxClientException, CxTokenExpiredException {
+    public List<Preset> getPresetList() throws IOException, CxClientException {
         return (List<Preset>) httpClient.getRequest(CXPRESETS, CONTENT_TYPE_APPLICATION_JSON_V1, Preset.class, 200, "preset list", true);
     }
 
-    public List<CxNameObj> getConfigurationSetList() throws IOException, CxClientException, CxTokenExpiredException {
+    public List<CxNameObj> getConfigurationSetList() throws IOException, CxClientException {
         return (List<CxNameObj>) httpClient.getRequest(SAST_ENGINE_CONFIG, CONTENT_TYPE_APPLICATION_JSON_V1, CxNameObj.class, 200, "engine configurations", true);
     }
 
     //Private methods
-    private void resolveTeam() throws CxClientException, IOException, CxTokenExpiredException {
+    private void resolveTeam() throws CxClientException, IOException {
         if (config.getTeamId() == null) {
             config.setTeamId(getTeamIdByName(config.getTeamPath()));
         }
     }
 
-    private void resolvePreset() throws CxClientException, IOException, CxTokenExpiredException {
+    private void resolvePreset() throws CxClientException, IOException {
         if (config.getPresetId() == null) {
             config.setPresetId(getPresetIdByName(config.getPresetName()));
         }
     }
 
-    private void resolveProject() throws IOException, CxClientException, CxTokenExpiredException {
+    private void resolveProject() throws IOException, CxClientException {
         List<Project> projects = getProjectByName(config.getProjectName(), config.getTeamId());
-        if (projects == null) { // Project is new
+        if (projects == null || projects.isEmpty()) { // Project is new
             if (config.getDenyProject()) {
                 String errMsg = "Creation of the new project [" + config.getProjectName() + "] is not authorized. " +
                         "Please use an existing project. \nYou can enable the creation of new projects by disabling" + "" +
@@ -191,12 +190,12 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         }
     }
 
-    private List<Project> getProjectByName(String projectName, String teamId) throws IOException, CxClientException, CxTokenExpiredException {
+    private List<Project> getProjectByName(String projectName, String teamId) throws IOException, CxClientException {
         String projectNamePath = SAST_GET_PROJECT.replace("{name}", projectName).replace("{teamId}", teamId);
         List<Project> projects = null;
         try {
             projects = (List<Project>) httpClient.getRequest(projectNamePath, CONTENT_TYPE_APPLICATION_JSON_V1, Project.class, 200, "project by name: " + projectName, true);
-        } catch (HttpResponseException ex) {
+        } catch (CxHTTPClientException ex) {
             if (ex.getStatusCode() != 404) {
                 throw ex;
             }
@@ -204,7 +203,7 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         return projects;
     }
 
-    public List<Project> getAllProjects() throws IOException, CxClientException, CxTokenExpiredException {
+    public List<Project> getAllProjects() throws IOException, CxClientException {
         List<Project> projects = null;
         try {
             projects = (List<Project>) httpClient.getRequest(SAST_GET_All_PROJECTS, CONTENT_TYPE_APPLICATION_JSON_V1, Project.class, 200, "all projects", true);
@@ -216,7 +215,7 @@ public class CxShragaClient /*implements ICxShragaClient*/ {
         return projects;
     }
 
-    private Project createNewProject(CreateProjectRequest request) throws CxClientException, IOException, CxTokenExpiredException {
+    private Project createNewProject(CreateProjectRequest request) throws CxClientException, IOException {
         String json = convertToJson(request);
         StringEntity entity = new StringEntity(json);
         return httpClient.postRequest(CREATE_PROJECT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, Project.class, 201, "create new project: " + request.getName());

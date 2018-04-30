@@ -25,7 +25,7 @@ public class CxZip {
     }
 
     public File zipWorkspaceFolder(File baseDir, String[] includes, String[] excludes)
-            throws InterruptedException, IOException {
+            throws IOException {
         log.info("Zipping workspace: '" + baseDir + "'");
 
         ZipListener zipListener = new ZipListener() {

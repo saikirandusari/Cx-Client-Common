@@ -21,7 +21,7 @@ import static com.cx.restclient.sast.utils.SASTParam.TEMP_FILE_NAME_TO_ZIP;
 
 public abstract class CxZipUtils {
 
-    public static File zipWorkspaceFolder(CxScanConfig config, long maxZipBytes, Logger log) throws IOException, InterruptedException {
+    public static File zipWorkspaceFolder(CxScanConfig config, long maxZipBytes, Logger log) throws IOException {
         Map<String, List<String>> stringListMap = ShragaUtils.generateIncludesExcludesPatternLists(config.getSastFolderExclusions(), config.getSastFilterPattern(), log);
         List<String> includes = stringListMap.get(ShragaUtils.INCLUDES_LIST);
         List<String> excludes = stringListMap.get(ShragaUtils.EXCLUDES_LIST);

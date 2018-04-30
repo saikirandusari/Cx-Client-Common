@@ -130,7 +130,7 @@ public abstract class OSAUtils {
           FileUtils.writeStringToFile(jsonFile, json);
           log.info(name + " json location: " + workDirectory + CX_REPORT_LOCATION + File.separator + fileName);
       }catch (Exception ex){
-          //TODO
+          log.warn("Failed to write OSA JSON report ("+name+") to file: " + ex.getMessage());
       }
     }
 }

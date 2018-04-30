@@ -1,5 +1,6 @@
 package com.cx.restclient.sast.utils;
 
+import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.sast.dto.CxXMLResults;
 import com.cx.restclient.sast.dto.SASTResults;
 import org.apache.commons.io.FileUtils;
@@ -11,7 +12,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -31,7 +31,7 @@ public abstract class SASTUtils {
         }
     }
 
-    public static CxXMLResults convertToXMLResult(byte[] cxReport) throws IOException, JAXBException {
+    public static CxXMLResults convertToXMLResult(byte[] cxReport) throws CxClientException {
         CxXMLResults reportObj = null;
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(cxReport);
         try {
@@ -40,6 +40,8 @@ public abstract class SASTUtils {
 
             reportObj = (CxXMLResults) unmarshaller.unmarshal(byteArrayInputStream);
 
+        } catch (JAXBException e) {
+            throw new CxClientException("Failed to parse xml report: " + e.getMessage(), e);
         } finally {
             IOUtils.closeQuietly(byteArrayInputStream);
         }
