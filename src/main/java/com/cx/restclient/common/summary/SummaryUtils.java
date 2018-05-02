@@ -33,7 +33,9 @@ public abstract class SummaryUtils {
         //sast:
         if(config.getSastEnabled() && sastResults.isSastResultsReady()) {
             boolean sastThresholdExceeded = ShragaUtils.isThresholdExceeded(config, sastResults, null, new StringBuilder());
+            boolean sastNewResultsExceeded = ShragaUtils.isThresholdForNewResultExceeded(config, sastResults, new StringBuilder());
             templateData.put("sastThresholdExceeded", sastThresholdExceeded);
+            templateData.put("sastNewResultsExceeded", sastNewResultsExceeded);
 
             //calculate sast bars:
             float maxCount = Math.max(sastResults.getHigh(), Math.max(sastResults.getMedium(), sastResults.getLow()));

@@ -32,6 +32,40 @@ public abstract class ShragaUtils {
         return thresholdExceeded;
     }
 
+    public static boolean isThresholdForNewResultExceeded(CxScanConfig config, SASTResults sastResults, StringBuilder res) {
+        boolean exceeded = false;
+
+        if (sastResults != null && sastResults.isSastResultsReady()  && config.getSastNewResultsThresholdEnabled()) {
+            String severity = config.getSastNewResultsThresholdSeverity();
+
+            if ("LOW".equals(severity)) {
+                if (sastResults.getNewLow() > 0) {
+                    res.append("One or more new results of low severity\n");
+                    exceeded = true;
+                }
+                severity = "MEDIUM";
+            }
+
+            if ("MEDIUM".equals(severity)) {
+                if (sastResults.getNewMedium() > 0) {
+                    res.append("One or more new results of medium severity\n");
+                    exceeded = true;
+                }
+                severity = "HIGH";
+            }
+
+            if ("HIGH".equals(severity)) {
+                if (sastResults.getHigh() > 0) {
+                    res.append("One or more New results of high severity\n");
+                    exceeded = true;
+                }
+            }
+        }
+
+        return exceeded;
+    }
+
+
     private static boolean isSeverityExceeded(int result, Integer threshold, StringBuilder res, String severity, String severityType) {
         boolean fail = false;
         if (threshold != null && result > threshold) {
@@ -50,11 +84,11 @@ public abstract class ShragaUtils {
         if (StringUtils.isEmpty(filterPattern) && StringUtils.isEmpty(excludeFoldersPattern)) {
             combinedPatterns = "";
         } else if (!StringUtils.isEmpty(filterPattern) && StringUtils.isEmpty(excludeFoldersPattern)) {
-            combinedPatterns =  filterPattern;
+            combinedPatterns = filterPattern;
         } else if (StringUtils.isEmpty(filterPattern) && !StringUtils.isEmpty(excludeFoldersPattern)) {
-            combinedPatterns =  excludeFoldersPattern;
+            combinedPatterns = excludeFoldersPattern;
         } else {
-            combinedPatterns =  filterPattern + "," + excludeFoldersPattern;
+            combinedPatterns = filterPattern + "," + excludeFoldersPattern;
         }
 
 
@@ -86,6 +120,7 @@ public abstract class ShragaUtils {
 
     public static final String INCLUDES_LIST = "includes";
     public static final String EXCLUDES_LIST = "excludes";
+
     public static Map<String, List<String>> convertPatternsToLists(String filterPatterns) {
 
         filterPatterns = StringUtils.defaultString(filterPatterns);

@@ -931,8 +931,8 @@
 
 
                                 <div class="threshold-exceeded-compliance" id="threshold-exceeded-compliance">
-                                    <#if config.isSASTThresholdEffectivelyEnabled()>
-                                        <#if sastThresholdExceeded>
+                                    <#if config.isSASTThresholdEffectivelyEnabled() || config.sastNewResultsThresholdEnabled>
+                                        <#if sastThresholdExceeded || sastNewResultsExceeded>
                                             <div class="threshold-exceeded">
                                                 <div class="threshold-exceeded-icon">
                                                     <svg xmlns="http://www.w3.org/2000/svg"

@@ -24,7 +24,7 @@ public class SASTParam {
     public static final String SAST_GET_REPORT = "reports/sastScan/{reportId}"; //Get report status
 
     //ZIP PARAMS
-    public static final long MAX_ZIP_SIZE_BYTES = 209715200;
+    public static final long MAX_ZIP_SIZE_BYTES = 2147483648L;
     public static final String TEMP_FILE_NAME_TO_ZIP = "zippedSource";
 
     //Links formats

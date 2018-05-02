@@ -10,8 +10,6 @@ import java.util.Map;
  */
 public class CxScanConfig implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     private Boolean sastEnabled = false;
     private Boolean osaEnabled = false;
 
@@ -39,6 +37,9 @@ public class CxScanConfig implements Serializable {
     private Integer sastHighThreshold;
     private Integer sastMediumThreshold;
     private Integer sastLowThreshold;
+    private Boolean sastNewResultsThresholdEnabled = false;
+    private String sastNewResultsThresholdSeverity;
+
     private Boolean generatePDFReport = false;
     private File zipFile;
     private Integer engineConfigurationId = 1;
@@ -270,6 +271,22 @@ public class CxScanConfig implements Serializable {
 
     public void setSastLowThreshold(Integer sastLowThreshold) {
         this.sastLowThreshold = sastLowThreshold;
+    }
+
+    public String getSastNewResultsThresholdSeverity() {
+        return sastNewResultsThresholdSeverity;
+    }
+
+    public void setSastNewResultsThresholdSeverity(String sastNewResultsThresholdSeverity) {
+        this.sastNewResultsThresholdSeverity = sastNewResultsThresholdSeverity;
+    }
+
+    public Boolean getSastNewResultsThresholdEnabled() {
+        return sastNewResultsThresholdEnabled;
+    }
+
+    public void setSastNewResultsThresholdEnabled(Boolean sastNewResultsThresholdEnabled) {
+        this.sastNewResultsThresholdEnabled = sastNewResultsThresholdEnabled;
     }
 
     public Boolean getGeneratePDFReport() {
