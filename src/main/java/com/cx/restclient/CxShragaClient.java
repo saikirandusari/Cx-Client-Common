@@ -46,13 +46,18 @@ public class CxShragaClient {
     public CxShragaClient(CxScanConfig config, Logger log) throws MalformedURLException {
         this.config = config;
         this.log = log;
-        this.httpClient = new CxHttpClient(config.getUrl(), config.getUsername(), config.getPassword(), config.getCxOrigin(), log);
+        this.httpClient = new CxHttpClient(
+                config.getUrl(),
+                config.getUsername(),
+                config.getPassword(),
+                config.getCxOrigin(),
+                config.isDisableCertificateValidation(), log);
         sastClient = new CxSASTClient(httpClient, log, config);
         osaClient = new CxOSAClient(httpClient, log, config);
     }
 
-    public CxShragaClient(String serverUrl, String username, String password, String origin, Logger log) throws MalformedURLException {
-        this(new CxScanConfig(serverUrl, username, password, origin),log);
+    public CxShragaClient(String serverUrl, String username, String password, String origin, boolean disableCertificateValidation, Logger log) throws MalformedURLException {
+        this(new CxScanConfig(serverUrl, username, password, origin, disableCertificateValidation), log);
     }
 
     //API Scans methods
@@ -77,7 +82,7 @@ public class CxShragaClient {
     }
 
     public void cancelSASTScan() throws IOException, CxClientException {
-        sastClient.cancelSASTScan(sastResults.getScanId());
+        sastClient.cancelSASTScan(sastScanId);
     }
 
     public SASTResults waitForSASTResults() throws InterruptedException, CxClientException, IOException {
@@ -136,6 +141,16 @@ public class CxShragaClient {
         throw new CxClientException("Could not resolve team ID from team name: " + teamName);
     }
 
+    public String getTeamNameById(String teamId) throws CxClientException, IOException {
+        List<Team> allTeams = getTeamList();
+        for (Team team : allTeams) {
+            if (teamId.equals(team.getId())) {
+                return team.getFullName();
+            }
+        }
+        throw new CxClientException("Could not resolve team name from id: " + teamId);
+    }
+
     public int getPresetIdByName(String presetName) throws CxClientException, IOException {
         List<Preset> allPresets = getPresetList();
         for (Preset preset : allPresets) {
@@ -151,6 +166,10 @@ public class CxShragaClient {
         return (List<Team>) httpClient.getRequest(CXTEAMS, CONTENT_TYPE_APPLICATION_JSON_V1, Team.class, 200, "team list", true);
     }
 
+    public Preset getPresetById(int presetId) throws IOException, CxClientException {
+        return httpClient.getRequest(CXPRESETS + "/" + presetId, CONTENT_TYPE_APPLICATION_JSON_V1, Preset.class, 200, "preset by id", false);
+    }
+
     public List<Preset> getPresetList() throws IOException, CxClientException {
         return (List<Preset>) httpClient.getRequest(CXPRESETS, CONTENT_TYPE_APPLICATION_JSON_V1, Preset.class, 200, "preset list", true);
     }
@@ -164,11 +183,35 @@ public class CxShragaClient {
         if (config.getTeamId() == null) {
             config.setTeamId(getTeamIdByName(config.getTeamPath()));
         }
+        printTeamPath();
     }
 
     private void resolvePreset() throws CxClientException, IOException {
         if (config.getPresetId() == null) {
             config.setPresetId(getPresetIdByName(config.getPresetName()));
+        }
+        printPresetName();
+    }
+
+    private void printPresetName() {
+        try {
+            String presetName = config.getPresetName();
+            if(presetName == null) {
+                presetName = getPresetById(config.getPresetId()).getName();
+            }
+            log.info("preset name: " + presetName);
+        } catch (Exception e) {
+        }
+    }
+
+    private void printTeamPath() {
+        try {
+            String teamPath = config.getTeamPath();
+            if(teamPath == null) {
+                teamPath = getTeamNameById(config.getTeamId());
+            }
+            log.info("full team path: " + teamPath);
+        } catch (Exception e) {
         }
     }
 
@@ -221,4 +264,3 @@ public class CxShragaClient {
         return httpClient.postRequest(CREATE_PROJECT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, Project.class, 201, "create new project: " + request.getName());
     }
  }
-

@@ -55,7 +55,7 @@ public abstract class ShragaUtils {
             }
 
             if ("HIGH".equals(severity)) {
-                if (sastResults.getHigh() > 0) {
+                if (sastResults.getNewHigh() > 0) {
                     res.append("One or more New results of high severity\n");
                     exceeded = true;
                 }

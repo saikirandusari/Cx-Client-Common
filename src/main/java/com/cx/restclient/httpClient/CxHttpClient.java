@@ -8,16 +8,25 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.ssl.SSLContexts;
+import org.apache.http.ssl.TrustStrategy;
 import org.slf4j.Logger;
 
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,14 +59,18 @@ public class CxHttpClient {
         }
     };
 
-    public CxHttpClient(String hostname, String username, String password, String origin, Logger logi) throws MalformedURLException {
+    public CxHttpClient(String hostname, String username, String password, String origin, boolean disableSSLValidation, Logger logi) throws MalformedURLException {
         this.logi = logi;
         this.username = username;
         this.password = password;
         this.rootUri = new URL(new URL(hostname), "CxRestAPI/").toString();
         this.cxOrigin = origin;
         //create httpclient
-        apacheClient = HttpClientBuilder.create().addInterceptorFirst(requestFilter).build();
+        HttpClientBuilder builder = HttpClientBuilder.create().addInterceptorFirst(requestFilter);
+        if (disableSSLValidation) {
+            builder = disableCertificateValidation(builder, logi);
+        }
+        apacheClient = builder.build();
     }
 
     public void login() throws IOException, CxClientException {
@@ -131,4 +144,24 @@ public class CxHttpClient {
     public void close() {
         HttpClientUtils.closeQuietly(apacheClient);
     }
+
+    private HttpClientBuilder disableCertificateValidation(HttpClientBuilder builder, Logger logi) {
+        try {
+            SSLContext disabledSSLContext = SSLContexts.custom().loadTrustMaterial(new TrustStrategy() {
+                public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                    return true;
+                }
+            }).build();
+            builder.setSslcontext(disabledSSLContext);
+            builder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
+        } catch (KeyStoreException e) {
+            logi.warn("Failed to disable certificate verification: " + e.getMessage());
+        } catch (NoSuchAlgorithmException e) {
+            logi.warn("Failed to disable certificate verification: " + e.getMessage());
+        } catch (KeyManagementException e) {
+            logi.warn("Failed to disable certificate verification: " + e.getMessage());
+        }
+        return builder;
+    }
+
 }

@@ -14,6 +14,7 @@ public class CxScanConfig implements Serializable {
     private Boolean osaEnabled = false;
 
     private String cxOrigin;
+    private boolean disableCertificateValidation = false;
     private String sourceDir;
     private File reportsDir;
     private String username;
@@ -58,11 +59,12 @@ public class CxScanConfig implements Serializable {
     public CxScanConfig() {
     }
 
-    public CxScanConfig(String url, String username, String password, String cxOrigin) {
+    public CxScanConfig(String url, String username, String password, String cxOrigin, boolean disableCertificateValidation) {
         this.url = url;
         this.username = username;
         this.password = password;
         this.cxOrigin = cxOrigin;
+        this.disableCertificateValidation = disableCertificateValidation;
     }
 
     public Boolean getSastEnabled() {
@@ -87,6 +89,14 @@ public class CxScanConfig implements Serializable {
 
     public void setCxOrigin(String cxOrigin) {
         this.cxOrigin = cxOrigin;
+    }
+
+    public boolean isDisableCertificateValidation() {
+        return disableCertificateValidation;
+    }
+
+    public void setDisableCertificateValidation(boolean disableCertificateValidation) {
+        this.disableCertificateValidation = disableCertificateValidation;
     }
 
     public String getSourceDir() {
