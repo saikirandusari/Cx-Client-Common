@@ -166,7 +166,7 @@ class CxSASTClient {
                 return retrieveSASTResults(s.getId(), projectId);
             }
         }
-        return null;
+        return new SASTResults();
     }
 
     //Cancel SAST Scan

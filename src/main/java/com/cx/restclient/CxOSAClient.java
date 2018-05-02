@@ -119,7 +119,7 @@ class CxOSAClient {
                 return retrieveOSAResults(s.getId(), s, projectId);
             }
         }
-        return null;
+        return new OSAResults();
     }
 
     //Private Methods
