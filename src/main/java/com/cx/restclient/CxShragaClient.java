@@ -26,6 +26,8 @@ import static com.cx.restclient.sast.utils.SASTParam.*;
 /**
  * Created by Galn on 05/02/2018.
  */
+//SHRAGA
+//System Holistic Rest Api Generic Application
 public class CxShragaClient {
 
     private CxHttpClient httpClient;
