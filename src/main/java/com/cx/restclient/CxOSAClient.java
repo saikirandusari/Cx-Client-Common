@@ -144,7 +144,7 @@ class CxOSAClient {
     }
 
     private List<OSAScanStatus> getOSALastOSAStatus(long projectId) throws IOException, CxClientException {
-        return (List<OSAScanStatus>)httpClient.getRequest(OSA_SCANS + PROJECT_ID_QUERY_PARAM + projectId, CONTENT_TYPE_APPLICATION_JSON_V1, OSAScanStatus.class, 200, " last OSA scan ID", true);
+        return (List<OSAScanStatus>) httpClient.getRequest(OSA_SCANS + PROJECT_ID_QUERY_PARAM + projectId, CONTENT_TYPE_APPLICATION_JSON_V1, OSAScanStatus.class, 200, " last OSA scan ID", true);
     }
 
     private List<Library> getOSALibraries(String scanId) throws IOException, CxClientException {

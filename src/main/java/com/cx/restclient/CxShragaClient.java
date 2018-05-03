@@ -21,9 +21,7 @@ import static com.cx.restclient.common.CxPARAM.*;
 import static com.cx.restclient.common.ShragaUtils.isThresholdExceeded;
 import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON_V1;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.convertToJson;
-import static com.cx.restclient.sast.utils.SASTParam.SAST_ENGINE_CONFIG;
-import static com.cx.restclient.sast.utils.SASTParam.SAST_GET_PROJECT;
-import static com.cx.restclient.sast.utils.SASTParam.SAST_GET_All_PROJECTS;
+import static com.cx.restclient.sast.utils.SASTParam.*;
 
 /**
  * Created by Galn on 05/02/2018.
@@ -196,7 +194,7 @@ public class CxShragaClient {
     private void printPresetName() {
         try {
             String presetName = config.getPresetName();
-            if(presetName == null) {
+            if (presetName == null) {
                 presetName = getPresetById(config.getPresetId()).getName();
             }
             log.info("preset name: " + presetName);
@@ -207,7 +205,7 @@ public class CxShragaClient {
     private void printTeamPath() {
         try {
             String teamPath = config.getTeamPath();
-            if(teamPath == null) {
+            if (teamPath == null) {
                 teamPath = getTeamNameById(config.getTeamId());
             }
             log.info("full team path: " + teamPath);
@@ -263,4 +261,4 @@ public class CxShragaClient {
         StringEntity entity = new StringEntity(json);
         return httpClient.postRequest(CREATE_PROJECT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, Project.class, 201, "create new project: " + request.getName());
     }
- }
+}

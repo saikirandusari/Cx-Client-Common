@@ -5,7 +5,7 @@ package com.cx.restclient.dto;
  */
 public class Team {
     private String id;
-    private String  fullName;
+    private String fullName;
 
     public String getId() {
         return id;

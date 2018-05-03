@@ -177,7 +177,7 @@ class CxSASTClient {
         String json = convertToJson(request);
         StringEntity entity = new StringEntity(json);
         httpClient.patchRequest(SAST_QUEUE_SCAN_STATUS.replace("{scanId}", Long.toString(scanId)), CONTENT_TYPE_APPLICATION_JSON_V1, entity, 200, "cancel SAST scan");
-        log.info("SAST Scan canceled. (scanId: "+scanId+")");
+        log.info("SAST Scan canceled. (scanId: " + scanId + ")");
     }
 
 

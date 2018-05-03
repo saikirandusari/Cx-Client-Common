@@ -49,8 +49,8 @@ public abstract class Waiter<T> {
             printProgress(obj);
 
         }
-        if (scanTimeoutSec  > 0 && scanTimeoutSec < elapsedTimeSec) {
-            throw new CxClientException("Waiting for " +scanType +" has reached the time limit. (" + scanTimeoutSec / 60 + " minutes).");
+        if (scanTimeoutSec > 0 && scanTimeoutSec < elapsedTimeSec) {
+            throw new CxClientException("Waiting for " + scanType + " has reached the time limit. (" + scanTimeoutSec / 60 + " minutes).");
         }
         return resolveStatus(obj);
     }

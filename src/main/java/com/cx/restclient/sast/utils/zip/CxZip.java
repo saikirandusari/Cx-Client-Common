@@ -2,13 +2,12 @@ package com.cx.restclient.sast.utils.zip;
 
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import org.slf4j.Logger;
 
 
 public class CxZip {

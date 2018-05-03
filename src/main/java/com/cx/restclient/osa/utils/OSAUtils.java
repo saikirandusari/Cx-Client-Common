@@ -9,10 +9,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import static com.cx.restclient.common.CxPARAM.CX_REPORT_LOCATION;
 
@@ -35,7 +37,7 @@ public abstract class OSAUtils {
         try {
             File file = new File(dir, "OSADependencies.json");
             FileUtils.writeStringToFile(file, osaDependenciesJson, Charset.defaultCharset());
-            log.info("OSA dependencies saved to file: ["+file.getAbsolutePath()+"]");
+            log.info("OSA dependencies saved to file: [" + file.getAbsolutePath() + "]");
         } catch (Exception e) {
             log.info("Failed to write OSA dependencies to file: " + e.getMessage());
         }
@@ -43,7 +45,7 @@ public abstract class OSAUtils {
     }
 
     public static String composeProjectOSASummaryLink(String url, long projectId) {
-        return String.format( url + "/CxWebClient/SPA/#/viewer/project/%s", projectId);
+        return String.format(url + "/CxWebClient/SPA/#/viewer/project/%s", projectId);
     }
 
     public static Properties generateOSAScanConfiguration(String folderExclusions, String filterPatterns, String archiveIncludes, String scanFolder, boolean installBeforeScan, Logger log) {
@@ -62,7 +64,7 @@ public abstract class OSAUtils {
         if (StringUtils.isNotEmpty(includesString)) {
             ret.put("includes", includesString);
         } else {
-            ret.put("includes",INCLUDE_ALL_EXTENSIONS);
+            ret.put("includes", INCLUDE_ALL_EXTENSIONS);
         }
 
         if (StringUtils.isNotEmpty(excludesString)) {
@@ -81,7 +83,7 @@ public abstract class OSAUtils {
             archiveIncludes = StringUtils.join(archivePatterns, ",");
             ret.put("archiveIncludes", archiveIncludes);
         } else {
-            ret.put("archiveIncludes",DEFAULT_ARCHIVE_INCLUDES);
+            ret.put("archiveIncludes", DEFAULT_ARCHIVE_INCLUDES);
         }
 
         ret.put("archiveExtractionDepth", "4");
@@ -121,16 +123,16 @@ public abstract class OSAUtils {
     }
 
     public static void writeJsonToFile(String name, Object jsonObj, File workDirectory, Logger log) {
-      try {
-          ObjectMapper objectMapper = new ObjectMapper();
-          String now = new SimpleDateFormat("dd_MM_yyyy-HH_mm_ss").format(new Date());
-          String fileName = name + "_" + now + ".json";
-          File jsonFile = new File(workDirectory + CX_REPORT_LOCATION, fileName);
-          String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObj);
-          FileUtils.writeStringToFile(jsonFile, json);
-          log.info(name + " json location: " + workDirectory + CX_REPORT_LOCATION + File.separator + fileName);
-      }catch (Exception ex){
-          log.warn("Failed to write OSA JSON report ("+name+") to file: " + ex.getMessage());
-      }
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String now = new SimpleDateFormat("dd_MM_yyyy-HH_mm_ss").format(new Date());
+            String fileName = name + "_" + now + ".json";
+            File jsonFile = new File(workDirectory + CX_REPORT_LOCATION, fileName);
+            String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObj);
+            FileUtils.writeStringToFile(jsonFile, json);
+            log.info(name + " json location: " + workDirectory + CX_REPORT_LOCATION + File.separator + fileName);
+        } catch (Exception ex) {
+            log.warn("Failed to write OSA JSON report (" + name + ") to file: " + ex.getMessage());
+        }
     }
 }

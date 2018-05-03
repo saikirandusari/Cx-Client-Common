@@ -1,16 +1,13 @@
 package com.cx.restclient.sast.dto;
 
 import com.cx.restclient.dto.BaseStatus;
-import com.cx.restclient.dto.Status;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.List;
 
 /**
  * Created by Galn on 05/02/2018.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ResponseQueueScanStatus extends BaseStatus{
+public class ResponseQueueScanStatus extends BaseStatus {
 
     private long id;
     private CxValueObj stage;

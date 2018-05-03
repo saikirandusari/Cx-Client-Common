@@ -31,7 +31,7 @@ public abstract class SummaryUtils {
         //calculated params:
 
         //sast:
-        if(config.getSastEnabled() && sastResults.isSastResultsReady()) {
+        if (config.getSastEnabled() && sastResults.isSastResultsReady()) {
             boolean sastThresholdExceeded = ShragaUtils.isThresholdExceeded(config, sastResults, null, new StringBuilder());
             boolean sastNewResultsExceeded = ShragaUtils.isThresholdForNewResultExceeded(config, sastResults, new StringBuilder());
             templateData.put("sastThresholdExceeded", sastThresholdExceeded);
@@ -39,10 +39,10 @@ public abstract class SummaryUtils {
 
             //calculate sast bars:
             float maxCount = Math.max(sastResults.getHigh(), Math.max(sastResults.getMedium(), sastResults.getLow()));
-            float sastBarNorm = maxCount * 10f/9f;
+            float sastBarNorm = maxCount * 10f / 9f;
 
             //sast high bars
-            float sastHighTotalHeight = (float)sastResults.getHigh() / sastBarNorm * 238f;
+            float sastHighTotalHeight = (float) sastResults.getHigh() / sastBarNorm * 238f;
             float sastHighNewHeight = calculateNewBarHeight(sastResults.getNewHigh(), sastResults.getHigh(), sastHighTotalHeight);
             float sastHighRecurrentHeight = sastHighTotalHeight - sastHighNewHeight;
             templateData.put("sastHighTotalHeight", sastHighTotalHeight);
@@ -50,7 +50,7 @@ public abstract class SummaryUtils {
             templateData.put("sastHighRecurrentHeight", sastHighRecurrentHeight);
 
             //sast medium bars
-            float sastMediumTotalHeight = (float)sastResults.getMedium() / sastBarNorm * 238f;
+            float sastMediumTotalHeight = (float) sastResults.getMedium() / sastBarNorm * 238f;
             float sastMediumNewHeight = calculateNewBarHeight(sastResults.getNewMedium(), sastResults.getMedium(), sastMediumTotalHeight);
             float sastMediumRecurrentHeight = sastMediumTotalHeight - sastMediumNewHeight;
             templateData.put("sastMediumTotalHeight", sastMediumTotalHeight);
@@ -58,7 +58,7 @@ public abstract class SummaryUtils {
             templateData.put("sastMediumRecurrentHeight", sastMediumRecurrentHeight);
 
             //sast low bars
-            float sastLowTotalHeight = (float)sastResults.getLow() / sastBarNorm * 238f;
+            float sastLowTotalHeight = (float) sastResults.getLow() / sastBarNorm * 238f;
             float sastLowNewHeight = calculateNewBarHeight(sastResults.getNewLow(), sastResults.getLow(), sastLowTotalHeight);
             float sastLowRecurrentHeight = sastLowTotalHeight - sastLowNewHeight;
             templateData.put("sastLowTotalHeight", sastLowTotalHeight);
@@ -67,7 +67,7 @@ public abstract class SummaryUtils {
         }
 
         //osa:
-        if(config.getOsaEnabled() && osaResults.isOsaResultsReady()) {
+        if (config.getOsaEnabled() && osaResults.isOsaResultsReady()) {
             boolean osaThresholdExceeded = ShragaUtils.isThresholdExceeded(config, null, osaResults, new StringBuilder());
             templateData.put("osaThresholdExceeded", osaThresholdExceeded);
 
@@ -77,7 +77,7 @@ public abstract class SummaryUtils {
             int osaMedium = osaSummaryResults.getTotalMediumVulnerabilities();
             int osaLow = osaSummaryResults.getTotalLowVulnerabilities();
             float osaMaxCount = Math.max(osaHigh, Math.max(osaMedium, osaLow));
-            float osaBarNorm = osaMaxCount * 10f/9f;
+            float osaBarNorm = osaMaxCount * 10f / 9f;
 
             float osaHighTotalHeight = (float) osaHigh / osaBarNorm * 238f;
             float osaMediumTotalHeight = (float) osaMedium / osaBarNorm * 238f;
@@ -97,7 +97,7 @@ public abstract class SummaryUtils {
     private static float calculateNewBarHeight(int newCount, int count, float totalHeight) {
         int minimalVisibilityHeight = 5;
         //new high
-        float highNewHeightPx = (float)newCount / (float)count * totalHeight;
+        float highNewHeightPx = (float) newCount / (float) count * totalHeight;
         //if new height is between 1 and 9 - give it a minimum height and if theres enough spce in total height
         if (isNewNeedChange(totalHeight, highNewHeightPx, minimalVisibilityHeight)) {
             highNewHeightPx = minimalVisibilityHeight;

@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by Galn on 07/02/2018.
  */
-public class OSAResults implements Serializable{
+public class OSAResults implements Serializable {
     private String osaScanId;
     private OSASummaryResults results;
     private List<Library> osaLibraries;
@@ -135,18 +135,16 @@ public class OSAResults implements Serializable{
         //create uniqueness by key: cve + libraryId
         for (CVE cve : osaVulnerabilities) {
             Library lib = libMap.get(cve.getLibraryId());
-            String publishDate = formatDate(cve.getPublishDate(),  "yyyy-MM-dd'T'HH:mm:ss", "dd/MM/yy");
+            String publishDate = formatDate(cve.getPublishDate(), "yyyy-MM-dd'T'HH:mm:ss", "dd/MM/yy");
             cveMap.put(cve.getCveName() + "," + cve.getLibraryId(), new CVEReportTableRow(cve.getCveName(), cve.getSeverity().getName(), publishDate, lib.getName(), cve.getState().getName()));
         }
 
         for (CVEReportTableRow row : cveMap.values()) {
-            if("High".equals(row.getSeverity())) {
+            if ("High".equals(row.getSeverity())) {
                 osaHighCVEReportTable.add(row);
-            }
-            else if("Medium".equals(row.getSeverity())) {
+            } else if ("Medium".equals(row.getSeverity())) {
                 osaMediumCVEReportTable.add(row);
-            }
-            else if("Low".equals(row.getSeverity())) {
+            } else if ("Low".equals(row.getSeverity())) {
                 osaLowCVEReportTable.add(row);
             }
 

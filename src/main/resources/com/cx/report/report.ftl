@@ -827,7 +827,6 @@
     </#if>
 </#macro>
 
-
 <div id="cx-report" class="cx-report">
     <div class="report-title">
         <div class="cx-report-title">Checkmarx Report</div>
@@ -884,7 +883,8 @@
                                 </#if>
                             </div>
                         <#else>
-                            <div id="no-scan-message-sast-failed" class="no-scan-message-container sast-scan-failed" style="display: inline-block">
+                            <div id="no-scan-message-sast-failed" class="no-scan-message-container sast-scan-failed"
+                                 style="display: inline-block">
                                 <div class="no-scan-message">
                                     <div class="no-scan-message-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -966,7 +966,7 @@
                                                 <div class="threshold-compliance-icon">
                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                          xmlns:xlink="http://www.w3.org/1999/xlink"
-                                                         xmlns:svgjs="http://svgjs.com/svgjs" id="SvgjsSvg1050"
+                                                         id="SvgjsSvg1050"
                                                          version="1.1" width="13.99264158479491" height="13"
                                                          viewBox="0 0 13.99264158479491 13"><title>Icon</title>
                                                         <desc>Created with Avocode.</desc>
@@ -1426,7 +1426,7 @@
                                                     <div class="threshold-compliance-icon">
                                                         <svg xmlns="http://www.w3.org/2000/svg"
                                                              xmlns:xlink="http://www.w3.org/1999/xlink"
-                                                             xmlns:svgjs="http://svgjs.com/svgjs" id="SvgjsSvg1050"
+                                                             id="SvgjsSvg1050"
                                                              version="1.1" width="13.99264158479491" height="13"
                                                              viewBox="0 0 13.99264158479491 13"><title>Icon</title>
                                                             <desc>Created with Avocode.</desc>
@@ -1826,7 +1826,7 @@
                             <!--sast-full-loc-->
                             <div class="full-loc">
                                 <div class="full-start-end-icon loc-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:svgjs="http://www.w3.org/2000/svg"
+                                    <svg xmlns="http://www.w3.org/2000/svg"
                                          xmlns:xlink="http://www.w3.org/1999/xlink" height="29"
                                          id="sast-full-loc-svg"
                                          version="1.1" viewBox="0 0 29 29" width="29">
@@ -2162,7 +2162,7 @@
                             <!--osa-full-files-->
                             <div class="full-files">
                                 <div class="full-start-end-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:svgjs="http://svgjs.com/svgjs"
+                                    <svg xmlns="http://www.w3.org/2000/svg"
                                          xmlns:xlink="http://www.w3.org/1999/xlink" height="27"
                                          id="osa-full-files-svg"
                                          version="1.1" viewBox="0 0 32 27" width="32">

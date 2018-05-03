@@ -35,7 +35,7 @@ public abstract class ShragaUtils {
     public static boolean isThresholdForNewResultExceeded(CxScanConfig config, SASTResults sastResults, StringBuilder res) {
         boolean exceeded = false;
 
-        if (sastResults != null && sastResults.isSastResultsReady()  && config.getSastNewResultsThresholdEnabled()) {
+        if (sastResults != null && sastResults.isSastResultsReady() && config.getSastNewResultsThresholdEnabled()) {
             String severity = config.getSastNewResultsThresholdSeverity();
 
             if ("LOW".equals(severity)) {

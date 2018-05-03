@@ -66,7 +66,7 @@ public abstract class SASTUtils {
     }
 
     //PDF Report
-    public static void writePDFReport(byte[] scanReport, File workspace, Logger log)  {
+    public static void writePDFReport(byte[] scanReport, File workspace, Logger log) {
         try {
             String now = new SimpleDateFormat("dd_MM_yyyy-HH_mm_ss").format(new Date());
             String pdfFileName = PDF_REPORT_NAME + "_" + now + ".pdf";

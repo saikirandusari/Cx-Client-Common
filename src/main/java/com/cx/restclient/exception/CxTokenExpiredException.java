@@ -3,7 +3,7 @@ package com.cx.restclient.exception;
 /**
  * Created by Galn on 19/03/2018.
  */
-public class CxTokenExpiredException extends CxClientException{
+public class CxTokenExpiredException extends CxClientException {
 
     public CxTokenExpiredException() {
         super();

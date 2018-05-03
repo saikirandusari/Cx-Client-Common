@@ -64,7 +64,7 @@ public class SASTResults implements Serializable {
                 CxXMLResults.Query.Result result = qResult.get(i);
                 if ("True".equals(result.getFalsePositive())) {
                     qResult.remove(i);
-                } else if ("New".equals(result.getStatus())){
+                } else if ("New".equals(result.getStatus())) {
                     Severity sev = Severity.valueOf(result.getSeverity());
                     switch (sev) {
                         case High:

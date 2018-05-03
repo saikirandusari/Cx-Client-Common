@@ -1,4 +1,3 @@
-
 package com.cx.restclient.sast.dto;
 
 import javax.xml.bind.annotation.*;
@@ -9,9 +8,9 @@ import java.util.List;
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -137,16 +136,13 @@ import java.util.List;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "query"
+        "query"
 })
 @XmlRootElement(name = "CxXMLResults")
-public class CxXMLResults
-{
+public class CxXMLResults {
 
     @XmlElement(name = "Query")
     protected List<Query> query;
@@ -192,25 +188,23 @@ public class CxXMLResults
 
     /**
      * Gets the value of the query property.
-     * 
+     * <p>
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the query property.
-     * 
+     * <p>
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getQuery().add(newItem);
      * </pre>
-     * 
-     * 
+     * <p>
+     * <p>
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link Query }
-     * 
-     * 
      */
     public List<Query> getQuery() {
         if (query == null) {
@@ -221,11 +215,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the initiatorName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getInitiatorName() {
         return initiatorName;
@@ -233,11 +225,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the initiatorName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setInitiatorName(String value) {
         this.initiatorName = value;
@@ -245,11 +235,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the owner property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getOwner() {
         return owner;
@@ -257,11 +245,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the owner property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setOwner(String value) {
         this.owner = value;
@@ -269,11 +255,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the scanId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getScanId() {
         return scanId;
@@ -281,11 +265,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the scanId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setScanId(String value) {
         this.scanId = value;
@@ -293,11 +275,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the projectId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getProjectId() {
         return projectId;
@@ -305,11 +285,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the projectId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setProjectId(String value) {
         this.projectId = value;
@@ -317,11 +295,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the projectName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getProjectName() {
         return projectName;
@@ -329,11 +305,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the projectName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setProjectName(String value) {
         this.projectName = value;
@@ -341,11 +315,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the teamFullPathOnReportDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getTeamFullPathOnReportDate() {
         return teamFullPathOnReportDate;
@@ -353,11 +325,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the teamFullPathOnReportDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setTeamFullPathOnReportDate(String value) {
         this.teamFullPathOnReportDate = value;
@@ -365,11 +335,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the deepLink property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getDeepLink() {
         return deepLink;
@@ -377,11 +345,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the deepLink property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setDeepLink(String value) {
         this.deepLink = value;
@@ -389,11 +355,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the scanStart property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getScanStart() {
         return scanStart;
@@ -401,11 +365,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the scanStart property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setScanStart(String value) {
         this.scanStart = value;
@@ -413,11 +375,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the preset property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getPreset() {
         return preset;
@@ -425,11 +385,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the preset property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPreset(String value) {
         this.preset = value;
@@ -437,11 +395,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the scanTime property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getScanTime() {
         return scanTime;
@@ -449,11 +405,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the scanTime property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setScanTime(String value) {
         this.scanTime = value;
@@ -461,11 +415,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the linesOfCodeScanned property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getLinesOfCodeScanned() {
         return linesOfCodeScanned;
@@ -473,11 +425,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the linesOfCodeScanned property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setLinesOfCodeScanned(String value) {
         this.linesOfCodeScanned = value;
@@ -485,11 +435,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the filesScanned property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getFilesScanned() {
         return filesScanned;
@@ -497,11 +445,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the filesScanned property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setFilesScanned(String value) {
         this.filesScanned = value;
@@ -509,11 +455,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the reportCreationTime property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getReportCreationTime() {
         return reportCreationTime;
@@ -521,11 +465,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the reportCreationTime property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setReportCreationTime(String value) {
         this.reportCreationTime = value;
@@ -533,11 +475,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the team property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getTeam() {
         return team;
@@ -545,11 +485,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the team property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setTeam(String value) {
         this.team = value;
@@ -557,11 +495,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the checkmarxVersion property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getCheckmarxVersion() {
         return checkmarxVersion;
@@ -569,11 +505,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the checkmarxVersion property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setCheckmarxVersion(String value) {
         this.checkmarxVersion = value;
@@ -581,11 +515,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the scanComments property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getScanComments() {
         return scanComments;
@@ -593,11 +525,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the scanComments property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setScanComments(String value) {
         this.scanComments = value;
@@ -605,11 +535,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the scanType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getScanType() {
         return scanType;
@@ -617,11 +545,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the scanType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setScanType(String value) {
         this.scanType = value;
@@ -629,11 +555,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the sourceOrigin property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getSourceOrigin() {
         return sourceOrigin;
@@ -641,11 +565,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the sourceOrigin property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setSourceOrigin(String value) {
         this.sourceOrigin = value;
@@ -653,11 +575,9 @@ public class CxXMLResults
 
     /**
      * Gets the value of the visibility property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getVisibility() {
         return visibility;
@@ -665,11 +585,9 @@ public class CxXMLResults
 
     /**
      * Sets the value of the visibility property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setVisibility(String value) {
         this.visibility = value;
@@ -678,9 +596,9 @@ public class CxXMLResults
 
     /**
      * <p>Java class for anonymous complex type.
-     * 
+     *
      * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     *
      * <pre>
      * &lt;complexType>
      *   &lt;complexContent>
@@ -777,12 +695,10 @@ public class CxXMLResults
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     * 
-     * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-        "result"
+            "result"
     })
     public static class Query implements Serializable {
         @Override
@@ -824,25 +740,23 @@ public class CxXMLResults
 
         /**
          * Gets the value of the result property.
-         * 
+         * <p>
          * <p>
          * This accessor method returns a reference to the live list,
          * not a snapshot. Therefore any modification you make to the
          * returned list will be present inside the JAXB object.
          * This is why there is not a <CODE>set</CODE> method for the result property.
-         * 
+         * <p>
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getResult().add(newItem);
          * </pre>
-         * 
-         * 
+         * <p>
+         * <p>
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link Result }
-         * 
-         * 
          */
         public List<Result> getResult() {
             if (result == null) {
@@ -853,11 +767,9 @@ public class CxXMLResults
 
         /**
          * Gets the value of the id property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getId() {
             return id;
@@ -865,11 +777,9 @@ public class CxXMLResults
 
         /**
          * Sets the value of the id property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setId(String value) {
             this.id = value;
@@ -877,11 +787,9 @@ public class CxXMLResults
 
         /**
          * Gets the value of the categories property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getCategories() {
             return categories;
@@ -889,11 +797,9 @@ public class CxXMLResults
 
         /**
          * Sets the value of the categories property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setCategories(String value) {
             this.categories = value;
@@ -901,11 +807,9 @@ public class CxXMLResults
 
         /**
          * Gets the value of the cweId property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getCweId() {
             return cweId;
@@ -913,11 +817,9 @@ public class CxXMLResults
 
         /**
          * Sets the value of the cweId property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setCweId(String value) {
             this.cweId = value;
@@ -925,11 +827,9 @@ public class CxXMLResults
 
         /**
          * Gets the value of the name property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getName() {
             return name;
@@ -937,11 +837,9 @@ public class CxXMLResults
 
         /**
          * Sets the value of the name property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setName(String value) {
             this.name = value;
@@ -949,11 +847,9 @@ public class CxXMLResults
 
         /**
          * Gets the value of the group property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getGroup() {
             return group;
@@ -961,11 +857,9 @@ public class CxXMLResults
 
         /**
          * Sets the value of the group property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setGroup(String value) {
             this.group = value;
@@ -973,11 +867,9 @@ public class CxXMLResults
 
         /**
          * Gets the value of the severity property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getSeverity() {
             return severity;
@@ -985,11 +877,9 @@ public class CxXMLResults
 
         /**
          * Sets the value of the severity property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setSeverity(String value) {
             this.severity = value;
@@ -997,11 +887,9 @@ public class CxXMLResults
 
         /**
          * Gets the value of the language property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getLanguage() {
             return language;
@@ -1009,11 +897,9 @@ public class CxXMLResults
 
         /**
          * Sets the value of the language property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setLanguage(String value) {
             this.language = value;
@@ -1021,11 +907,9 @@ public class CxXMLResults
 
         /**
          * Gets the value of the languageHash property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getLanguageHash() {
             return languageHash;
@@ -1033,11 +917,9 @@ public class CxXMLResults
 
         /**
          * Sets the value of the languageHash property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setLanguageHash(String value) {
             this.languageHash = value;
@@ -1045,11 +927,9 @@ public class CxXMLResults
 
         /**
          * Gets the value of the languageChangeDate property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getLanguageChangeDate() {
             return languageChangeDate;
@@ -1057,11 +937,9 @@ public class CxXMLResults
 
         /**
          * Sets the value of the languageChangeDate property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setLanguageChangeDate(String value) {
             this.languageChangeDate = value;
@@ -1069,11 +947,9 @@ public class CxXMLResults
 
         /**
          * Gets the value of the severityIndex property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getSeverityIndex() {
             return severityIndex;
@@ -1081,11 +957,9 @@ public class CxXMLResults
 
         /**
          * Sets the value of the severityIndex property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setSeverityIndex(String value) {
             this.severityIndex = value;
@@ -1093,11 +967,9 @@ public class CxXMLResults
 
         /**
          * Gets the value of the queryPath property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getQueryPath() {
             return queryPath;
@@ -1105,11 +977,9 @@ public class CxXMLResults
 
         /**
          * Sets the value of the queryPath property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setQueryPath(String value) {
             this.queryPath = value;
@@ -1117,11 +987,9 @@ public class CxXMLResults
 
         /**
          * Gets the value of the queryVersionCode property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is
+         * {@link String }
          */
         public String getQueryVersionCode() {
             return queryVersionCode;
@@ -1129,11 +997,9 @@ public class CxXMLResults
 
         /**
          * Sets the value of the queryVersionCode property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is
+         *              {@link String }
          */
         public void setQueryVersionCode(String value) {
             this.queryVersionCode = value;
@@ -1142,9 +1008,9 @@ public class CxXMLResults
 
         /**
          * <p>Java class for anonymous complex type.
-         * 
+         *
          * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         *
          * <pre>
          * &lt;complexType>
          *   &lt;complexContent>
@@ -1219,12 +1085,10 @@ public class CxXMLResults
          *   &lt;/complexContent>
          * &lt;/complexType>
          * </pre>
-         * 
-         * 
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
-            "path"
+                "path"
         })
         public static class Result implements Serializable {
 
@@ -1258,11 +1122,9 @@ public class CxXMLResults
 
             /**
              * Gets the value of the path property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link Path }
-             *     
+             *
+             * @return possible object is
+             * {@link Path }
              */
             public Path getPath() {
                 return path;
@@ -1270,11 +1132,9 @@ public class CxXMLResults
 
             /**
              * Sets the value of the path property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link Path }
-             *     
+             *
+             * @param value allowed object is
+             *              {@link Path }
              */
             public void setPath(Path value) {
                 this.path = value;
@@ -1282,11 +1142,9 @@ public class CxXMLResults
 
             /**
              * Gets the value of the nodeId property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is
+             * {@link String }
              */
             public String getNodeId() {
                 return nodeId;
@@ -1294,11 +1152,9 @@ public class CxXMLResults
 
             /**
              * Sets the value of the nodeId property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is
+             *              {@link String }
              */
             public void setNodeId(String value) {
                 this.nodeId = value;
@@ -1306,11 +1162,9 @@ public class CxXMLResults
 
             /**
              * Gets the value of the fileName property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is
+             * {@link String }
              */
             public String getFileName() {
                 return fileName;
@@ -1318,11 +1172,9 @@ public class CxXMLResults
 
             /**
              * Sets the value of the fileName property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is
+             *              {@link String }
              */
             public void setFileName(String value) {
                 this.fileName = value;
@@ -1330,11 +1182,9 @@ public class CxXMLResults
 
             /**
              * Gets the value of the status property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is
+             * {@link String }
              */
             public String getStatus() {
                 return status;
@@ -1342,11 +1192,9 @@ public class CxXMLResults
 
             /**
              * Sets the value of the status property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is
+             *              {@link String }
              */
             public void setStatus(String value) {
                 this.status = value;
@@ -1354,11 +1202,9 @@ public class CxXMLResults
 
             /**
              * Gets the value of the line property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is
+             * {@link String }
              */
             public String getLine() {
                 return line;
@@ -1366,11 +1212,9 @@ public class CxXMLResults
 
             /**
              * Sets the value of the line property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is
+             *              {@link String }
              */
             public void setLine(String value) {
                 this.line = value;
@@ -1378,11 +1222,9 @@ public class CxXMLResults
 
             /**
              * Gets the value of the column property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is
+             * {@link String }
              */
             public String getColumn() {
                 return column;
@@ -1390,11 +1232,9 @@ public class CxXMLResults
 
             /**
              * Sets the value of the column property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is
+             *              {@link String }
              */
             public void setColumn(String value) {
                 this.column = value;
@@ -1402,11 +1242,9 @@ public class CxXMLResults
 
             /**
              * Gets the value of the falsePositive property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is
+             * {@link String }
              */
             public String getFalsePositive() {
                 return falsePositive;
@@ -1414,11 +1252,9 @@ public class CxXMLResults
 
             /**
              * Sets the value of the falsePositive property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is
+             *              {@link String }
              */
             public void setFalsePositive(String value) {
                 this.falsePositive = value;
@@ -1426,11 +1262,9 @@ public class CxXMLResults
 
             /**
              * Gets the value of the severity property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is
+             * {@link String }
              */
             public String getSeverity() {
                 return severity;
@@ -1438,11 +1272,9 @@ public class CxXMLResults
 
             /**
              * Sets the value of the severity property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is
+             *              {@link String }
              */
             public void setSeverity(String value) {
                 this.severity = value;
@@ -1450,11 +1282,9 @@ public class CxXMLResults
 
             /**
              * Gets the value of the assignToUser property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is
+             * {@link String }
              */
             public String getAssignToUser() {
                 return assignToUser;
@@ -1462,11 +1292,9 @@ public class CxXMLResults
 
             /**
              * Sets the value of the assignToUser property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is
+             *              {@link String }
              */
             public void setAssignToUser(String value) {
                 this.assignToUser = value;
@@ -1474,11 +1302,9 @@ public class CxXMLResults
 
             /**
              * Gets the value of the state property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is
+             * {@link String }
              */
             public String getState() {
                 return state;
@@ -1486,11 +1312,9 @@ public class CxXMLResults
 
             /**
              * Sets the value of the state property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is
+             *              {@link String }
              */
             public void setState(String value) {
                 this.state = value;
@@ -1498,11 +1322,9 @@ public class CxXMLResults
 
             /**
              * Gets the value of the remark property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is
+             * {@link String }
              */
             public String getRemark() {
                 return remark;
@@ -1510,11 +1332,9 @@ public class CxXMLResults
 
             /**
              * Sets the value of the remark property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is
+             *              {@link String }
              */
             public void setRemark(String value) {
                 this.remark = value;
@@ -1522,11 +1342,9 @@ public class CxXMLResults
 
             /**
              * Gets the value of the deepLink property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is
+             * {@link String }
              */
             public String getDeepLink() {
                 return deepLink;
@@ -1534,11 +1352,9 @@ public class CxXMLResults
 
             /**
              * Sets the value of the deepLink property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is
+             *              {@link String }
              */
             public void setDeepLink(String value) {
                 this.deepLink = value;
@@ -1546,11 +1362,9 @@ public class CxXMLResults
 
             /**
              * Gets the value of the severityIndex property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is
+             * {@link String }
              */
             public String getSeverityIndex() {
                 return severityIndex;
@@ -1558,11 +1372,9 @@ public class CxXMLResults
 
             /**
              * Sets the value of the severityIndex property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is
+             *              {@link String }
              */
             public void setSeverityIndex(String value) {
                 this.severityIndex = value;
@@ -1571,9 +1383,9 @@ public class CxXMLResults
 
             /**
              * <p>Java class for anonymous complex type.
-             * 
+             *
              * <p>The following schema fragment specifies the expected content contained within this class.
-             * 
+             *
              * <pre>
              * &lt;complexType>
              *   &lt;complexContent>
@@ -1626,12 +1438,10 @@ public class CxXMLResults
              *   &lt;/complexContent>
              * &lt;/complexType>
              * </pre>
-             * 
-             * 
              */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "", propOrder = {
-                "pathNode"
+                    "pathNode"
             })
             public static class Path implements Serializable {
 
@@ -1646,25 +1456,23 @@ public class CxXMLResults
 
                 /**
                  * Gets the value of the pathNode property.
-                 * 
+                 * <p>
                  * <p>
                  * This accessor method returns a reference to the live list,
                  * not a snapshot. Therefore any modification you make to the
                  * returned list will be present inside the JAXB object.
                  * This is why there is not a <CODE>set</CODE> method for the pathNode property.
-                 * 
+                 * <p>
                  * <p>
                  * For example, to add a new item, do as follows:
                  * <pre>
                  *    getPathNode().add(newItem);
                  * </pre>
-                 * 
-                 * 
+                 * <p>
+                 * <p>
                  * <p>
                  * Objects of the following type(s) are allowed in the list
                  * {@link PathNode }
-                 * 
-                 * 
                  */
                 public List<PathNode> getPathNode() {
                     if (pathNode == null) {
@@ -1675,11 +1483,9 @@ public class CxXMLResults
 
                 /**
                  * Gets the value of the resultId property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is
+                 * {@link String }
                  */
                 public String getResultId() {
                     return resultId;
@@ -1687,11 +1493,9 @@ public class CxXMLResults
 
                 /**
                  * Sets the value of the resultId property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
                  */
                 public void setResultId(String value) {
                     this.resultId = value;
@@ -1699,11 +1503,9 @@ public class CxXMLResults
 
                 /**
                  * Gets the value of the pathId property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is
+                 * {@link String }
                  */
                 public String getPathId() {
                     return pathId;
@@ -1711,11 +1513,9 @@ public class CxXMLResults
 
                 /**
                  * Sets the value of the pathId property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
                  */
                 public void setPathId(String value) {
                     this.pathId = value;
@@ -1723,11 +1523,9 @@ public class CxXMLResults
 
                 /**
                  * Gets the value of the similarityId property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is
+                 * {@link String }
                  */
                 public String getSimilarityId() {
                     return similarityId;
@@ -1735,11 +1533,9 @@ public class CxXMLResults
 
                 /**
                  * Sets the value of the similarityId property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is
+                 *              {@link String }
                  */
                 public void setSimilarityId(String value) {
                     this.similarityId = value;
@@ -1748,9 +1544,9 @@ public class CxXMLResults
 
                 /**
                  * <p>Java class for anonymous complex type.
-                 * 
+                 *
                  * <p>The following schema fragment specifies the expected content contained within this class.
-                 * 
+                 *
                  * <pre>
                  * &lt;complexType>
                  *   &lt;complexContent>
@@ -1790,19 +1586,17 @@ public class CxXMLResults
                  *   &lt;/complexContent>
                  * &lt;/complexType>
                  * </pre>
-                 * 
-                 * 
                  */
                 @XmlAccessorType(XmlAccessType.FIELD)
                 @XmlType(name = "", propOrder = {
-                    "fileName",
-                    "line",
-                    "column",
-                    "nodeId",
-                    "name",
-                    "type",
-                    "length",
-                    "snippet"
+                        "fileName",
+                        "line",
+                        "column",
+                        "nodeId",
+                        "name",
+                        "type",
+                        "length",
+                        "snippet"
                 })
                 public static class PathNode implements Serializable {
 
@@ -1825,11 +1619,9 @@ public class CxXMLResults
 
                     /**
                      * Gets the value of the fileName property.
-                     * 
-                     * @return
-                     *     possible object is
-                     *     {@link String }
-                     *     
+                     *
+                     * @return possible object is
+                     * {@link String }
                      */
                     public String getFileName() {
                         return fileName;
@@ -1837,11 +1629,9 @@ public class CxXMLResults
 
                     /**
                      * Sets the value of the fileName property.
-                     * 
-                     * @param value
-                     *     allowed object is
-                     *     {@link String }
-                     *     
+                     *
+                     * @param value allowed object is
+                     *              {@link String }
                      */
                     public void setFileName(String value) {
                         this.fileName = value;
@@ -1849,7 +1639,6 @@ public class CxXMLResults
 
                     /**
                      * Gets the value of the line property.
-                     * 
                      */
                     public String getLine() {
                         return line;
@@ -1857,7 +1646,6 @@ public class CxXMLResults
 
                     /**
                      * Sets the value of the line property.
-                     * 
                      */
                     public void setLine(String value) {
                         this.line = value;
@@ -1865,7 +1653,6 @@ public class CxXMLResults
 
                     /**
                      * Gets the value of the column property.
-                     * 
                      */
                     public String getColumn() {
                         return column;
@@ -1873,7 +1660,6 @@ public class CxXMLResults
 
                     /**
                      * Sets the value of the column property.
-                     * 
                      */
                     public void setColumn(String value) {
                         this.column = value;
@@ -1881,7 +1667,6 @@ public class CxXMLResults
 
                     /**
                      * Gets the value of the nodeId property.
-                     * 
                      */
                     public String getNodeId() {
                         return nodeId;
@@ -1889,7 +1674,6 @@ public class CxXMLResults
 
                     /**
                      * Sets the value of the nodeId property.
-                     * 
                      */
                     public void setNodeId(String value) {
                         this.nodeId = value;
@@ -1897,11 +1681,9 @@ public class CxXMLResults
 
                     /**
                      * Gets the value of the name property.
-                     * 
-                     * @return
-                     *     possible object is
-                     *     {@link String }
-                     *     
+                     *
+                     * @return possible object is
+                     * {@link String }
                      */
                     public String getName() {
                         return name;
@@ -1909,11 +1691,9 @@ public class CxXMLResults
 
                     /**
                      * Sets the value of the name property.
-                     * 
-                     * @param value
-                     *     allowed object is
-                     *     {@link String }
-                     *     
+                     *
+                     * @param value allowed object is
+                     *              {@link String }
                      */
                     public void setName(String value) {
                         this.name = value;
@@ -1921,11 +1701,9 @@ public class CxXMLResults
 
                     /**
                      * Gets the value of the type property.
-                     * 
-                     * @return
-                     *     possible object is
-                     *     {@link String }
-                     *     
+                     *
+                     * @return possible object is
+                     * {@link String }
                      */
                     public String getType() {
                         return type;
@@ -1933,11 +1711,9 @@ public class CxXMLResults
 
                     /**
                      * Sets the value of the type property.
-                     * 
-                     * @param value
-                     *     allowed object is
-                     *     {@link String }
-                     *     
+                     *
+                     * @param value allowed object is
+                     *              {@link String }
                      */
                     public void setType(String value) {
                         this.type = value;
@@ -1945,7 +1721,6 @@ public class CxXMLResults
 
                     /**
                      * Gets the value of the length property.
-                     * 
                      */
                     public String getLength() {
                         return length;
@@ -1953,7 +1728,6 @@ public class CxXMLResults
 
                     /**
                      * Sets the value of the length property.
-                     * 
                      */
                     public void setLength(String value) {
                         this.length = value;
@@ -1961,11 +1735,9 @@ public class CxXMLResults
 
                     /**
                      * Gets the value of the snippet property.
-                     * 
-                     * @return
-                     *     possible object is
-                     *     {@link Snippet }
-                     *     
+                     *
+                     * @return possible object is
+                     * {@link Snippet }
                      */
                     public Snippet getSnippet() {
                         return snippet;
@@ -1973,11 +1745,9 @@ public class CxXMLResults
 
                     /**
                      * Sets the value of the snippet property.
-                     * 
-                     * @param value
-                     *     allowed object is
-                     *     {@link Snippet }
-                     *     
+                     *
+                     * @param value allowed object is
+                     *              {@link Snippet }
                      */
                     public void setSnippet(Snippet value) {
                         this.snippet = value;
@@ -1986,9 +1756,9 @@ public class CxXMLResults
 
                     /**
                      * <p>Java class for anonymous complex type.
-                     * 
+                     *
                      * <p>The following schema fragment specifies the expected content contained within this class.
-                     * 
+                     *
                      * <pre>
                      * &lt;complexType>
                      *   &lt;complexContent>
@@ -2011,12 +1781,10 @@ public class CxXMLResults
                      *   &lt;/complexContent>
                      * &lt;/complexType>
                      * </pre>
-                     * 
-                     * 
                      */
                     @XmlAccessorType(XmlAccessType.FIELD)
                     @XmlType(name = "", propOrder = {
-                        "line"
+                            "line"
                     })
                     public static class Snippet implements Serializable {
 
@@ -2025,11 +1793,9 @@ public class CxXMLResults
 
                         /**
                          * Gets the value of the line property.
-                         * 
-                         * @return
-                         *     possible object is
-                         *     {@link Line }
-                         *     
+                         *
+                         * @return possible object is
+                         * {@link Line }
                          */
                         public Line getLine() {
                             return line;
@@ -2037,11 +1803,9 @@ public class CxXMLResults
 
                         /**
                          * Sets the value of the line property.
-                         * 
-                         * @param value
-                         *     allowed object is
-                         *     {@link Line }
-                         *     
+                         *
+                         * @param value allowed object is
+                         *              {@link Line }
                          */
                         public void setLine(Line value) {
                             this.line = value;
@@ -2050,9 +1814,9 @@ public class CxXMLResults
 
                         /**
                          * <p>Java class for anonymous complex type.
-                         * 
+                         *
                          * <p>The following schema fragment specifies the expected content contained within this class.
-                         * 
+                         *
                          * <pre>
                          * &lt;complexType>
                          *   &lt;complexContent>
@@ -2065,13 +1829,11 @@ public class CxXMLResults
                          *   &lt;/complexContent>
                          * &lt;/complexType>
                          * </pre>
-                         * 
-                         * 
                          */
                         @XmlAccessorType(XmlAccessType.FIELD)
                         @XmlType(name = "", propOrder = {
-                            "number",
-                            "code"
+                                "number",
+                                "code"
                         })
                         public static class Line implements Serializable {
 
@@ -2082,7 +1844,6 @@ public class CxXMLResults
 
                             /**
                              * Gets the value of the number property.
-                             * 
                              */
                             public String getNumber() {
                                 return number;
@@ -2090,7 +1851,6 @@ public class CxXMLResults
 
                             /**
                              * Sets the value of the number property.
-                             * 
                              */
                             public void setNumber(String value) {
                                 this.number = value;
@@ -2098,11 +1858,9 @@ public class CxXMLResults
 
                             /**
                              * Gets the value of the code property.
-                             * 
-                             * @return
-                             *     possible object is
-                             *     {@link String }
-                             *     
+                             *
+                             * @return possible object is
+                             * {@link String }
                              */
                             public String getCode() {
                                 return code;
@@ -2110,11 +1868,9 @@ public class CxXMLResults
 
                             /**
                              * Sets the value of the code property.
-                             * 
-                             * @param value
-                             *     allowed object is
-                             *     {@link String }
-                             *     
+                             *
+                             * @param value allowed object is
+                             *              {@link String }
                              */
                             public void setCode(String value) {
                                 this.code = value;
