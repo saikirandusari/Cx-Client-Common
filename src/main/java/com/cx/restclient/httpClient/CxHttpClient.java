@@ -154,13 +154,10 @@ public class CxHttpClient {
             }).build();
             builder.setSslcontext(disabledSSLContext);
             builder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
-        } catch (KeyStoreException e) {
-            logi.warn("Failed to disable certificate verification: " + e.getMessage());
-        } catch (NoSuchAlgorithmException e) {
-            logi.warn("Failed to disable certificate verification: " + e.getMessage());
-        } catch (KeyManagementException e) {
+        } catch (KeyManagementException | NoSuchAlgorithmException| KeyStoreException e) {
             logi.warn("Failed to disable certificate verification: " + e.getMessage());
         }
+
         return builder;
     }
 
