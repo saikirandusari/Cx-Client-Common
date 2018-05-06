@@ -10,6 +10,9 @@ public class Preset {
     private int id;
     private String name;
 
+    public Preset() {
+    }
+
     public Preset(int id, String name) {
         this.id = id;
         this.name = name;
