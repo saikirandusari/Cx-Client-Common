@@ -10,6 +10,11 @@ public class Preset {
     private int id;
     private String name;
 
+    public Preset(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }
