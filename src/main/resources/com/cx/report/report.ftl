@@ -27,7 +27,7 @@
         background-color: #372F51;
     }
 
-    .cx-report .legend-color-box.new-legend-color {
+    .cx-report .legend-color-box.new-legend-color  {
         background: linear-gradient(45deg, white 25%, #373050 25%, #373050 50%, white 50%, white 75%, #373050 75%);
         background-size: 4px 4px;
     }
