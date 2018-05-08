@@ -85,6 +85,19 @@
   </dependencies>
   <developers>
     <developer>
+    <name>Gal Or Nussbaum</name>
+    <email>gal.nussbaum@checkmarx.com</email>
+    <organization>Checkmarx</organization>
+    <organizationUrl>https://www.checkmarx.com/</organizationUrl>
+    <roles>
+      <role>Architect</role>
+      <role>Developer</role>
+    </roles>
+    <properties>
+      <picUrl>https://www.linkedin.com/in/gal-nussbaum-68b3a76a/de</picUrl>
+    </properties>
+    </developer>
+    <developer>
       <name>Dor Golan</name>
       <email>dor.golan@checkmarx.com</email>
       <organization>Checkmarx</organization>
