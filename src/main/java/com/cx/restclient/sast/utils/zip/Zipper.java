@@ -32,7 +32,7 @@ public class Zipper {
         DirectoryScanner ds = this.createDirectoryScanner(baseDir, filterIncludePatterns, filterExcludePatterns);
         ds.setFollowSymlinks(true);
         ds.scan();
-        this.printDebug(ds);
+       // this.printDebug(ds);
         if (ds.getIncludedFiles().length == 0) {
             outputStream.close();
             log.info("No files to zip");
@@ -52,7 +52,7 @@ public class Zipper {
 
         for (int i$ = 0; i$ < len$; ++i$) {
             String fileName = arr$[i$];
-            log.debug("Adding file to zip: " + fileName);
+          //  log.debug("Adding file to zip: " + fileName);
             File file = new File(baseDir, fileName);
             if (!file.canRead()) {
                 log.warn("Skipping unreadable file: " + file);

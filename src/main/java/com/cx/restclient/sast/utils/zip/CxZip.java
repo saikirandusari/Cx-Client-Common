@@ -11,7 +11,7 @@ import java.io.OutputStream;
 
 
 public class CxZip {
-    private long maxZipSizeInBytes = 209715200;
+    private long maxZipSizeInBytes = 2147483648l;
     private int numOfZippedFiles = 0;
 
     private String tempFileName;

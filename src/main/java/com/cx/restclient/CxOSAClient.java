@@ -53,6 +53,7 @@ class CxOSAClient {
 
     //API
     public String createOSAScan(long projectId) throws IOException, CxClientException {
+        log.info("----------------------------------- Create CxOSA Scan:------------------------------------");
         log.info("Creating OSA scan");
         String osaDependenciesJson = config.getOsaDependenciesJson();
         if (osaDependenciesJson == null) {

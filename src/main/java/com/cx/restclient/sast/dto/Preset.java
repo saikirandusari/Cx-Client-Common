@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Preset {
-    private int id;
-    private String name;
+    public int id;
+    public String name;
 
     public Preset() {
     }
@@ -16,6 +16,25 @@ public class Preset {
     public Preset(int id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Preset)) return false;
+
+        Preset preset = (Preset) o;
+
+        if (getId() != preset.getId()) return false;
+        return getName().equals(preset.getName());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + getName().hashCode();
+        return result;
     }
 
     public int getId() {

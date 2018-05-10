@@ -4,8 +4,8 @@ package com.cx.restclient.dto;
  * Created by Galn on 14/02/2018.
  */
 public class Team {
-    private String id;
-    private String fullName;
+    public String id;
+    public String fullName;
 
     public Team() {
     }
@@ -13,6 +13,25 @@ public class Team {
     public Team(String id, String fullName) {
         this.id = id;
         this.fullName = fullName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Team)) return false;
+
+        Team team = (Team) o;
+
+        if (!getId().equals(team.getId())) return false;
+        return getFullName().equals(team.getFullName());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getFullName().hashCode();
+        return result;
     }
 
     public String getId() {

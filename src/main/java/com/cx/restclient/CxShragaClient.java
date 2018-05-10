@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import static com.cx.restclient.common.CxPARAM.*;
@@ -234,6 +235,7 @@ public class CxShragaClient {
     }
 
     private List<Project> getProjectByName(String projectName, String teamId) throws IOException, CxClientException {
+        projectName = URLEncoder.encode(projectName, "UTF-8");
         String projectNamePath = SAST_GET_PROJECT.replace("{name}", projectName).replace("{teamId}", teamId);
         List<Project> projects = null;
         try {
