@@ -40,8 +40,8 @@ public class CxShragaClient {
     private CxOSAClient osaClient;
     private long sastScanId;
     private String osaScanId;
-    private SASTResults sastResults;
-    private OSAResults osaResults;
+    private SASTResults sastResults = new SASTResults();
+    private OSAResults osaResults = new OSAResults();
 
 
     public CxShragaClient(CxScanConfig config, Logger log) throws MalformedURLException {

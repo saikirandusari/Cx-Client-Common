@@ -65,7 +65,6 @@ public abstract class ShragaUtils {
         return exceeded;
     }
 
-
     private static boolean isSeverityExceeded(int result, Integer threshold, StringBuilder res, String severity, String severityType) {
         boolean fail = false;
         if (threshold != null && result > threshold) {
@@ -74,7 +73,6 @@ public abstract class ShragaUtils {
         }
         return fail;
     }
-
 
     public static Map<String, List<String>> generateIncludesExcludesPatternLists(String folderExclusions, String filterPattern, Logger log) {
 
@@ -91,10 +89,7 @@ public abstract class ShragaUtils {
             combinedPatterns = filterPattern + "," + excludeFoldersPattern;
         }
 
-
         return convertPatternsToLists(combinedPatterns);
-
-
     }
 
     public static String processExcludeFolders(String folderExclusions, Logger log) {
@@ -116,13 +111,9 @@ public abstract class ShragaUtils {
         log.info("Exclude folders converted to: '" + result.toString() + "'");
         return result.toString();
     }
-
-
     public static final String INCLUDES_LIST = "includes";
     public static final String EXCLUDES_LIST = "excludes";
-
     public static Map<String, List<String>> convertPatternsToLists(String filterPatterns) {
-
         filterPatterns = StringUtils.defaultString(filterPatterns);
         List<String> inclusions = new ArrayList<String>();
         List<String> exclusions = new ArrayList<String>();
@@ -144,5 +135,4 @@ public abstract class ShragaUtils {
 
         return ret;
     }
-
 }

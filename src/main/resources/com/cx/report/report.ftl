@@ -19,6 +19,13 @@
         }
     }
 
+    .aui-group > .aui-item {
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        display: table;
+        margin: 0;
+    }
+
     .cx-report .recurrent-legend {
         margin-right: 15px;
     }
@@ -369,6 +376,7 @@
 
     .cx-report .results-report .threshold-exceeded,
     .cx-report .results-report .threshold-compliance {
+        min-width: 100%;
         display: inline-flex;
         font-size: 14px;
         font-weight: normal;

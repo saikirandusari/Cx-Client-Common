@@ -262,8 +262,10 @@ class CxSASTClient {
         String hoursStr = (hours < 10) ? ("0" + Long.toString(hours)) : (Long.toString(hours));
         String minutesStr = (minutes < 10) ? ("0" + Long.toString(minutes)) : (Long.toString(minutes));
         String secondsStr = (seconds < 10) ? ("0" + Long.toString(seconds)) : (Long.toString(seconds));
-        log.info("Waiting for SAST scan results. Elapsed time: " + hoursStr + ":" + minutesStr + ":" + secondsStr + ". " + scanStatus.getTotalPercent() +
-                "% processed. Status: " + scanStatus.getStage().getValue() + ".");
+
+        String prefix = (scanStatus.getTotalPercent() < 10) ? " " : "";
+        log.info("Waiting for SAST scan results. Elapsed time: " + hoursStr + ":" + minutesStr + ":" + secondsStr + ". " + prefix +
+                scanStatus.getTotalPercent() + "% processed. Status: " + scanStatus.getStage().getValue() + ".");
     }
 
     private ResponseQueueScanStatus resolveSASTStatus(ResponseQueueScanStatus scanStatus) throws CxClientException {

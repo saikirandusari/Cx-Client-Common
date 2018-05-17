@@ -47,7 +47,7 @@ public class SASTResults implements Serializable {
     private byte[] rawXMLReport;
     private byte[] PDFReport;
 
-    private enum Severity {
+    public enum Severity {
         High, Medium, Low, Info;
     }
 
