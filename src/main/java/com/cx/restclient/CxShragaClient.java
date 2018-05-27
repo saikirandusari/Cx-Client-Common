@@ -74,11 +74,13 @@ public class CxShragaClient {
 
     public long createSASTScan() throws IOException, CxClientException {
         sastScanId = sastClient.createSASTScan(projectId);
+        sastResults.setSastScanLink(config.getUrl(), sastScanId, projectId);
         return sastScanId;
     }
 
     public String createOSAScan() throws IOException, CxClientException {
         osaScanId = osaClient.createOSAScan(projectId);
+        osaResults.setOsaProjectSummaryLink(config.getUrl(), projectId);
         return osaScanId;
     }
 
@@ -135,7 +137,7 @@ public class CxShragaClient {
     public String getTeamIdByName(String teamName) throws CxClientException, IOException {
         List<Team> allTeams = getTeamList();
         for (Team team : allTeams) {
-            if ((team.getFullName()).equalsIgnoreCase(teamName)) { //TODO caseSenesitive- checkkk and REMOVE The WA "\"
+            if (team.getFullName().equalsIgnoreCase(teamName)){ //TODO caseSenesitive- checkkk and REMOVE The WA "\"
                 return team.getId();
             }
         }

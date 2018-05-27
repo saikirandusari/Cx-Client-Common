@@ -91,6 +91,10 @@ public class CxScanConfig implements Serializable {
         this.cxOrigin = cxOrigin;
     }
 
+    public boolean isCxOriginJenkins(){
+        return "Jenkins".equals(cxOrigin);
+    }
+
     public boolean isDisableCertificateValidation() {
         return disableCertificateValidation;
     }

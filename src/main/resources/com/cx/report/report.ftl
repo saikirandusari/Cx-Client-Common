@@ -772,10 +772,7 @@
         padding: 4% 0;
     }
 
-    .cx-report .aui-message.error,
-    .cx-report .aui-message-error {
-        display: block;
-    }
+
 
     .cx-report .chart-large .no-scan-message-container {
         height: 372px;
@@ -803,6 +800,12 @@
         font-size: 15px;
         text-align: center;
         width: 89%;
+    }
+
+    .cx-report #asyncMessage {
+        display: none;
+        font-weight: bold;
+        margin: 4% 0;
     }
 </style>
 
@@ -844,6 +847,21 @@
         <div class="summary-section">
             <div id="summary-results" class="summary-results">
 
+
+            <#if (config.sastEnabled || config.osaEnabled) && !config.isCxOriginJenkins() && !config.isSynchronous >
+                <div id="onAsyncMode" class="error-msg">
+                    <div id="asyncMessage" class="aui-message warning">
+                        <span class="aui-icon icon-warning"></span>
+                        <strong>CxScan was run in Asynchronous mode. </strong>
+                        <#if (config.sastEnabled)>
+                            <p>Refer to the <a href="${sast.sastScanLink}">${sast.sastScanLink}</a> for CxSAST scan results</p>
+                        </#if>
+                        <#if config.osaEnabled>
+                            <p>Refer to the <a href="${osa.sastScanLink}">${osa.osaProjectSummaryLink}</a> for CxOSA scan results</p>
+                        </#if>
+                    </div>
+                </div>
+            </#if>
             <#if config.sastEnabled>
                 <div class="sast-summary <#if !config.osaEnabled>chart-large</#if>" id="sast-summary">
                     <div class="summary-report-title sast">
