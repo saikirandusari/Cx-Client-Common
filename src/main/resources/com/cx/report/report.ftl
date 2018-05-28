@@ -848,7 +848,7 @@
             <div id="summary-results" class="summary-results">
 
 
-            <#if (config.sastEnabled || config.osaEnabled) && !config.isCxOriginJenkins() && !config.isSynchronous >
+            <#if (config.sastEnabled || config.osaEnabled) && !config.isCxOriginJenkins() && !config.getSynchronous  >
                 <div id="onAsyncMode" class="error-msg">
                     <div id="asyncMessage" class="aui-message warning">
                         <span class="aui-icon icon-warning"></span>
