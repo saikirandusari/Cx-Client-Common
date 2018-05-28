@@ -49,7 +49,7 @@ public abstract class Waiter<T> {
             printProgress(obj);
 
         }
-        if (scanTimeoutSec > 0 && scanTimeoutSec < elapsedTimeSec) {
+        if (scanTimeoutSec > 0 && scanTimeoutSec <= elapsedTimeSec) {
             throw new CxClientException( "Failed to perform " + scanType + " scan: " + scanType + " scan has been automatically aborted: reached the user-specified timeout (" + scanTimeoutSec / 60 + " minutes)");
         }
         return resolveStatus(obj);
