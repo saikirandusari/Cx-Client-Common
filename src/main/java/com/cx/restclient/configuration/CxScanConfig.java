@@ -32,8 +32,8 @@ public class CxScanConfig implements Serializable {
     private String sastFilterPattern;
     private Integer sastScanTimeoutInMinutes;
     private String scanComment;
-    private Boolean isIncremental = false;
-    private Boolean isSynchronous = false;
+    private Boolean incremental = false;
+    private Boolean synchronous = false;
     private Boolean sastThresholdsEnabled = false;
     private Integer sastHighThreshold;
     private Integer sastMediumThreshold;
@@ -240,19 +240,19 @@ public class CxScanConfig implements Serializable {
     }
 
     public Boolean getIncremental() {
-        return isIncremental;
+        return incremental;
     }
 
     public void setIncremental(Boolean incremental) {
-        isIncremental = incremental;
+        this.incremental = incremental;
     }
 
     public Boolean getSynchronous() {
-        return isSynchronous;
+        return synchronous;
     }
 
     public void setSynchronous(Boolean synchronous) {
-        isSynchronous = synchronous;
+        this.synchronous = synchronous;
     }
 
     public Boolean getSastThresholdsEnabled() {
