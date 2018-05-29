@@ -847,22 +847,23 @@
         <div class="summary-section">
             <div id="summary-results" class="summary-results">
 
-
-            <#if (config.sastEnabled || config.osaEnabled) && !config.isCxOriginJenkins() && !config.synchronous  >
-                <div id="onAsyncMode" class="error-msg">
-                    <div id="asyncMessage" class="aui-message warning">
-                        <span class="aui-icon icon-warning"></span>
-                        <strong>CxScan was run in Asynchronous mode. </strong>
-                        <#if (config.sastEnabled && sast.sastScanLink??)>
-                            <p>Refer to the <a href="${sast.sastScanLink}">${sast.sastScanLink}</a> for CxSAST scan results.</p>
-                        </#if>
-                        <#if config.osaEnabled && osa.osaProjectSummaryLink??>
-                            <p>Refer to the <a href="${osa.osaProjectSummaryLink}">${osa.osaProjectSummaryLink}</a> for CxOSA scan results.</p>
-                        </#if>
+            <#if!config.synchronous>
+                <#if (config.sastEnabled || config.osaEnabled) && !config.isCxOriginJenkins()>
+                    <div id="onAsyncMode" class="error-msg">
+                        <div id="asyncMessage" class="aui-message warning">
+                            <span class="aui-icon icon-warning"></span>
+                            <strong>CxScan was run in Asynchronous mode. </strong>
+                            <#if (config.sastEnabled && sast.sastScanLink??)>
+                                <p>Refer to the <a href="${sast.sastScanLink}">${sast.sastScanLink}</a> for CxSAST scan results.</p>
+                            </#if>
+                            <#if config.osaEnabled && osa.osaProjectSummaryLink??>
+                                <p>Refer to the <a href="${osa.osaProjectSummaryLink}">${osa.osaProjectSummaryLink}</a> for CxOSA scan results.</p>
+                            </#if>
+                        </div>
                     </div>
-                </div>
-            </#if>
-            <#if config.sastEnabled>
+                </#if>
+            <#else>
+                <#if config.sastEnabled>
                 <div class="sast-summary <#if !config.osaEnabled>chart-large</#if>" id="sast-summary">
                     <div class="summary-report-title sast">
                         <div class="summary-title-text sast">CxSAST Vulnerabilities Status</div>
@@ -1233,7 +1234,7 @@
                 </div>
             </#if>
 
-            <#if config.osaEnabled>
+                 <#if config.osaEnabled>
                 <div class="osa-summary <#if !config.sastEnabled>sast-summary chart-large</#if>" id="osa-summary">
                     <div class="summary-report-title osa">
                         <div class="summary-title-text osa">CxOSA Vulnerabilities & Libraries</div>
@@ -1666,6 +1667,7 @@
                         </div>
                     </#if>
                 </div>
+            </#if>
             </#if>
             </div>
         </div>
