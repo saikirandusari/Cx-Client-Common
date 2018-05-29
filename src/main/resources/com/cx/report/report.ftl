@@ -853,10 +853,10 @@
                     <div id="asyncMessage" class="aui-message warning">
                         <span class="aui-icon icon-warning"></span>
                         <strong>CxScan was run in Asynchronous mode. </strong>
-                        <#if (config.sastEnabled)>
+                        <#if (config.sastEnabled && sast.sastScanLink??)>
                             <p>Refer to the <a href="${sast.sastScanLink}">${sast.sastScanLink}</a> for CxSAST scan results.</p>
                         </#if>
-                        <#if config.osaEnabled>
+                        <#if config.osaEnabled && osa.osaProjectSummaryLink??>
                             <p>Refer to the <a href="${osa.osaProjectSummaryLink}">${osa.osaProjectSummaryLink}</a> for CxOSA scan results.</p>
                         </#if>
                     </div>
