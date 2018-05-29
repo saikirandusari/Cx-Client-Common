@@ -854,10 +854,10 @@
                         <span class="aui-icon icon-warning"></span>
                         <strong>CxScan was run in Asynchronous mode. </strong>
                         <#if (config.sastEnabled)>
-                            <p>Refer to the <a href="${sast.sastScanLink}">${sast.sastScanLink}</a> for CxSAST scan results</p>
+                            <p>Refer to the <a href="${sast.sastScanLink}">${sast.sastScanLink}</a> for CxSAST scan results.</p>
                         </#if>
                         <#if config.osaEnabled>
-                            <p>Refer to the <a href="${osa.sastScanLink}">${osa.osaProjectSummaryLink}</a> for CxOSA scan results</p>
+                            <p>Refer to the <a href="${osa.osaProjectSummaryLink}">${osa.osaProjectSummaryLink}</a> for CxOSA scan results.</p>
                         </#if>
                     </div>
                 </div>
