@@ -772,7 +772,10 @@
         padding: 4% 0;
     }
 
-
+    .cx-report .aui-message.error,
+    .cx-report .aui-message-error {
+        display: block;
+    }
 
     .cx-report .chart-large .no-scan-message-container {
         height: 372px;
@@ -1234,7 +1237,7 @@
                 </div>
             </#if>
 
-                 <#if config.osaEnabled>
+            <#if config.osaEnabled>
                 <div class="osa-summary <#if !config.sastEnabled>sast-summary chart-large</#if>" id="osa-summary">
                     <div class="summary-report-title osa">
                         <div class="summary-title-text osa">CxOSA Vulnerabilities & Libraries</div>
