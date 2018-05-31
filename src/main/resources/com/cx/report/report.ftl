@@ -849,7 +849,6 @@
 
         <div class="summary-section">
             <div id="summary-results" class="summary-results">
-
             <#if!config.synchronous>
                 <#if (config.sastEnabled || config.osaEnabled) && !config.isCxOriginJenkins()>
                     <div id="onAsyncMode" class="error-msg">
