@@ -82,7 +82,6 @@ class CxOSAClient {
             String osaDependenciesJson = componentScan.scan();
             log.info("555555");
             OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
-            log.info("6666");
 
         return osaDependenciesJson;}
         catch (Exception x){
