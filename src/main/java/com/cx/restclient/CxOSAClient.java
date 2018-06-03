@@ -67,20 +67,32 @@ class CxOSAClient {
     }
 
     private String resolveOSADependencies() {
-        log.info("Scanning for CxOSA compatible files");
-        Properties scannerProperties = OSAUtils.generateOSAScanConfiguration(
-                config.getOsaFolderExclusions(),
-                config.getOsaFilterPattern(),
-                config.getOsaArchiveIncludePatterns(),
-                config.getSourceDir(),
-                config.getOsaRunInstall(),
-                log);
+        try {
+            log.info("Scanning for CxOSA compatible files");
+            Properties scannerProperties = OSAUtils.generateOSAScanConfiguration(
+                    config.getOsaFolderExclusions(),
+                    config.getOsaFilterPattern(),
+                    config.getOsaArchiveIncludePatterns(),
+                    config.getSourceDir(),
+                    config.getOsaRunInstall(),
+                    log);
+            log.info("sdsdsdsdssdds");
+            ComponentScan componentScan = new ComponentScan(scannerProperties);
+            log.info("44444444444444444444");
+            String osaDependenciesJson = componentScan.scan();
+            log.info("555555");
+            OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
+            log.info("6666");
 
-        ComponentScan componentScan = new ComponentScan(scannerProperties);
-        String osaDependenciesJson = componentScan.scan();
-        OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
-
-        return osaDependenciesJson;
+        return osaDependenciesJson;}
+        catch (Exception x){
+            log.info("$$$$$$$$$$$$$$");
+            log.info(x.getMessage());
+            if (x.getCause() != null)
+            log.info(x.getCause().getMessage());
+            log.info("$$$$$$$$$$$$$$");
+        }
+        return  null;
     }
 
     public OSAResults getOSAResults(String scanId, long projectId) throws CxClientException, InterruptedException, IOException {
