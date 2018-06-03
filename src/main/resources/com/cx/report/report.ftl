@@ -804,12 +804,6 @@
         text-align: center;
         width: 89%;
     }
-
-    .cx-report #asyncMessage {
-        display: none;
-        font-weight: bold;
-        margin: 4% 0;
-    }
 </style>
 
 <#macro thresholdTooltip threshold count>
@@ -849,23 +843,8 @@
 
         <div class="summary-section">
             <div id="summary-results" class="summary-results">
-            <#if!config.synchronous>
-                <#if (config.sastEnabled || config.osaEnabled) && !config.isCxOriginJenkins()>
-                    <div id="onAsyncMode" class="error-msg">
-                        <div id="asyncMessage" class="aui-message warning">
-                            <span class="aui-icon icon-warning"></span>
-                            <strong>CxScan was run in Asynchronous mode. </strong>
-                            <#if (config.sastEnabled && sast.sastScanLink??)>
-                                <p>Refer to the <a href="${sast.sastScanLink}">${sast.sastScanLink}</a> for CxSAST scan results.</p>
-                            </#if>
-                            <#if config.osaEnabled && osa.osaProjectSummaryLink??>
-                                <p>Refer to the <a href="${osa.osaProjectSummaryLink}">${osa.osaProjectSummaryLink}</a> for CxOSA scan results.</p>
-                            </#if>
-                        </div>
-                    </div>
-                </#if>
-            <#else>
-                <#if config.sastEnabled>
+
+            <#if config.sastEnabled>
                 <div class="sast-summary <#if !config.osaEnabled>chart-large</#if>" id="sast-summary">
                     <div class="summary-report-title sast">
                         <div class="summary-title-text sast">CxSAST Vulnerabilities Status</div>
@@ -1669,7 +1648,6 @@
                         </div>
                     </#if>
                 </div>
-            </#if>
             </#if>
             </div>
         </div>

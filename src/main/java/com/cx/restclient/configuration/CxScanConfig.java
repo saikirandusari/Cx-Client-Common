@@ -32,8 +32,8 @@ public class CxScanConfig implements Serializable {
     private String sastFilterPattern;
     private Integer sastScanTimeoutInMinutes;
     private String scanComment;
-    private Boolean incremental = false;
-    private Boolean synchronous = false;
+    private Boolean isIncremental = false;
+    private Boolean isSynchronous = false;
     private Boolean sastThresholdsEnabled = false;
     private Integer sastHighThreshold;
     private Integer sastMediumThreshold;
@@ -89,10 +89,6 @@ public class CxScanConfig implements Serializable {
 
     public void setCxOrigin(String cxOrigin) {
         this.cxOrigin = cxOrigin;
-    }
-
-    public boolean isCxOriginJenkins(){
-        return "Jenkins".equals(cxOrigin);
     }
 
     public boolean isDisableCertificateValidation() {
@@ -240,19 +236,19 @@ public class CxScanConfig implements Serializable {
     }
 
     public Boolean getIncremental() {
-        return incremental;
+        return isIncremental;
     }
 
     public void setIncremental(Boolean incremental) {
-        this.incremental = incremental;
+        this.isIncremental = incremental;
     }
 
     public Boolean getSynchronous() {
-        return synchronous;
+        return isSynchronous;
     }
 
     public void setSynchronous(Boolean synchronous) {
-        this.synchronous = synchronous;
+        this.isSynchronous = synchronous;
     }
 
     public Boolean getSastThresholdsEnabled() {

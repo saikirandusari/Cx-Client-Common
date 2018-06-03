@@ -267,10 +267,4 @@ public class CxShragaClient {
         StringEntity entity = new StringEntity(json);
         return httpClient.postRequest(CREATE_PROJECT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, Project.class, 201, "create new project: " + request.getName());
     }
-
-
-    public void setSynchronous(boolean sync) {
-        config.setSynchronous(sync);
-    }
-
 }
