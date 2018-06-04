@@ -103,6 +103,12 @@ public class CxHttpClient {
         return request(post, contentType, entity, responseType, expectStatus, failedMsg, false, true);
     }
 
+    //PUT REQUEST
+    public <T> T putRequest(String relPath, String contentType, HttpEntity entity, Class<T> responseType, int expectStatus, String failedMsg) throws IOException, CxClientException {
+        HttpPut put = new HttpPut(rootUri + relPath);
+        return request(put, contentType, entity, responseType, expectStatus, failedMsg, false, true);
+    }
+
     //PATCH REQUEST
     public void patchRequest(String relPath, String contentType, HttpEntity entity, int expectStatus, String failedMsg) throws IOException, CxClientException {
         HttpPatch patch = new HttpPatch(rootUri + relPath);

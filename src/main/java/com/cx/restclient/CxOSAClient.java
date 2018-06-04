@@ -67,7 +67,6 @@ class CxOSAClient {
     }
 
     private String resolveOSADependencies() {
-        try {
             log.info("Scanning for CxOSA compatible files");
             Properties scannerProperties = OSAUtils.generateOSAScanConfiguration(
                     config.getOsaFolderExclusions(),
@@ -76,22 +75,11 @@ class CxOSAClient {
                     config.getSourceDir(),
                     config.getOsaRunInstall(),
                     log);
-            log.info("sdsdsdsdssdds");
             ComponentScan componentScan = new ComponentScan(scannerProperties);
-            log.info("44444444444444444444");
             String osaDependenciesJson = componentScan.scan();
-            log.info("555555");
             OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
 
-        return osaDependenciesJson;}
-        catch (Exception x){
-            log.info("$$$$$$$$$$$$$$");
-            log.info(x.getMessage());
-            if (x.getCause() != null)
-            log.info(x.getCause().getMessage());
-            log.info("$$$$$$$$$$$$$$");
-        }
-        return  null;
+        return osaDependenciesJson;
     }
 
     public OSAResults getOSAResults(String scanId, long projectId) throws CxClientException, InterruptedException, IOException {

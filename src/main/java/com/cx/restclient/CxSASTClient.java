@@ -85,9 +85,7 @@ class CxSASTClient {
         ScanSettingResponse scanSettingResponse = getScanSetting(projectId);
 
         ScanSettingRequest scanSettingRequest = new ScanSettingRequest();
-        scanSettingRequest.setEngineConfigurationId(scanSettingResponse.getEngineConfiguration().getId());
-        scanSettingRequest.setEmailNotifications(scanSettingResponse.getEmailNotifications());
-        //TODO scanSettingRequest.setPostScanActionId(scanSettingResponse.getPostScanAction());
+        scanSettingRequest.setEngineConfigurationId(scanSettingResponse.getEngineConfiguration().getId());//todo check for null
         scanSettingRequest.setProjectId(projectId);
         scanSettingRequest.setPresetId(config.getPresetId());
         if (config.getEngineConfigurationId() != null) {
@@ -189,7 +187,7 @@ class CxSASTClient {
 
     private void defineScanSetting(ScanSettingRequest scanSetting) throws IOException, CxClientException {
         StringEntity entity = new StringEntity(convertToJson(scanSetting));
-        httpClient.postRequest(SAST_UPDATE_SCAN_SETTINGS, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CxID.class, 200, "define scan setting");
+        httpClient.putRequest(SAST_UPDATE_SCAN_SETTINGS, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CxID.class, 200, "define scan setting");
     }
 
     private void updateScanComment(String comment, long scanId) throws CxClientException, IOException {

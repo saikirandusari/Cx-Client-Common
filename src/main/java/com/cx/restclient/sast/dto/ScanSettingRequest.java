@@ -10,8 +10,6 @@ public class ScanSettingRequest {
     private long projectId;
     private long presetId;
     private long engineConfigurationId;
-    private Integer postScanActionId;
-    private EmailNotifications emailNotifications;
 
     public long getProjectId() {
         return projectId;
@@ -35,21 +33,5 @@ public class ScanSettingRequest {
 
     public void setEngineConfigurationId(long engineConfigurationId) {
         this.engineConfigurationId = engineConfigurationId;
-    }
-
-    public Integer getPostScanActionId() {
-        return postScanActionId;
-    }
-
-    public void setPostScanActionId(Integer postScanActionId) {
-        this.postScanActionId = postScanActionId;
-    }
-
-    public EmailNotifications getEmailNotifications() {
-        return emailNotifications;
-    }
-
-    public void setEmailNotifications(EmailNotifications emailNotifications) {
-        this.emailNotifications = emailNotifications;
     }
 }
