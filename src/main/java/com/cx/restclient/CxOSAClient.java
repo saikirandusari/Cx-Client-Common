@@ -67,17 +67,20 @@ class CxOSAClient {
     }
 
     private String resolveOSADependencies() {
-            log.info("Scanning for CxOSA compatible files");
-            Properties scannerProperties = OSAUtils.generateOSAScanConfiguration(
+        log.info("Scanning for CxOSA compatible files");
+        Properties scannerProperties = config.getOsaFsaConfig();
+        if (scannerProperties == null) {
+            scannerProperties = OSAUtils.generateOSAScanConfiguration(
                     config.getOsaFolderExclusions(),
                     config.getOsaFilterPattern(),
                     config.getOsaArchiveIncludePatterns(),
                     config.getSourceDir(),
                     config.getOsaRunInstall(),
                     log);
-            ComponentScan componentScan = new ComponentScan(scannerProperties);
-            String osaDependenciesJson = componentScan.scan();
-            OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
+        }
+        ComponentScan componentScan = new ComponentScan(scannerProperties);
+        String osaDependenciesJson = componentScan.scan();
+        OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
 
         return osaDependenciesJson;
     }

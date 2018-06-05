@@ -4,6 +4,7 @@ package com.cx.restclient.configuration;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by galn on 21/12/2016.
@@ -48,12 +49,13 @@ public class CxScanConfig implements Serializable {
     private String osaFolderExclusions;
     private String osaFilterPattern;
     private String osaArchiveIncludePatterns;
+    private Boolean osaGenerateJsonReport = true;
     private Boolean osaRunInstall = false;
     private Boolean osaThresholdsEnabled = false;
     private Integer osaHighThreshold;
     private Integer osaMediumThreshold;
     private Integer osaLowThreshold;
-    private Map<String, String> osaFsaConfig; //for MAVEN
+    private Properties osaFsaConfig; //for MAVEN
     private String osaDependenciesJson;
 
     public CxScanConfig() {
@@ -387,11 +389,11 @@ public class CxScanConfig implements Serializable {
         this.osaLowThreshold = osaLowThreshold;
     }
 
-    public Map<String, String> getOsaFsaConfig() {
+    public Properties getOsaFsaConfig() {
         return osaFsaConfig;
     }
 
-    public void setOsaFsaConfig(Map<String, String> osaFsaConfig) {
+    public void setOsaFsaConfig(Properties osaFsaConfig) {
         this.osaFsaConfig = osaFsaConfig;
     }
 
@@ -411,5 +413,11 @@ public class CxScanConfig implements Serializable {
         this.osaDependenciesJson = osaDependenciesJson;
     }
 
+    public Boolean getOsaGenerateJsonReport() {
+        return osaGenerateJsonReport;
+    }
 
+    public void setOsaGenerateJsonReport(Boolean osaGenerateJsonReport) {
+        this.osaGenerateJsonReport = osaGenerateJsonReport;
+    }
 }

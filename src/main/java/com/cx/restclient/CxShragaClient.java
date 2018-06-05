@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Properties;
 
 import static com.cx.restclient.common.CxPARAM.*;
 import static com.cx.restclient.common.ShragaUtils.isThresholdExceeded;
@@ -260,6 +261,10 @@ public class CxShragaClient {
             }
         }
         return projects;
+    }
+
+    public void setOsaFSAProperties(Properties fsaConfig){  //For CxMaven plugin
+        config.setOsaFsaConfig(fsaConfig);
     }
 
     private Project createNewProject(CreateProjectRequest request) throws CxClientException, IOException {
