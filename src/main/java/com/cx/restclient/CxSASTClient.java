@@ -107,7 +107,7 @@ class CxSASTClient {
 
         //Start a new createSASTScan
         log.info("Uploading zip file");
-        CreateScanRequest scanRequest = new CreateScanRequest(projectId, config.getIncremental(), config.getPublic(), config.getForceScan());
+        CreateScanRequest scanRequest = new CreateScanRequest(projectId, config.getIncremental(), config.getPublic(), config.getForceScan(), config.getScanComment());
         log.info("Sending SAST scan request");
         CxID createScanResponse = createScan(scanRequest);
         log.info(String.format("SAST Scan created successfully. Link to project state: " + config.getUrl() + LINK_FORMAT, projectId));
@@ -124,10 +124,7 @@ class CxSASTClient {
         log.info("Waiting for CxSAST scan to finish.");
         sastWaiter.waitForTaskToFinish(Long.toString(scanId), config.getSastScanTimeoutInMinutes() * 60, log);
         log.info("Retrieving SAST scan results");
-        //Update comment if needed
-        if (!StringUtils.isEmpty(config.getScanComment())) {
-            updateScanComment(config.getScanComment(), scanId);
-        }
+
         //retrieve SAST scan results
         sastResults = retrieveSASTResults(scanId, projectId);
         SASTUtils.printSASTResultsToConsole(sastResults, log);
@@ -188,11 +185,6 @@ class CxSASTClient {
     private void defineScanSetting(ScanSettingRequest scanSetting) throws IOException, CxClientException {
         StringEntity entity = new StringEntity(convertToJson(scanSetting));
         httpClient.putRequest(SAST_UPDATE_SCAN_SETTINGS, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CxID.class, 200, "define scan setting");
-    }
-
-    private void updateScanComment(String comment, long scanId) throws CxClientException, IOException {
-        StringEntity entity = new StringEntity(convertToJson(new Comment(comment)));
-        httpClient.patchRequest(SAST_SCAN.replace("{scanId}", Long.toString(scanId)), CONTENT_TYPE_APPLICATION_JSON_V1, entity, 204, "update comment");
     }
 
     private void uploadZipFile(File zipFile, long projectId) throws CxClientException, IOException {

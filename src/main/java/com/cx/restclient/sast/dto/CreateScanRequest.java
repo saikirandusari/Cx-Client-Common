@@ -11,12 +11,14 @@ public class CreateScanRequest {
     private boolean isIncremental;
     private boolean isPublic;
     private boolean forceScan;
+    private String comment;
 
-    public CreateScanRequest(long projectId, boolean isIncremental, boolean isPublic, boolean forceScan) {
+    public CreateScanRequest(long projectId, boolean isIncremental, boolean isPublic, boolean forceScan,String comment) {
         this.projectId = projectId;
         this.isIncremental = isIncremental;
         this.isPublic = isPublic;
         this.forceScan = forceScan;
+        this.comment = comment;
     }
 
     public long getProjectId() {
@@ -49,5 +51,13 @@ public class CreateScanRequest {
 
     public void setForceScan(boolean forceScan) {
         this.forceScan = forceScan;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
