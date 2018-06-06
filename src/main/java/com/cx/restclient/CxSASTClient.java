@@ -107,7 +107,7 @@ class CxSASTClient {
 
         //Start a new createSASTScan
         log.info("Uploading zip file");
-        CreateScanRequest scanRequest = new CreateScanRequest(projectId, config.getIncremental(), config.getPublic(), config.getForceScan(), config.getScanComment());
+        CreateScanRequest scanRequest = new CreateScanRequest(projectId, config.getIncremental(), config.getPublic(), config.getForceScan(), config.getScanComment() == null ? "" : config.getScanComment());
         log.info("Sending SAST scan request");
         CxID createScanResponse = createScan(scanRequest);
         log.info(String.format("SAST Scan created successfully. Link to project state: " + config.getUrl() + LINK_FORMAT, projectId));
