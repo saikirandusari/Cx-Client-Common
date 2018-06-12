@@ -59,7 +59,7 @@ public abstract class SASTUtils {
         logger.info("High severity results: " + scanResults.getHigh() + highNew);
         logger.info("Medium severity results: " + scanResults.getMedium() + mediumNew);
         logger.info("Low severity results: " + scanResults.getLow() + lowNew);
-        logger.info("Information severity results: " + scanResults.getInfo() + infoNew);
+        logger.info("Information severity results: " + scanResults.getInformation() + infoNew);
         logger.info("");
         logger.info("Scan results location: " + scanResults.getSastScanLink());
         logger.info("------------------------------------------------------------------------------------------\n");

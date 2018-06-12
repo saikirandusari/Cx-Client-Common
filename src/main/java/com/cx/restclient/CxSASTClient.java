@@ -152,6 +152,7 @@ class CxSASTClient {
         CxXMLResults reportObj = convertToXMLResult(cxReport);
         sastResults.setScanDetailedReport(reportObj);
         sastResults.setRawXMLReport(cxReport);
+        sastResults.setSastResultsReady(true);
         return sastResults;
     }
 

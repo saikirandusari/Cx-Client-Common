@@ -29,19 +29,19 @@ public class CreateScanRequest {
         this.projectId = projectId;
     }
 
-    public boolean isIncremental() {
+    public boolean isIsIncremental() {
         return isIncremental;
     }
 
-    public void setIncremental(boolean incremental) {
+    public void setIsIncremental(boolean incremental) {
         isIncremental = incremental;
     }
 
-    public boolean isPublic() {
+    public boolean isIsPublic() {
         return isPublic;
     }
 
-    public void setPublic(boolean aPublic) {
+    public void setIsPublic(boolean aPublic) {
         isPublic = aPublic;
     }
 

@@ -24,7 +24,7 @@ public class SASTResults implements Serializable {
     private int high = 0;
     private int medium = 0;
     private int low = 0;
-    private int info = 0;
+    private int information = 0;
 
     private int newHigh = 0;
     private int newMedium = 0;
@@ -48,7 +48,7 @@ public class SASTResults implements Serializable {
     private byte[] PDFReport;
 
     public enum Severity {
-        High, Medium, Low, Info;
+        High, Medium, Low, Information;
     }
 
     public void setScanDetailedReport(CxXMLResults reportObj) {
@@ -76,7 +76,7 @@ public class SASTResults implements Serializable {
                         case Low:
                             newLow++;
                             break;
-                        case Info:
+                        case Information:
                             newInfo++;
                             break;
                     }
@@ -91,10 +91,9 @@ public class SASTResults implements Serializable {
         setHigh(statisticsResults.getHighSeverity());
         setMedium(statisticsResults.getMediumSeverity());
         setLow(statisticsResults.getLowSeverity());
-        setInfo(statisticsResults.getInfoSeverity());
+        setInformation(statisticsResults.getInfoSeverity());
         setSastScanLink(url, scanId, projectId);
         setSastProjectLink(url, projectId);
-        setSastResultsReady(true);
     }
 
     public long getScanId() {
@@ -129,12 +128,12 @@ public class SASTResults implements Serializable {
         this.low = low;
     }
 
-    public int getInfo() {
-        return info;
+    public int getInformation() {
+        return information;
     }
 
-    public void setInfo(int info) {
-        this.info = info;
+    public void setInformation(int information) {
+        this.information = information;
     }
 
     public int getNewHigh() {
