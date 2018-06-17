@@ -1,7 +1,9 @@
 package com.cx.restclient.httpClient;
 
+import com.cx.restclient.common.UrlUtils;
 import com.cx.restclient.dto.TokenLoginResponse;
 import com.cx.restclient.exception.CxClientException;
+import com.cx.restclient.exception.CxHTTPClientException;
 import com.cx.restclient.exception.CxTokenExpiredException;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
@@ -15,6 +17,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.ssl.TrustStrategy;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 
 import javax.net.ssl.SSLContext;
@@ -22,6 +25,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -34,6 +38,7 @@ import static com.cx.restclient.common.CxPARAM.AUTHENTICATION;
 import static com.cx.restclient.common.CxPARAM.ORIGIN_HEADER;
 import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.*;
+import org.apache.http.HttpStatus;
 
 /**
  * Created by Galn on 05/02/2018.
@@ -63,7 +68,7 @@ public class CxHttpClient {
         this.logi = logi;
         this.username = username;
         this.password = password;
-        this.rootUri = new URL(new URL(hostname), "CxRestAPI/").toString();
+        this.rootUri = UrlUtils.parseURLToString(hostname, "CxRestAPI/");
         this.cxOrigin = origin;
         //create httpclient
         HttpClientBuilder builder = HttpClientBuilder.create().addInterceptorFirst(requestFilter);
@@ -76,7 +81,7 @@ public class CxHttpClient {
     public void login() throws IOException, CxClientException {
         UrlEncodedFormEntity requestEntity = generateUrlEncodedFormEntity();
         HttpPost post = new HttpPost(rootUri + AUTHENTICATION);
-        token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, 200, "authenticate", false, false);
+        token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
     }
 
     private UrlEncodedFormEntity generateUrlEncodedFormEntity() throws UnsupportedEncodingException {
@@ -127,13 +132,15 @@ public class CxHttpClient {
         try {
             response = apacheClient.execute(httpMethod);
 
-            if (response.getStatusLine().getStatusCode() == 401) { //Token expired
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED) { //Token expired
                 throw new CxTokenExpiredException(extractResponseBody(response));
             }
             validateResponse(response, expectStatus, "Failed to " + failedMsg);
 
             //extract response as object and return the link
             return convertToObject(response, responseType, isCollection);
+        } catch (UnknownHostException e){
+            throw new CxHTTPClientException("Supplied URL is invalid");
         } catch (CxTokenExpiredException ex) {
             if (retry) {
                 logi.warn("Access token expired, requesting a new token");
