@@ -2197,7 +2197,7 @@
                                     <div class="full-start-end-text">
                                         Libraries:
                                     </div>
-                                    <div class="full-start-end-date" id="osa-full-files"></div>
+                                    <div class="full-start-end-date" id="osa-full-files">${osa.results.totalLibraries}</div>
                                 </div>
                             </div>
                         </div>
