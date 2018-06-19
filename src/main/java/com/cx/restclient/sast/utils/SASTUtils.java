@@ -66,14 +66,15 @@ public abstract class SASTUtils {
     }
 
     //PDF Report
-    public static void writePDFReport(byte[] scanReport, File workspace, Logger log) {
+    public static String writePDFReport(byte[] scanReport, File workspace, Logger log) {
+        String now = new SimpleDateFormat("dd_MM_yyyy-HH_mm_ss").format(new Date());
+        String pdfFileName = PDF_REPORT_NAME + "_" + now + ".pdf";
         try {
-            String now = new SimpleDateFormat("dd_MM_yyyy-HH_mm_ss").format(new Date());
-            String pdfFileName = PDF_REPORT_NAME + "_" + now + ".pdf";
             FileUtils.writeByteArrayToFile(new File(workspace + CX_REPORT_LOCATION, pdfFileName), scanReport);
             log.info("PDF report location: " + workspace + CX_REPORT_LOCATION + File.separator + pdfFileName);
         } catch (Exception e) {
             log.error("Failed to write PDF report to workspace: ", e.getMessage());
         }
+        return pdfFileName;
     }
 }

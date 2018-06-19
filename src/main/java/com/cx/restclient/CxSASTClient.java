@@ -8,7 +8,6 @@ import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.sast.dto.*;
 import com.cx.restclient.sast.utils.SASTUtils;
 import com.cx.restclient.sast.utils.zip.CxZipUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -135,10 +134,10 @@ class CxSASTClient {
             byte[] pdfReport = getScanReport(sastResults.getScanId(), ReportType.PDF, CONTENT_TYPE_APPLICATION_PDF_V1);
             sastResults.setPDFReport(pdfReport);
             if (config.getReportsDir() != null) {
-                writePDFReport(pdfReport, config.getReportsDir(), log);
+                String pdfFileName = writePDFReport(pdfReport, config.getReportsDir(), log);
+                sastResults.setPdfFileName(pdfFileName);
             }
         }
-
         return sastResults;
     }
 
