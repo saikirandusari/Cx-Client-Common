@@ -1,7 +1,5 @@
 package com.cx.restclient.common;
 
-import com.cx.restclient.exception.CxURLException;
-
 import java.net.URL;
 import java.net.MalformedURLException;
 /**
@@ -33,13 +31,13 @@ public class UrlUtils {
         }
     }
 
-    public static String parseURLToString(String hostname, String spec) throws CxURLException {
+    public static String parseURLToString(String hostname, String spec) throws MalformedURLException {
         String rootUri = "";
         try {
             rootUri = (new URL(new URL(hostname), spec)).toString();
         }
         catch (MalformedURLException e) {
-            throw new CxURLException(ErrorMessage.CHECKMARX_SERVER_CONNECTION_FAILED.getErrorMessage());
+            throw new MalformedURLException(ErrorMessage.CHECKMARX_SERVER_CONNECTION_FAILED.getErrorMessage());
         }
         return rootUri;
     }

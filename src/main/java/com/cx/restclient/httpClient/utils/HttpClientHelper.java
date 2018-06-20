@@ -2,6 +2,7 @@ package com.cx.restclient.httpClient.utils;
 
 
 import com.cx.restclient.common.ErrorMessage;
+import com.cx.restclient.common.ErrorUtil;
 import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.exception.CxHTTPClientException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -9,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -69,16 +69,16 @@ public abstract class HttpClientHelper {
         }
     }
 
-    public static void validateResponse(HttpResponse response, int status, String message) throws CxHTTPClientException {
-        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
-           throw new CxHTTPClientException(response.getStatusLine().getStatusCode(), ErrorMessage.SERVICE_UNAVAILABLE.getErrorMessage());
-        }else {
-            if (response.getStatusLine().getStatusCode() != status) {
-                String responseBody = extractResponseBody(response);
-                responseBody = responseBody.replace("{", "").replace("}", "").replace(System.getProperty("line.separator"), " ").replace("  ", "");
-                throw new CxHTTPClientException(response.getStatusLine().getStatusCode(), message + ": " + responseBody);
+    public static void validateResponse(HttpResponse response, int status, String message) throws CxClientException {
+        if (response.getStatusLine().getStatusCode() != status) {
+            if (ErrorUtil.isServerErrorCodes(response.getStatusLine().getStatusCode())) {
+                throw new CxClientException(ErrorMessage.SERVICE_UNAVAILABLE.getErrorMessage());
             }
+            String responseBody = extractResponseBody(response);
+            responseBody = responseBody.replace("{", "").replace("}", "").replace(System.getProperty("line.separator"), " ").replace("  ", "");
+            throw new CxHTTPClientException(response.getStatusLine().getStatusCode(), message + ": " + responseBody);
         }
+
     }
 
     public static String extractResponseBody(HttpResponse response) {
