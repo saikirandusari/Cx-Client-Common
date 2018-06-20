@@ -46,6 +46,7 @@ public class SASTResults implements Serializable {
 
     private byte[] rawXMLReport;
     private byte[] PDFReport;
+    private String pdfFileName;
 
     public enum Severity {
         High, Medium, Low, Information;
@@ -266,6 +267,14 @@ public class SASTResults implements Serializable {
 
     public byte[] getRawXMLReport() {
         return rawXMLReport;
+    }
+
+    public String getPdfFileName() {
+        return pdfFileName;
+    }
+
+    public void setPdfFileName(String pdfFileName) {
+        this.pdfFileName = pdfFileName;
     }
 
     public void setRawXMLReport(byte[] rawXMLReport) {
