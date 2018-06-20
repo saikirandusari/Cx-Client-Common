@@ -1,5 +1,6 @@
 package com.cx.restclient.httpClient;
 
+import com.cx.restclient.common.ErrorMessage;
 import com.cx.restclient.common.UrlUtils;
 import com.cx.restclient.dto.TokenLoginResponse;
 import com.cx.restclient.exception.CxClientException;
@@ -140,7 +141,7 @@ public class CxHttpClient {
             //extract response as object and return the link
             return convertToObject(response, responseType, isCollection);
         } catch (UnknownHostException e){
-            throw new CxHTTPClientException("Supplied URL is invalid");
+            throw new CxHTTPClientException(ErrorMessage.CHECKMARX_SERVER_CONNECTION_FAILED.getErrorMessage());
         } catch (CxTokenExpiredException ex) {
             if (retry) {
                 logi.warn("Access token expired, requesting a new token");

@@ -39,13 +39,9 @@ public class UrlUtils {
             rootUri = (new URL(new URL(hostname), spec)).toString();
         }
         catch (MalformedURLException e) {
-            throw new CxURLException("URL must be provided with the proper HTTP or HTTPS prefix");
+            throw new CxURLException(ErrorMessage.CHECKMARX_SERVER_CONNECTION_FAILED.getErrorMessage());
         }
         return rootUri;
     }
 
-    public static void main(String[] args) throws CxURLException {
-        String rootUri = parseURLToString("localhost", "CxRestAPI/");
-        System.out.println(rootUri);
-    }
 }
