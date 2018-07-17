@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.checkmarx.client</groupId>
     <artifactId>checkmarx-client</artifactId>
-    <version>8.80.0-SNAPSHOT</version>
+    <version>8.80.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Checkmarx Client</name>
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>org.whitesource</groupId>
             <artifactId>whitesource-fs-agent</artifactId>
-            <version>18.3.1</version>
+            <version>18.3.1.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.xml.bind</groupId>
