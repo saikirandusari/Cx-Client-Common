@@ -12,10 +12,8 @@ public abstract class CxPARAM {
     public static final String CXTEAMS = "auth/teams";
     public static final String CREATE_PROJECT = "projects";//Create new project (default preset and configuration)
 
-
-    public static final String OPTION_TRUE = "true";
-    public static final String OPTION_FALSE = "false";
-
     public static final String CX_REPORT_LOCATION = File.separator + "Checkmarx" + File.separator + "Reports";
 
+    public static final String CX_ARM_URL ="/Configurations/Portal";
+    public static final String CX_ARM_VIOLATION ="/cxarm/policymanager/projects/{projectId}/violations";
 }

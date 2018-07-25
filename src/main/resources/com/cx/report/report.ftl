@@ -71,7 +71,7 @@
         text-align: right;
     }
 
-    .cx-report .results-report .threshold-exceeded-compliance {
+    .threshold-exceeded-compliance {
         width: 50%;
     }
 
@@ -170,7 +170,7 @@
     .cx-report .results-report .summary-section {
         display: flex;
         padding-top: 34px;
-        padding-bottom: 25px;
+        padding-bottom: 60px;
         position: relative;
     }
 
@@ -371,11 +371,10 @@
         background-color: #373050;
     }
 
-    .cx-report .results-report .threshold-exceeded-compliance {
-    }
 
-    .cx-report .results-report .threshold-exceeded,
-    .cx-report .results-report .threshold-compliance {
+     .threshold-exceeded,
+     .threshold-compliance,
+     .policy-compliance{
         min-width: 100%;
         display: inline-flex;
         font-size: 14px;
@@ -384,20 +383,21 @@
         padding: 4px 9px;
     }
 
-    .cx-report .threshold-exceeded {
+     .threshold-exceeded {
         background-color: #DA2945;
         color: white;
         border-radius: 2px;
         font-weight: bold;
     }
-
-    .cx-report .results-report .threshold-exceeded-text,
-    .cx-report .results-report .threshold-compliance-text {
-
+    .policy-compliance{
+        border-radius: 2px;
+        font-weight: bold;
     }
 
-    .cx-report .results-report .threshold-exceeded-icon,
-    .cx-report .results-report .threshold-compliance-icon {
+
+    .threshold-exceeded-icon,
+    .threshold-compliance-icon,
+    .policy-compliance{
         display: inline-flex;
         padding-right: 6px;
         margin: auto 0;
@@ -413,45 +413,34 @@
         background-color: #f2f2f2;
         width: 138px;
         padding: 16px;
-        padding-bottom: 39px;
-        /*can be 30*/
+        padding-bottom: 22px;
     }
 
     .cx-report .results-report .osa-libraries-title {
-        font-size: 14px;
+        font-size: 15px;
         font-weight: 600;
-        padding-bottom: 25px;
+        padding-bottom: 10px;
     }
 
     .cx-report .results-report .libraries-vulnerable {
         overflow: hidden;
-        margin-bottom: 34px;
     }
 
-    .cx-report .results-report .libraries-ok {
-        overflow: hidden;
-    }
-
-    .cx-report .results-report .libraries-vulnerable-number,
-    .cx-report .results-report .libraries-ok-number {
+    .cx-report .results-report .libraries-vulnerable-number{
         font-size: 18px;
         margin: auto auto auto 10px;
     }
 
-    .cx-report .results-report .libraries-vulnerable-icon,
-    .cx-report .results-report .libraries-ok-icon {
-        font-size: 18px;
-    }
 
-    .cx-report .results-report .libraries-vulnerable-text,
-    .cx-report .results-report .libraries-ok-text {
-        font-size: 14px;
-        line-height: 20px;
+    .cx-report .results-report .libraries-vulnerable-text {
+        font-size: 12px;
+        line-height: 15px;
     }
 
     .cx-report .results-report .libraries-icon-number {
         display: flex;
-        margin-bottom: 13px;
+        margin-bottom: 5px;
+        margin-top: 10px;
     }
 
     .cx-report .results-report .osa-results {
@@ -772,11 +761,6 @@
         padding: 4% 0;
     }
 
-    .cx-report .aui-message.error,
-    .cx-report .aui-message-error {
-        display: block;
-    }
-
     .cx-report .chart-large .no-scan-message-container {
         height: 372px;
     }
@@ -803,6 +787,14 @@
         font-size: 15px;
         text-align: center;
         width: 89%;
+    }
+
+    .policy-violation{
+        float: right;
+        margin-top: -33px;
+        float: right;
+        margin-right: 20px
+
     }
 </style>
 
@@ -835,9 +827,94 @@
     </#if>
 </#macro>
 
+
+
 <div id="cx-report" class="cx-report">
     <div class="report-title">
         <div class="cx-report-title">Checkmarx Report</div>
+
+    <#if config.osaEnabled && osa.osaResultsReady >
+        <#if osa.osaViolations?size gt 0>
+            <div class="policy-violation">
+                <div class="threshold-exceeded">
+                    <div class="threshold-exceeded-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="15px" height="17px" viewBox="0 0 15 17" version="1.1">
+                            <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+                            <title>policy violeted</title>
+                            <desc>Created with Sketch.</desc>
+                            <defs>
+                                <path d="M0,0 L15,0 L15,17 L0,17 L0,0 Z M3,1 L3,3 L12,3 L12,1 L3,1 Z" id="path-1"/>
+                            </defs>
+                            <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <g id="Jenkins-eport-policy-stat" transform="translate(-81.000000, -80.000000)">
+                                    <g id="Group-15" transform="translate(69.000000, 75.000000)">
+                                        <g id="Group-14" transform="translate(12.000000, 5.000000)">
+                                            <g id="policy-violeted">
+                                                <mask id="mask-2" fill="white">
+                                                    <use xlink:href="#path-1"/>
+                                                </mask>
+                                                <g id="Mask"/>
+                                                <rect id="Rectangle-6" stroke="#FFFFFF" stroke-width="2" mask="url(#mask-2)" x="1" y="2" width="13" height="14"/>
+                                                <rect id="Rectangle-2" fill="#FFFFFF" mask="url(#mask-2)" x="4" y="6" width="7" height="1"/>
+                                                <rect id="Rectangle-2-Copy" fill="#FFFFFF" mask="url(#mask-2)" x="4" y="9" width="7" height="1"/>
+                                                <rect id="Rectangle-2-Copy-2" fill="#FFFFFF" mask="url(#mask-2)" x="4" y="12" width="7" height="1"/>
+                                                <rect id="Rectangle-2-Copy-3" fill="#FFFFFF" x="5" y="0" width="5" height="3"/>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="threshold-exceeded-text">
+                        Policy Violated
+                    </div>
+                </div>
+            </div>
+        <#else>
+        <div class="policy-violation">
+            <div class="policy-compliance">
+                <div id="no-policy-violation" >
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="19px" height="22px" viewBox="0 0 19 22" version="1.1">
+                        <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+                        <title>Policy ok</title>
+                        <desc>Created with Sketch.</desc>
+                        <defs>
+                            <path d="M0,0 L15,0 L15,17 L0,17 L0,0 Z M3,1 L3,3 L12,3 L12,1 L3,1 Z M14,11 L14,11 C17.3137085,11 20,13.6862915 20,17 L20,17 C20,20.3137085 17.3137085,23 14,23 L14,23 C10.6862915,23 8,20.3137085 8,17 L8,17 C8,13.6862915 10.6862915,11 14,11 Z" id="path-1"/>
+                        </defs>
+                        <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g id="Jenkins-eport-policy-stat" transform="translate(-79.000000, -147.000000)">
+                                <g id="Group-13-Copy" transform="translate(79.000000, 147.000000)">
+                                    <g id="Group">
+                                        <g id="Policy-ok">
+                                            <mask id="mask-2" fill="white">
+                                                <use xlink:href="#path-1"/>
+                                            </mask>
+                                            <g id="Mask"/>
+                                            <rect id="Rectangle-6" stroke="#373050" stroke-width="2" mask="url(#mask-2)" x="1" y="2" width="13" height="14"/>
+                                            <rect id="Rectangle-2" fill="#373050" mask="url(#mask-2)" x="4" y="6" width="7" height="1"/>
+                                            <rect id="Rectangle-2-Copy" fill="#373050" mask="url(#mask-2)" x="4" y="9" width="7" height="1"/>
+                                            <rect id="Rectangle-2-Copy-2" fill="#373050" mask="url(#mask-2)" x="4" y="12" width="7" height="1"/>
+                                            <rect id="Rectangle-2-Copy-3" fill="#373050" x="5" y="0" width="5" height="3"/>
+                                            <g id="ok" transform="translate(9.000000, 11.000000)">
+                                                <rect id="Rectangle-6-Copy" fill="#35D87D" x="0" y="1" width="10" height="10" rx="5"/>
+                                                <path d="M4.3590334,6.60460901 L6.3590334,6.60460901 L6.3590334,8.60460901 L4.3590334,8.60460901 L2.3590334,8.60460901 L2.3590334,0.604609006 L4.3590334,0.604609006 L4.3590334,6.60460901 Z" id="Combined-Shape" fill="#FFFFFF" transform="translate(4.359033, 4.604609) rotate(-35.000000) translate(-4.359033, -4.604609) "/>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+                <div>
+                   Policy Compliant
+                </div>
+            </div>
+        </div>
+        </#if>
+    </#if>
+
     </div>
     <div id="results-report" class="results-report">
 
@@ -1285,58 +1362,9 @@
                             <!--osa-libraries-count-->
                             <div class="osa-libraries">
                                 <div class="osa-libraries-title">Libraries:</div>
+                                <!--osa-libs-vulnerable-->
                                 <div class="libraries-vulnerable">
                                     <div class="libraries-icon-number">
-                                        <div class="libraries-vulnerable-icon">
-                                            <!--osa-libs-->
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                                                 height="31px" version="1.1" viewBox="0 0 47 31" width="47px">
-                                                <title>lib Vulnerabilities Icon</title>
-                                                <desc>Created with Sketch.</desc>
-                                                <defs>
-                                                    <path id="osa-libs-path-1"
-                                                          d="M25,31 L4,31 C1.94360167,31 0,29.0245324 0,27 L0,8 L0,3 C0,1.48550257 1.46424259,0 3,0 L9,0 C9.88514832,0 11.1635669,0.937415809 12,2 L12,4 L34,4 C36.0604107,4.42857143 38,6.41548071 38,9 L38,11"/>
-                                                    <mask height="31" maskUnits="objectBoundingBox"
-                                                          id="osa-libs-mask-1" width="38"
-                                                          maskContentUnits="userSpaceOnUse" fill="white" x="0" y="0">
-                                                        <use xlink:href="#osa-libs-path-1"/>
-                                                    </mask>
-                                                </defs>
-                                                <g stroke-width="1" fill-rule="evenodd"
-                                                   id="osa-libs-Page-1" stroke="none" fill="none">
-                                                    <g transform="translate(-518.000000, -646.000000)"
-                                                       id="osa-libs-vulnerable-1">
-                                                        <g transform="translate(270.000000, 646.000000)"
-                                                           id="osa-libs-vulnerable-2">
-                                                            <g transform="translate(248.000000, 0.000000)"
-                                                               id="osa-libs-vulnerable-3">
-                                                                <g id="osa-libs-Vulnerabilities-Icon">
-                                                                    <use mask="url(#osa-libs-mask-1)" stroke-width="4"
-                                                                         id="osa-libs-use-1"
-                                                                         stroke="#362F53"
-                                                                         xlink:href="#osa-libs-path-1"/>
-                                                                    <g transform="translate(26.600000, 14.233021)"
-                                                                       id="osa-libs-Alert">
-                                                                        <path id="osa-libs-Page-2"
-                                                                              d="M9.71486676,1.21470909 C10.3018963,0.274949219 11.2197722,0.29932009 11.7612462,1.26246584 L19.4943093,15.0176364 C20.037464,15.9837716 19.5847058,16.7669789 18.4769973,16.7669789 L2.0007805,16.7669789 C0.895779941,16.7669789 0.477014275,16.0033396 1.06291102,15.0653932 L9.71486676,1.21470909 Z"
-                                                                              fill="#DA2945"/>
-                                                                        <rect height="5" id="osa-libs-Rectangle-1"
-                                                                              width="2"
-                                                                              fill="#FFFFFF"
-                                                                              x="9.4" y="5.76697892"/>
-                                                                        <rect height="2" id="osa-libs-Rectangle-2"
-                                                                              width="2"
-                                                                              fill="#FFFFFF"
-                                                                              x="9.4" y="11.7669789"/>
-                                                                    </g>
-                                                                </g>
-                                                            </g>
-                                                        </g>
-                                                    </g>
-                                                </g>
-                                            </svg>
-                                        </div>
                                         <div class="libraries-vulnerable-number"
                                              id="vulnerable-libraries">${osa.results.vulnerableAndOutdated}</div>
                                     </div>
@@ -1344,54 +1372,23 @@
                                         Vulnerable and Outdated Libraries
                                     </div>
                                 </div>
-
                                 <!--osa-libs-ok-->
-                                <div class="libraries-ok">
+                                <div class="libraries-vulnerable">
                                     <div class="libraries-icon-number">
-                                        <div class="libraries-ok-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                                                 height="31px" version="1.1" viewBox="0 0 47 31" width="47px">
-                                                <title>Icon</title>
-                                                <desc>Created with Sketch.</desc>
-                                                <defs>
-                                                    <path id="osa-libs-ok-path-1"
-                                                          d="M28,31 L4,31 C1.99474908,31 0,29.0245324 0,27 L0,8 L0,3 C0,1.48550257 1.50277529,0 3,0 L9,0 C10.1452838,0 11.457345,0.937415809 12,2 L13,4 L35,4 C37.0093689,4.42857143 39,6.41548071 39,9 L39,11"/>
-                                                    <mask height="31" maskUnits="objectBoundingBox"
-                                                          id="osa-libs-ok-mask-1" width="39"
-                                                          maskContentUnits="userSpaceOnUse" fill="white" x="0" y="0">
-                                                        <use xlink:href="#osa-libs-ok-path-1"/>
-                                                    </mask>
-                                                </defs>
-                                                <g stroke-width="1" fill-rule="evenodd"
-                                                   id="osa-libs-ok-Page-1" stroke="none" fill="none">
-                                                    <g transform="translate(-848.000000, -651.000000)"
-                                                       id="osa-libs-ok-1">
-                                                        <g transform="translate(270.000000, 646.000000)"
-                                                           id="osa-libs-ok-mask-2">
-                                                            <g transform="translate(578.000000, 5.000000)"
-                                                               id="osa-libs-OK">
-                                                                <g id="osa-libs-ok-Icon">
-                                                                    <use mask="url(#osa-libs-ok-mask-1)"
-                                                                         stroke-width="4"
-                                                                         id="osa-libs-ok-use-1"
-                                                                         stroke="#362F53"
-                                                                         xlink:href="#osa-libs-ok-path-1"/>
-                                                                    <path id="osa-libs-ok-path-2"
-                                                                          d="M46.4529784,18.9030304 C46.8068562,19.8686359 47,20.9117624 47,22 C47,26.9705627 42.9705627,31 38,31 C33.0294373,31 29,26.9705627 29,22 C29,17.0294373 33.0294373,13 38,13 C40.393622,13 42.5689975,13.934425 44.1812437,15.4583924 L37.6904269,21.8965709 L35.079173,19.3040452 L32.1948583,22.1475069 L37.6899611,27.6031981 L46.4529784,18.9030304 Z"
-                                                                          fill="#8EBE15"/>
-                                                                </g>
-                                                            </g>
-                                                        </g>
-                                                    </g>
-                                                </g>
-                                            </svg>
-                                        </div>
                                         <div class="libraries-vulnerable-number"
-                                             id="ok-libraries">${osa.results.nonVulnerableLibraries}</div>
+                                             id="vulnerable-libraries">${osa.results.nonVulnerableLibraries}</div>
                                     </div>
-                                    <div class="libraries-ok-text">
+                                    <div class="libraries-vulnerable-text">
                                         No Known Vulnerability Libraries
+                                    </div>
+                                </div>
+                                <!--osa-policy-violated-->
+                                <div class="libraries-vulnerable">
+                                    <div class="libraries-icon-number">
+                                        <div class="libraries-vulnerable-number">${osa.osaViolations?size }</div>
+                                    </div>
+                                    <div class="libraries-vulnerable-text">
+                                        Policy Violated Libraries
                                     </div>
                                 </div>
                             </div>
@@ -2038,7 +2035,7 @@
     </#if>
 
     <#if config.osaEnabled && osa.osaResultsReady>
-        <#if osa.osaHighCVEReportTable?size gt 0 || osa.osaMediumCVEReportTable?size gt 0 || osa.osaLowCVEReportTable?size gt 0>
+        <#if osa.osaHighCVEReportTable?size gt 0 || osa.osaMediumCVEReportTable?size gt 0 || osa.osaLowCVEReportTable?size gt 0 || osa.osaViolations?size gt 0>
             <div id="osa-full" class="osa-full full-results-section">
                 <div class="summary-table-row cxosa-full">
                     <div class="title-column">
@@ -2054,7 +2051,7 @@
                                             <div class="results-link-icon link-icon">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="14"
                                                      viewBox="0 0 12 14">
-                                                    <title>analize</title>
+                                                    <title>analyze</title>
                                                     <g fill="none" fill-rule="evenodd">
                                                         <circle stroke="#4A90E2" stroke-width="2" cx="5" cy="5" r="4"/>
                                                         <path fill="#4A90E2"
@@ -2365,6 +2362,66 @@
                                         <td>${cve.name}</td>
                                         <td>${cve.publishDate}</td>
                                         <td>${cve.libraryName}</td>
+                                    </tr>
+                                    </#list>
+                                </table>
+                            </div>
+                        </#if>
+
+                        <#if osa.osaViolations?size gt 0>
+                            <div id="osa-policy-violations-container">
+                                <div class="full-severity-title">
+                                    <div class="severity-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="19px" height="22px" viewBox="0 0 19 22" version="1.1">
+                                            <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+                                            <title>Policy violation</title>
+                                            <desc>Created with Sketch.</desc>
+                                            <defs>
+                                                <path d="M0,0 L15,0 L15,17 L0,17 L0,0 Z M3,1 L3,3 L12,3 L12,1 L3,1 Z M14,11 L14,11 C17.3137085,11 20,13.6862915 20,17 L20,17 C20,20.3137085 17.3137085,23 14,23 L14,23 C10.6862915,23 8,20.3137085 8,17 L8,17 C8,13.6862915 10.6862915,11 14,11 Z" id="path-1"/>
+                                            </defs>
+                                            <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <g id="Jenkins-eport" transform="translate(-525.000000, -2433.000000)">
+                                                    <g id="Osa-Full" transform="translate(272.000000, 1523.000000)">
+                                                        <g id="high-copy-2" transform="translate(249.000000, 909.000000)">
+                                                            <g id="TTL" transform="translate(4.000000, 0.000000)">
+                                                                <g id="Policy-mgmt" transform="translate(0.000000, 1.000000)">
+                                                                    <mask id="mask-2" fill="white">
+                                                                        <use xlink:href="#path-1"/>
+                                                                    </mask>
+                                                                    <g id="Mask"/>
+                                                                    <rect id="Rectangle-6" stroke="#373050" stroke-width="2" mask="url(#mask-2)" x="1" y="2" width="13" height="14"/>
+                                                                    <rect id="Rectangle-2" fill="#373050" mask="url(#mask-2)" x="4" y="6" width="7" height="1"/>
+                                                                    <rect id="Rectangle-2-Copy" fill="#373050" mask="url(#mask-2)" x="4" y="9" width="7" height="1"/>
+                                                                    <rect id="Rectangle-2-Copy-2" fill="#373050" mask="url(#mask-2)" x="4" y="12" width="7" height="1"/>
+                                                                    <rect id="Rectangle-2-Copy-3" fill="#373050" x="5" y="0" width="5" height="3"/>
+                                                                    <g id="Alert_general_hover" transform="translate(9.000000, 12.000000)">
+                                                                        <rect id="Rectangle-6-Copy" fill="#DA2946" x="0" y="0" width="10" height="10" rx="5"/>
+                                                                        <rect id="Rectangle-7" fill="#FFFFFF" x="4" y="2" width="2" height="4"/>
+                                                                        <rect id="Rectangle-7-Copy" fill="#FFFFFF" x="4" y="7" width="2" height="1"/>
+                                                                    </g>
+                                                                </g>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    <div class="severity-title-name">Policy Violations</div>
+                                    <div class="severity-count">${osa.osaViolations?size}</div>
+                                </div>
+                                <table id="osa-policy-violations-table" class="cve-table sast-cve-table osa-policy-violations">
+                                    <tr>
+                                        <th>Library Name</th>
+                                        <th>Policy</th>
+                                        <th>Rule</th>
+                                        <th>Detection Date</th>
+                                    </tr>
+                                    <#list osa.osaViolations as osaViolation>
+                                        <td>${osaViolation.libraryName}</td>
+                                        <td>${osaViolation.policyName}</td>
+                                        <td>${osaViolation.ruleName}</td>
+                                        <td>${osaViolation.detectionDate}</td>
                                     </tr>
                                     </#list>
                                 </table>

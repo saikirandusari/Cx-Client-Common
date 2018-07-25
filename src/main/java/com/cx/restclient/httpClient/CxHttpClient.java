@@ -18,14 +18,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.ssl.TrustStrategy;
-import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -39,7 +37,6 @@ import static com.cx.restclient.common.CxPARAM.AUTHENTICATION;
 import static com.cx.restclient.common.CxPARAM.ORIGIN_HEADER;
 import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.*;
-import org.apache.http.HttpStatus;
 
 /**
  * Created by Galn on 05/02/2018.
@@ -58,7 +55,6 @@ public class CxHttpClient {
     private final HttpRequestInterceptor requestFilter = new HttpRequestInterceptor() {
         public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
             httpRequest.addHeader(ORIGIN_HEADER, cxOrigin);
-            httpRequest.addHeader(HttpHeaders.ACCEPT, CONTENT_TYPE_APPLICATION_JSON);
             if (token != null) {
                 httpRequest.addHeader(HttpHeaders.AUTHORIZATION, token.getToken_type() + " " + token.getAccess_token());
             }
@@ -90,7 +86,7 @@ public class CxHttpClient {
         parameters.add(new BasicNameValuePair("username", username));
         parameters.add(new BasicNameValuePair("password", password));
         parameters.add(new BasicNameValuePair("grant_type", "password"));
-        parameters.add(new BasicNameValuePair("scope", "sast_rest_api"));
+        parameters.add(new BasicNameValuePair("scope", "sast_rest_api cxarm_api"));
         parameters.add(new BasicNameValuePair("client_id", "resource_owner_client"));
         parameters.add(new BasicNameValuePair("client_secret", "014DF517-39D1-4453-B7B3-9930C563627C"));
 
@@ -99,7 +95,12 @@ public class CxHttpClient {
 
     //GET REQUEST
     public <T> T getRequest(String relPath, String contentType, Class<T> responseType, int expectStatus, String failedMsg, boolean isCollection) throws IOException, CxClientException {
-        HttpGet get = new HttpGet(rootUri + relPath);
+            return getRequest(rootUri, relPath, CONTENT_TYPE_APPLICATION_JSON, contentType, responseType, expectStatus, failedMsg, isCollection);
+    }
+
+    public <T> T getRequest(String rootURL, String relPath, String acceptHeader, String contentType, Class<T> responseType, int expectStatus, String failedMsg, boolean isCollection) throws IOException, CxClientException {
+        HttpGet get = new HttpGet(rootURL + relPath);
+        get.addHeader(HttpHeaders.ACCEPT, acceptHeader);
         return request(get, contentType, null, responseType, expectStatus, "get " + failedMsg, isCollection, true);
     }
 

@@ -121,7 +121,7 @@ public abstract class OSAUtils {
         log.info("");
         log.info("OSA scan results location: " + osaResults.getOsaProjectSummaryLink());
         log.info("-----------------------------------------------------------------------------------------");
-    }
+    }//todo add policy violation
 
     public static void writeJsonToFile(String name, Object jsonObj, File workDirectory, Logger log) {
         try {
