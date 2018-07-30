@@ -15,5 +15,5 @@ public abstract class CxPARAM {
     public static final String CX_REPORT_LOCATION = File.separator + "Checkmarx" + File.separator + "Reports";
 
     public static final String CX_ARM_URL ="/Configurations/Portal";
-    public static final String CX_ARM_VIOLATION ="/cxarm/policymanager/projects/{projectId}/violations";
+    public static final String CX_ARM_VIOLATION ="/cxarm/policymanager/projects/{projectId}/violations?provider={provider}";
 }

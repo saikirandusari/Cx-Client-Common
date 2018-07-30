@@ -1,13 +1,13 @@
 package com.cx.restclient.sast.dto;
 
+import com.cx.restclient.cxArm.dto.Policy;
+import com.cx.restclient.cxArm.dto.Violation;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 import static com.cx.restclient.sast.utils.SASTParam.PROJECT_LINK_FORMAT;
 import static com.cx.restclient.sast.utils.SASTParam.SCAN_LINK_FORMAT;
@@ -47,6 +47,10 @@ public class SASTResults implements Serializable {
     private byte[] rawXMLReport;
     private byte[] PDFReport;
     private String pdfFileName;
+
+    private List<String> sastPolicies = new ArrayList<>();
+    private List<Violation> sastViolations = new ArrayList<>();
+
 
     public enum Severity {
         High, Medium, Low, Information;
@@ -348,5 +352,23 @@ public class SASTResults implements Serializable {
         return new Date(time);
     }
 
+    public List<Violation> getSastViolations() {
+        return sastViolations;
+    }
 
+    public void setSastViolations(List<Violation> sastViolations) {
+        this.sastViolations = sastViolations;
+    }
+
+    public void addAllViolations(List<Violation> violations) {
+        this.sastViolations.addAll(violations);
+    }
+
+    public List<String> getSastPolicies() {
+        return sastPolicies;
+    }
+
+    public void setSastPolicies(List<String> sastPolicies) {
+        this.sastPolicies = sastPolicies;
+    }
 }

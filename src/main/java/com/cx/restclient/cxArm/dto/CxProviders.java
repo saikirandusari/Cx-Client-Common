@@ -5,7 +5,7 @@ package com.cx.restclient.cxArm.dto;
  */
 
 public enum CxProviders {
-    OPEN_SOURCE("openSource"),
+    OPEN_SOURCE("open_source"),
     SAST("sast");
     private String value;
 

@@ -36,6 +36,11 @@ public class Policy implements Serializable {
     }
 
     public void setViolations(List<Violation> violations) {
+        //Add the policy name to the violations for the report
+            for(Violation violation: violations){
+                violation.setPolicyName(policyName);
+            }
+
         this.violations = violations;
     }
 }

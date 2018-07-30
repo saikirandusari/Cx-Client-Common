@@ -3,7 +3,6 @@ package com.cx.restclient.configuration;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -57,6 +56,10 @@ public class CxScanConfig implements Serializable {
     private Integer osaLowThreshold;
     private Properties osaFsaConfig; //for MAVEN
     private String osaDependenciesJson;
+
+    private boolean enablePolicyViolations = false;
+
+    private String cxARMUrl;
 
     public CxScanConfig() {
     }
@@ -419,5 +422,25 @@ public class CxScanConfig implements Serializable {
 
     public void setOsaGenerateJsonReport(Boolean osaGenerateJsonReport) {
         this.osaGenerateJsonReport = osaGenerateJsonReport;
+    }
+
+    public boolean getEnablePolicyViolations() {
+        return enablePolicyViolations;
+    }
+
+    public void setEnablePolicyViolations(boolean enablePolicyViolations) {
+        this.enablePolicyViolations = enablePolicyViolations;
+    }
+
+    public boolean isEnablePolicyViolations() {
+        return enablePolicyViolations;
+    }
+
+    public String getCxARMUrl() {
+        return cxARMUrl;
+    }
+
+    public void setCxARMUrl(String cxARMUrl) {
+        this.cxARMUrl = cxARMUrl;
     }
 }

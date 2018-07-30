@@ -6,6 +6,7 @@ import com.cx.restclient.sast.dto.SASTResults;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -133,6 +134,18 @@ public abstract class ShragaUtils {
         ret.put(INCLUDES_LIST, inclusions);
         ret.put(EXCLUDES_LIST, exclusions);
 
+        return ret;
+    }
+
+    public static String formatDate(String date, String fromFormat, String toFormat) {
+        SimpleDateFormat fromDate = new SimpleDateFormat(fromFormat);
+        SimpleDateFormat toDate = new SimpleDateFormat(toFormat);
+        String ret = "";
+        try {
+            ret = toDate.format(fromDate.parse(date));
+        } catch (Exception ignored) {
+
+        }
         return ret;
     }
 }

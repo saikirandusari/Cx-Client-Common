@@ -2,6 +2,7 @@ package com.cx.restclient;
 
 import com.cx.restclient.common.Waiter;
 import com.cx.restclient.configuration.CxScanConfig;
+import com.cx.restclient.cxArm.dto.Policy;
 import com.cx.restclient.dto.Status;
 import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.httpClient.CxHttpClient;
@@ -21,6 +22,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import static com.cx.restclient.cxArm.dto.CxProviders.SAST;
+import static com.cx.restclient.cxArm.utils.CxARMUtils.getProjectViolations;
 import static com.cx.restclient.httpClient.utils.ContentType.*;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.convertToJson;
 import static com.cx.restclient.sast.utils.SASTParam.*;
@@ -126,7 +129,10 @@ class CxSASTClient {
 
         //retrieve SAST scan results
         sastResults = retrieveSASTResults(scanId, projectId);
-        SASTUtils.printSASTResultsToConsole(sastResults, log);
+        if (config.getEnablePolicyViolations()) {
+            resolveSASTViolation(sastResults, projectId);
+        }
+        SASTUtils.printSASTResultsToConsole(sastResults, config.getEnablePolicyViolations(), log);
 
         //PDF report
         if (config.getGeneratePDFReport()) {
@@ -139,6 +145,17 @@ class CxSASTClient {
             }
         }
         return sastResults;
+    }
+
+    private void resolveSASTViolation(SASTResults sastResults, long projectId) {
+        try {
+            for (Policy policy : getProjectViolations(httpClient, config.getCxARMUrl(), projectId, SAST.value())) {
+                sastResults.getSastPolicies().add(policy.getPolicyName());
+                sastResults.addAllViolations(policy.getViolations());
+            }
+        }catch (Exception ex) {
+            log.error("CxARM is not available. Policy violations for SAST cannot be calculated: " + ex.getMessage());
+        }
     }
 
     private SASTResults retrieveSASTResults(long scanId, long projectId) throws CxClientException, IOException, InterruptedException {
@@ -263,7 +280,7 @@ class CxSASTClient {
             log.info("SAST scan finished successfully.");
             return scanStatus;
         } else {
-            throw new CxClientException("SAST scan cannot be completed. status [" + scanStatus.getStage().getValue() + "]");
+            throw new CxClientException("SAST scan cannot be completed. status [" + scanStatus.getStage().getValue() + "]: " + scanStatus.getStageDetails());
         }
     }
 

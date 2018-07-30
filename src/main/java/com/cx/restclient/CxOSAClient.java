@@ -2,6 +2,7 @@ package com.cx.restclient;
 
 import com.cx.restclient.common.Waiter;
 import com.cx.restclient.configuration.CxScanConfig;
+import com.cx.restclient.cxArm.dto.Policy;
 import com.cx.restclient.dto.Status;
 import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.httpClient.CxHttpClient;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
+import static com.cx.restclient.cxArm.dto.CxProviders.OPEN_SOURCE;
+import static com.cx.restclient.cxArm.utils.CxARMUtils.getProjectViolations;
 import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON_V1;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.convertToJson;
 import static com.cx.restclient.osa.utils.OSAParam.*;
@@ -93,7 +96,12 @@ class CxOSAClient {
 
         log.info("Creating OSA reports");
         OSAResults osaResults = retrieveOSAResults(scanId, osaScanStatus, projectId);
-        OSAUtils.printOSAResultsToConsole(osaResults, log);
+
+        if (config.getEnablePolicyViolations()) {
+            resolveOSAViolation(osaResults, projectId);
+        }
+
+        OSAUtils.printOSAResultsToConsole(osaResults, config.getEnablePolicyViolations(),  log);
 
         if (config.getReportsDir() != null) {
             writeJsonToFile(OSA_SUMMARY_NAME, osaResults.getResults(), config.getReportsDir(), log);
@@ -113,6 +121,18 @@ class CxOSAClient {
         results.setResults(osaSummaryResults, osaLibraries, osaVulnerabilities, osaScanStatus, config.getUrl(), projectId);
         return results;
     }
+
+    private void resolveOSAViolation(OSAResults osaResults, long projectId){
+        try {
+            for (Policy policy : getProjectViolations(httpClient, config.getCxARMUrl(), projectId, OPEN_SOURCE.value())) {
+                osaResults.getOsaPolicies().add(policy.getPolicyName());
+                osaResults.addAllViolations(policy.getViolations());
+            }
+        }catch (Exception ex) {
+            log.error("CxARM is not available. Policy violations for OSA cannot be calculated: " + ex.getMessage());
+        }
+    }
+
 
     public OSAResults getLatestOSAResults(long projectId) throws CxClientException, IOException, InterruptedException {
         log.info("----------------------------------Get CxOSA Last Results:--------------------------------");

@@ -30,13 +30,15 @@ public abstract class SummaryUtils {
 
         //calculated params:
 
+        boolean buildFailed = false;
+        boolean policyViolated = false;
         //sast:
         if (config.getSastEnabled() && sastResults.isSastResultsReady()) {
             boolean sastThresholdExceeded = ShragaUtils.isThresholdExceeded(config, sastResults, null, new StringBuilder());
             boolean sastNewResultsExceeded = ShragaUtils.isThresholdForNewResultExceeded(config, sastResults, new StringBuilder());
             templateData.put("sastThresholdExceeded", sastThresholdExceeded);
             templateData.put("sastNewResultsExceeded", sastNewResultsExceeded);
-
+            buildFailed = sastThresholdExceeded || sastNewResultsExceeded;
             //calculate sast bars:
             float maxCount = Math.max(sastResults.getHigh(), Math.max(sastResults.getMedium(), sastResults.getLow()));
             float sastBarNorm = maxCount * 10f / 9f;
@@ -48,6 +50,9 @@ public abstract class SummaryUtils {
             templateData.put("sastHighTotalHeight", sastHighTotalHeight);
             templateData.put("sastHighNewHeight", sastHighNewHeight);
             templateData.put("sastHighRecurrentHeight", sastHighRecurrentHeight);
+            if (config.getEnablePolicyViolations() && !sastResults.getSastViolations().isEmpty()){
+                policyViolated = true;
+            }
 
             //sast medium bars
             float sastMediumTotalHeight = (float) sastResults.getMedium() / sastBarNorm * 238f;
@@ -70,7 +75,10 @@ public abstract class SummaryUtils {
         if (config.getOsaEnabled() && osaResults.isOsaResultsReady()) {
             boolean osaThresholdExceeded = ShragaUtils.isThresholdExceeded(config, null, osaResults, new StringBuilder());
             templateData.put("osaThresholdExceeded", osaThresholdExceeded);
-
+            buildFailed |= osaThresholdExceeded;
+            if (config.getEnablePolicyViolations() && !osaResults.getOsaViolations().isEmpty()){
+                policyViolated = true;
+            }
             //calculate osa bars:
             OSASummaryResults osaSummaryResults = osaResults.getResults();
             int osaHigh = osaSummaryResults.getTotalHighVulnerabilities();
@@ -87,6 +95,10 @@ public abstract class SummaryUtils {
             templateData.put("osaMediumTotalHeight", osaMediumTotalHeight);
             templateData.put("osaLowTotalHeight", osaLowTotalHeight);
         }
+
+        templateData.put("policyViolated", policyViolated);
+        buildFailed |= policyViolated;
+        templateData.put("buildFailed", buildFailed);
 
         //generate the report:
         StringWriter writer = new StringWriter();

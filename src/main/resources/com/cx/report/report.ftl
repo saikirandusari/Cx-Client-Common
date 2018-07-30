@@ -789,13 +789,82 @@
         width: 89%;
     }
 
-    .policy-violation{
-        float: right;
-        margin-top: -33px;
-        float: right;
-        margin-right: 20px
 
+    .scan-status {
+
+        display: flex;
+        margin-top: 26px;
     }
+
+    .scan-status .content-scan-status {
+        color: black;
+        font-family: Roboto, sans-serif;
+        font-size: 12px;
+        line-height: 16px;
+        margin-top: -5px
+    }
+
+    .scan-status .content-scan-status ul {
+        margin-top: -3px;
+        margin-left: -7px;
+    }
+    .scan-status .content-scan-status li {
+        margin-top: 5px;
+    }
+
+    .scan-status.success {
+        border: 1px solid #38d87d;
+    }
+
+    .scan-status.failure {
+        border: 1px solid #DD3D56;
+    }
+
+    .scan-status .indicator-scan-status {
+        width: 50px;
+    }
+
+
+    .scan-status .indicator-scan-status.success {
+        background-color: #38d87d;
+    }
+
+    .scan-status .indicator-scan-status.failure {
+        background-color: #DD3D56;
+    }
+
+    .scan-status .indicator-scan-status .icon-scan-status {
+        margin-top: 5px;
+        text-align: center;
+        border: 1px solid #ffffff;
+    }
+
+    .scan-status .indicator-scan-status.success .icon-scan-status {
+        border: 1px solid #38d87d;
+    }
+
+    .scan-status .indicator-scan-status.failure .icon-scan-status {
+        border: 1px solid #DD3D56;
+    }
+
+
+
+
+    .scan-status .title-scan-status {
+        font-size: 12px;
+        font-weight: bold;
+        padding-left: 16px;
+    }
+
+    .scan-status .title-scan-status.failure {
+        color: #DD3D56;
+    }
+    .scan-status .title-scan-status.success {
+        color: #38d87d;
+    }
+
+
+
 </style>
 
 <#macro thresholdTooltip threshold count>
@@ -833,87 +902,86 @@
     <div class="report-title">
         <div class="cx-report-title">Checkmarx Report</div>
 
-    <#if config.osaEnabled && osa.osaResultsReady >
-        <#if osa.osaViolations?size gt 0>
-            <div class="policy-violation">
-                <div class="threshold-exceeded">
-                    <div class="threshold-exceeded-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="15px" height="17px" viewBox="0 0 15 17" version="1.1">
-                            <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
-                            <title>policy violeted</title>
-                            <desc>Created with Sketch.</desc>
-                            <defs>
-                                <path d="M0,0 L15,0 L15,17 L0,17 L0,0 Z M3,1 L3,3 L12,3 L12,1 L3,1 Z" id="path-1"/>
-                            </defs>
-                            <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                <g id="Jenkins-eport-policy-stat" transform="translate(-81.000000, -80.000000)">
-                                    <g id="Group-15" transform="translate(69.000000, 75.000000)">
-                                        <g id="Group-14" transform="translate(12.000000, 5.000000)">
-                                            <g id="policy-violeted">
-                                                <mask id="mask-2" fill="white">
-                                                    <use xlink:href="#path-1"/>
-                                                </mask>
-                                                <g id="Mask"/>
-                                                <rect id="Rectangle-6" stroke="#FFFFFF" stroke-width="2" mask="url(#mask-2)" x="1" y="2" width="13" height="14"/>
-                                                <rect id="Rectangle-2" fill="#FFFFFF" mask="url(#mask-2)" x="4" y="6" width="7" height="1"/>
-                                                <rect id="Rectangle-2-Copy" fill="#FFFFFF" mask="url(#mask-2)" x="4" y="9" width="7" height="1"/>
-                                                <rect id="Rectangle-2-Copy-2" fill="#FFFFFF" mask="url(#mask-2)" x="4" y="12" width="7" height="1"/>
-                                                <rect id="Rectangle-2-Copy-3" fill="#FFFFFF" x="5" y="0" width="5" height="3"/>
-                                            </g>
-                                        </g>
-                                    </g>
-                                </g>
-                            </g>
-                        </svg>
-                    </div>
-                    <div class="threshold-exceeded-text">
-                        Policy Violated
-                    </div>
-                </div>
-            </div>
-        <#else>
-        <div class="policy-violation">
-            <div class="policy-compliance">
-                <div id="no-policy-violation" >
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="19px" height="22px" viewBox="0 0 19 22" version="1.1">
-                        <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
-                        <title>Policy ok</title>
-                        <desc>Created with Sketch.</desc>
-                        <defs>
-                            <path d="M0,0 L15,0 L15,17 L0,17 L0,0 Z M3,1 L3,3 L12,3 L12,1 L3,1 Z M14,11 L14,11 C17.3137085,11 20,13.6862915 20,17 L20,17 C20,20.3137085 17.3137085,23 14,23 L14,23 C10.6862915,23 8,20.3137085 8,17 L8,17 C8,13.6862915 10.6862915,11 14,11 Z" id="path-1"/>
-                        </defs>
-                        <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <g id="Jenkins-eport-policy-stat" transform="translate(-79.000000, -147.000000)">
-                                <g id="Group-13-Copy" transform="translate(79.000000, 147.000000)">
-                                    <g id="Group">
-                                        <g id="Policy-ok">
-                                            <mask id="mask-2" fill="white">
-                                                <use xlink:href="#path-1"/>
-                                            </mask>
-                                            <g id="Mask"/>
-                                            <rect id="Rectangle-6" stroke="#373050" stroke-width="2" mask="url(#mask-2)" x="1" y="2" width="13" height="14"/>
-                                            <rect id="Rectangle-2" fill="#373050" mask="url(#mask-2)" x="4" y="6" width="7" height="1"/>
-                                            <rect id="Rectangle-2-Copy" fill="#373050" mask="url(#mask-2)" x="4" y="9" width="7" height="1"/>
-                                            <rect id="Rectangle-2-Copy-2" fill="#373050" mask="url(#mask-2)" x="4" y="12" width="7" height="1"/>
-                                            <rect id="Rectangle-2-Copy-3" fill="#373050" x="5" y="0" width="5" height="3"/>
-                                            <g id="ok" transform="translate(9.000000, 11.000000)">
-                                                <rect id="Rectangle-6-Copy" fill="#35D87D" x="0" y="1" width="10" height="10" rx="5"/>
-                                                <path d="M4.3590334,6.60460901 L6.3590334,6.60460901 L6.3590334,8.60460901 L4.3590334,8.60460901 L2.3590334,8.60460901 L2.3590334,0.604609006 L4.3590334,0.604609006 L4.3590334,6.60460901 Z" id="Combined-Shape" fill="#FFFFFF" transform="translate(4.359033, 4.604609) rotate(-35.000000) translate(-4.359033, -4.604609) "/>
-                                            </g>
-                                        </g>
-                                    </g>
-                                </g>
-                            </g>
-                        </g>
-                    </svg>
-                </div>
-                <div>
-                   Policy Compliant
-                </div>
-            </div>
-        </div>
-        </#if>
-    </#if>
+
+        <#if buildFailed>
+           <div class='scan-status failure'>
+               <div class='indicator-scan-status failure'>
+                   <div class='icon-scan-status'>
+                       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="22px" height="22px" viewBox="0 0 22 22" version="1.1">
+                           <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+                           <title>error</title>
+                           <desc>Created with Sketch.</desc>
+                           <defs/>
+                           <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                               <g id="Jenkins-eport-policy-stat" transform="translate(-90.000000, -32.000000)" fill="#FFFFFF">
+                                   <g id="Group-13" transform="translate(79.000000, 24.000000)">
+                                       <g id="Group-15-Copy">
+                                           <g id="Group-14" transform="translate(11.000000, 8.000000)">
+                                               <g id="error">
+                                                   <path d="M8.88864088,11.0488591 L5.97182541,13.9656746 L7.91636906,15.9102182 L10.8331845,12.9934028 L13.75,15.9102182 L15.6945436,13.9656746 L12.7777282,11.0488591 L15.6945436,8.13204365 L13.75,6.1875 L10.8331845,9.10431547 L7.91636906,6.1875 L5.97182541,8.13204365 L8.88864088,11.0488591 Z M11,22 C4.92486775,22 0,17.0751322 0,11 C0,4.92486775 4.92486775,0 11,0 C17.0751322,0 22,4.92486775 22,11 C22,17.0751322 17.0751322,22 11,22 Z" id="Combined-Shape"/>
+                                               </g>
+                                           </g>
+                                       </g>
+                                   </g>
+                               </g>
+                           </g>
+                       </svg>
+                   </div>
+               </div>
+               <div class='content-scan-status'>
+                   <p class="title-scan-status failure">
+                      Checkmarx Scan Failed
+                   </p>
+                   <ul>
+                   <#if policyViolated>
+                       <li> Policies Violated</li>
+                   </#if>
+                   <#if config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded)>
+                       <li>CxSAST Threshold Exceeded</li>
+                   </#if>
+                   <#if config.osaEnabled && osa.osaResultsReady && osaThresholdExceeded>
+                       <li>CxOSA Threshold Exceeded</li>
+                   </#if>
+                   </ul>
+               </div>
+           </div>
+       <#else>
+           <div class='scan-status success'>
+               <div class='indicator-scan-status success'>
+                   <div class='icon-scan-status'>
+                       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                           <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+                           <title>OK</title>
+                           <desc>Created with Sketch.</desc>
+                           <defs/>
+                           <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                               <g id="Jenkins-eport-policy-stat" transform="translate(-89.000000, -130.000000)">
+                                   <g id="Group-13-Copy" transform="translate(79.000000, 124.000000)">
+                                       <g id="Group-15-Copy">
+                                           <g id="Group-14" transform="translate(10.000000, 6.000000)">
+                                               <g id="disconected">
+                                                   <g id="OK">
+                                                       <circle id="Oval" fill="#FFFFFF" cx="12" cy="12" r="12"/>
+                                                       <path d="M9.45495129,11.7049513 L18.4549513,11.7049513 L18.4549513,14.7049513 L6.45495129,14.7049513 L6.45495129,11.7049513 L6.45495129,7.20495129 L9.45495129,7.20495129 L9.45495129,11.7049513 Z" id="Combined-Shape" fill="#38D87D" transform="translate(12.454951, 10.954951) rotate(-50.000000) translate(-12.454951, -10.954951) "/>
+                                                   </g>
+                                               </g>
+                                           </g>
+                                       </g>
+                                   </g>
+                               </g>
+                           </g>
+                       </svg>
+                   </div>
+               </div>
+               <div class='content-scan-status'>
+                   <p class="title-scan-status success">
+                       Checkmarx Scan Passed
+                   </p>
+               </div>
+           </div>
+
+       </#if>
+
 
     </div>
     <div id="results-report" class="results-report">
@@ -931,6 +999,7 @@
                                     <a href="${sast.sastScanLink}" class="html-report" id="sast-summary-html-link">
                                         <div class="results-link-icon link-icon">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="14"
+                                                 viewBox="0 0 12 14">
                                                  viewBox="0 0 12 14">
                                                 <g fill="none" fill-rule="evenodd">
                                                     <circle stroke="#4A90E2" stroke-width="2" cx="5" cy="5"
@@ -1013,81 +1082,6 @@
                         <!--sast-chart-->
                         <div class="summary-chart" id="sast-results">
                             <div class="top-of-chart">
-
-
-                                <div class="threshold-exceeded-compliance" id="threshold-exceeded-compliance">
-                                    <#if config.isSASTThresholdEffectivelyEnabled() || config.sastNewResultsThresholdEnabled>
-                                        <#if sastThresholdExceeded || sastNewResultsExceeded>
-                                            <div class="threshold-exceeded">
-                                                <div class="threshold-exceeded-icon">
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                         xmlns:xlink="http://www.w3.org/1999/xlink" width="12px"
-                                                         height="12px" viewBox="0 0 12 12" version="1.1">
-                                                        <defs/>
-                                                        <g id="Page-1" stroke="none" stroke-width="1" fill="none"
-                                                           fill-rule="evenodd">
-                                                            <g id="Icons"
-                                                               transform="translate(-52.000000, -241.000000)">
-                                                                <g id="threshhold-icon"
-                                                                   transform="translate(52.000000, 241.000000)">
-                                                                    <g>
-                                                                        <path d="M8.0904685,3 L7.0904685,3 L7.0904685,5 L8.0904685,5 L8.0904685,11 L3.0904685,11 L3.0904685,0 L8.0904685,0 L8.0904685,3 Z M3.0904685,3 L3.0904685,5 L5.0904685,5 L5.0904685,3 L3.0904685,3 Z M5.0904685,3 L5.0904685,5 L7.0904685,5 L7.0904685,3 L5.0904685,3 Z"
-                                                                              id="Combined-Shape" fill="#FFFFFF"/>
-                                                                        <path d="M10.5904685,11.5 L0.590468498,11.5"
-                                                                              id="Line" stroke="#FFFFFF"
-                                                                              stroke-linecap="square"/>
-                                                                    </g>
-                                                                </g>
-                                                            </g>
-                                                        </g>
-                                                    </svg>
-                                                </div>
-                                                <div class="threshold-exceeded-text">
-                                                    Threshold Exceeded
-                                                </div>
-                                            </div>
-                                        <#else>
-                                            <div class="threshold-compliance">
-                                                <div class="threshold-compliance-icon">
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                         xmlns:xlink="http://www.w3.org/1999/xlink"
-                                                         id="SvgjsSvg1050"
-                                                         version="1.1" width="13.99264158479491" height="13"
-                                                         viewBox="0 0 13.99264158479491 13"><title>Icon</title>
-                                                        <desc>Created with Avocode.</desc>
-                                                        <defs id="SvgjsDefs1051">
-                                                            <clipPath id="SvgjsClipPath1056">
-                                                                <path id="SvgjsPath1055"
-                                                                      d="M1035.00736 793.9841L1035.00736 784.01589L1046.9926400000002 784.01589L1046.9926400000002 793.9841ZM1038.67 790.72L1036.68 788.72L1036 789.4L1038.67 792.0699999999999L1045.21 785.67L1044.54 785Z "
-                                                                      fill="#ffffff"/>
-                                                            </clipPath>
-                                                        </defs>
-                                                        <path id="SvgjsPath1052"
-                                                              d="M1033 789.5C1033 785.91015 1035.91015 783 1039.5 783C1043.08985 783 1046 785.91015 1046 789.5C1046 793.08985 1043.08985 796 1039.5 796C1035.91015 796 1033 793.08985 1033 789.5Z "
-                                                              fill="#21bf3f" fill-opacity="1"
-                                                              transform="matrix(1,0,0,1,-1033,-783)"/>
-                                                        <path id="SvgjsPath1053"
-                                                              d="M1038.67 790.72L1036.68 788.72L1036 789.4L1038.67 792.0699999999999L1045.21 785.67L1044.54 785Z "
-                                                              fill="#ffffff" fill-opacity="1"
-                                                              transform="matrix(1,0,0,1,-1033,-783)"/>
-                                                        <path id="SvgjsPath1054"
-                                                              d="M1038.67 790.72L1036.68 788.72L1036 789.4L1038.67 792.0699999999999L1045.21 785.67L1044.54 785Z "
-                                                              fill-opacity="0" fill="#ffffff" stroke-dasharray="0"
-                                                              stroke-linejoin="miter" stroke-linecap="butt"
-                                                              stroke-opacity="1" stroke="#ffffff" stroke-miterlimit="50"
-                                                              stroke-width="1.4"
-                                                              clip-path="url(&quot;#SvgjsClipPath1056&quot;)"
-                                                              transform="matrix(1,0,0,1,-1033,-783)"/>
-                                                    </svg>
-                                                </div>
-                                                <div class="threshold-compliance-text">
-                                                    Threshold Compliant
-                                                </div>
-                                            </div>
-                                        </#if>
-                                    </#if>
-                                </div>
-
                                 <#if sast.hasNewResults()>
                                     <div id="sast-legend-container" class="chart-legend-container">
                                         <div class="chart-legend">
@@ -1394,82 +1388,6 @@
                             </div>
                             <!--osa-chart-->
                             <div class="osa-chart">
-                                <div class="top-of-chart">
-                                    <div class="threshold-exceeded-compliance" id="osa-threshold-exceeded-compliance">
-                                        <#if config.isOSAThresholdEffectivelyEnabled()>
-                                            <#if osaThresholdExceeded>
-                                                <div class="threshold-exceeded">
-                                                    <div class="threshold-exceeded-icon">
-                                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                                             xmlns:xlink="http://www.w3.org/1999/xlink" width="12px"
-                                                             height="12px" viewBox="0 0 12 12" version="1.1">
-                                                            <defs/>
-                                                            <g id="Page-1" stroke="none" stroke-width="1" fill="none"
-                                                               fill-rule="evenodd">
-                                                                <g id="Icons"
-                                                                   transform="translate(-52.000000, -241.000000)">
-                                                                    <g id="threshhold-icon"
-                                                                       transform="translate(52.000000, 241.000000)">
-                                                                        <g>
-                                                                            <path d="M8.0904685,3 L7.0904685,3 L7.0904685,5 L8.0904685,5 L8.0904685,11 L3.0904685,11 L3.0904685,0 L8.0904685,0 L8.0904685,3 Z M3.0904685,3 L3.0904685,5 L5.0904685,5 L5.0904685,3 L3.0904685,3 Z M5.0904685,3 L5.0904685,5 L7.0904685,5 L7.0904685,3 L5.0904685,3 Z"
-                                                                                  id="Combined-Shape" fill="#FFFFFF"/>
-                                                                            <path d="M10.5904685,11.5 L0.590468498,11.5"
-                                                                                  id="Line" stroke="#FFFFFF"
-                                                                                  stroke-linecap="square"/>
-                                                                        </g>
-                                                                    </g>
-                                                                </g>
-                                                            </g>
-                                                        </svg>
-                                                    </div>
-                                                    <div class="threshold-exceeded-text">
-                                                        Threshold Exceeded
-                                                    </div>
-                                                </div>
-                                            <#else>
-                                                <div class="threshold-compliance">
-                                                    <div class="threshold-compliance-icon">
-                                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                                             xmlns:xlink="http://www.w3.org/1999/xlink"
-                                                             id="SvgjsSvg1050"
-                                                             version="1.1" width="13.99264158479491" height="13"
-                                                             viewBox="0 0 13.99264158479491 13"><title>Icon</title>
-                                                            <desc>Created with Avocode.</desc>
-                                                            <defs id="SvgjsDefs1051">
-                                                                <clipPath id="SvgjsClipPath1056">
-                                                                    <path id="SvgjsPath1055"
-                                                                          d="M1035.00736 793.9841L1035.00736 784.01589L1046.9926400000002 784.01589L1046.9926400000002 793.9841ZM1038.67 790.72L1036.68 788.72L1036 789.4L1038.67 792.0699999999999L1045.21 785.67L1044.54 785Z "
-                                                                          fill="#ffffff"/>
-                                                                </clipPath>
-                                                            </defs>
-                                                            <path id="SvgjsPath1052"
-                                                                  d="M1033 789.5C1033 785.91015 1035.91015 783 1039.5 783C1043.08985 783 1046 785.91015 1046 789.5C1046 793.08985 1043.08985 796 1039.5 796C1035.91015 796 1033 793.08985 1033 789.5Z "
-                                                                  fill="#21bf3f" fill-opacity="1"
-                                                                  transform="matrix(1,0,0,1,-1033,-783)"/>
-                                                            <path id="SvgjsPath1053"
-                                                                  d="M1038.67 790.72L1036.68 788.72L1036 789.4L1038.67 792.0699999999999L1045.21 785.67L1044.54 785Z "
-                                                                  fill="#ffffff" fill-opacity="1"
-                                                                  transform="matrix(1,0,0,1,-1033,-783)"/>
-                                                            <path id="SvgjsPath1054"
-                                                                  d="M1038.67 790.72L1036.68 788.72L1036 789.4L1038.67 792.0699999999999L1045.21 785.67L1044.54 785Z "
-                                                                  fill-opacity="0" fill="#ffffff" stroke-dasharray="0"
-                                                                  stroke-linejoin="miter" stroke-linecap="butt"
-                                                                  stroke-opacity="1" stroke="#ffffff"
-                                                                  stroke-miterlimit="50"
-                                                                  stroke-width="1.4"
-                                                                  clip-path="url(&quot;#SvgjsClipPath1056&quot;)"
-                                                                  transform="matrix(1,0,0,1,-1033,-783)"/>
-                                                        </svg>
-                                                    </div>
-                                                    <div class="threshold-compliance-text">
-                                                        Threshold Compliant
-                                                    </div>
-                                                </div>
-                                            </#if>
-                                        </#if>
-                                    </div>
-                                </div>
-
                                 <ul class="osa-chart chart">
                                     <!--osa-high-->
                                     <li>
@@ -2028,6 +1946,66 @@
                             </div>
                         </#if>
 
+                        <#if sast.sastViolations?size gt 0>
+                            <div id="sast-policy-violations-container">
+                                <div class="full-severity-title">
+                                    <div class="severity-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="19px" height="22px" viewBox="0 0 19 22" version="1.1">
+                                            <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+                                            <title>Policy violation</title>
+                                            <desc>Created with Sketch.</desc>
+                                            <defs>
+                                                <path d="M0,0 L15,0 L15,17 L0,17 L0,0 Z M3,1 L3,3 L12,3 L12,1 L3,1 Z M14,11 L14,11 C17.3137085,11 20,13.6862915 20,17 L20,17 C20,20.3137085 17.3137085,23 14,23 L14,23 C10.6862915,23 8,20.3137085 8,17 L8,17 C8,13.6862915 10.6862915,11 14,11 Z" id="path-1"/>
+                                            </defs>
+                                            <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <g id="Jenkins-eport" transform="translate(-525.000000, -2433.000000)">
+                                                    <g id="Osa-Full" transform="translate(272.000000, 1523.000000)">
+                                                        <g id="high-copy-2" transform="translate(249.000000, 909.000000)">
+                                                            <g id="TTL" transform="translate(4.000000, 0.000000)">
+                                                                <g id="Policy-mgmt" transform="translate(0.000000, 1.000000)">
+                                                                    <mask id="mask-2" fill="white">
+                                                                        <use xlink:href="#path-1"/>
+                                                                    </mask>
+                                                                    <g id="Mask"/>
+                                                                    <rect id="Rectangle-6" stroke="#373050" stroke-width="2" mask="url(#mask-2)" x="1" y="2" width="13" height="14"/>
+                                                                    <rect id="Rectangle-2" fill="#373050" mask="url(#mask-2)" x="4" y="6" width="7" height="1"/>
+                                                                    <rect id="Rectangle-2-Copy" fill="#373050" mask="url(#mask-2)" x="4" y="9" width="7" height="1"/>
+                                                                    <rect id="Rectangle-2-Copy-2" fill="#373050" mask="url(#mask-2)" x="4" y="12" width="7" height="1"/>
+                                                                    <rect id="Rectangle-2-Copy-3" fill="#373050" x="5" y="0" width="5" height="3"/>
+                                                                    <g id="Alert_general_hover" transform="translate(9.000000, 12.000000)">
+                                                                        <rect id="Rectangle-6-Copy" fill="#DA2946" x="0" y="0" width="10" height="10" rx="5"/>
+                                                                        <rect id="Rectangle-7" fill="#FFFFFF" x="4" y="2" width="2" height="4"/>
+                                                                        <rect id="Rectangle-7-Copy" fill="#FFFFFF" x="4" y="7" width="2" height="1"/>
+                                                                    </g>
+                                                                </g>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    <div class="severity-title-name">Policy Violations</div>
+                                    <div class="severity-count">${sast.sastViolations?size}</div>
+                                </div>
+                                <table id="sast-policy-violations-table" class="cve-table sast-cve-table osa-policy-violations">
+                                    <tr>
+                                        <th>Library Name</th>
+                                        <th>Policy</th>
+                                        <th>Rule</th>
+                                        <th>Detection Date</th>
+                                    </tr>
+                                    <#list sast.sastViolations as sastViolation>
+                                        <td>${sastViolation.source}</td>
+                                        <td>${sastViolation.policyName}</td>
+                                        <td>${sastViolation.ruleName}</td>
+                                        <td>${sastViolation.detectionDate}</td>
+                                        </tr>
+                                    </#list>
+                                </table>
+                            </div>
+                        </#if>
+
                     </div>
                 </div>
             </div>
@@ -2418,7 +2396,7 @@
                                         <th>Detection Date</th>
                                     </tr>
                                     <#list osa.osaViolations as osaViolation>
-                                        <td>${osaViolation.libraryName}</td>
+                                        <td>${osaViolation.source}</td>
                                         <td>${osaViolation.policyName}</td>
                                         <td>${osaViolation.ruleName}</td>
                                         <td>${osaViolation.detectionDate}</td>

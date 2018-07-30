@@ -5,6 +5,7 @@ import com.cx.restclient.sast.dto.CxXMLResults;
 import com.cx.restclient.sast.dto.SASTResults;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import javax.xml.bind.JAXBContext;
@@ -48,21 +49,24 @@ public abstract class SASTUtils {
         return reportObj;
     }
 
-    public static void printSASTResultsToConsole(SASTResults scanResults, Logger logger) {
+    public static void printSASTResultsToConsole(SASTResults sastResults,boolean enableViolations, Logger log) {
 
-        String highNew = scanResults.getNewHigh() > 0 ? " (" + scanResults.getNewHigh() + " new)" : "";
-        String mediumNew = scanResults.getNewMedium() > 0 ? " (" + scanResults.getNewMedium() + " new)" : "";
-        String lowNew = scanResults.getNewLow() > 0 ? " (" + scanResults.getNewLow() + " new)" : "";
-        String infoNew = scanResults.getNewInfo() > 0 ? " (" + scanResults.getNewInfo() + " new)" : "";
+        String highNew = sastResults.getNewHigh() > 0 ? " (" + sastResults.getNewHigh() + " new)" : "";
+        String mediumNew = sastResults.getNewMedium() > 0 ? " (" + sastResults.getNewMedium() + " new)" : "";
+        String lowNew = sastResults.getNewLow() > 0 ? " (" + sastResults.getNewLow() + " new)" : "";
+        String infoNew = sastResults.getNewInfo() > 0 ? " (" + sastResults.getNewInfo() + " new)" : "";
 
-        logger.info("----------------------------Checkmarx Scan Results(CxSAST):-------------------------------");
-        logger.info("High severity results: " + scanResults.getHigh() + highNew);
-        logger.info("Medium severity results: " + scanResults.getMedium() + mediumNew);
-        logger.info("Low severity results: " + scanResults.getLow() + lowNew);
-        logger.info("Information severity results: " + scanResults.getInformation() + infoNew);
-        logger.info("");
-        logger.info("Scan results location: " + scanResults.getSastScanLink());
-        logger.info("------------------------------------------------------------------------------------------\n");
+        log.info("----------------------------Checkmarx Scan Results(CxSAST):-------------------------------");
+        log.info("High severity results: " + sastResults.getHigh() + highNew);
+        log.info("Medium severity results: " + sastResults.getMedium() + mediumNew);
+        log.info("Low severity results: " + sastResults.getLow() + lowNew);
+        log.info("Information severity results: " + sastResults.getInformation() + infoNew);
+        log.info("");
+        if (enableViolations && !sastResults.getSastPolicies().isEmpty()) {
+            log.info("SAST violated policies names: " + StringUtils.join(sastResults.getSastPolicies(), ','));
+        }
+        log.info("Scan results location: " + sastResults.getSastScanLink());
+        log.info("------------------------------------------------------------------------------------------\n");
     }
 
     //PDF Report

@@ -99,7 +99,7 @@ public abstract class OSAUtils {
         return ret;
     }
 
-    public static void printOSAResultsToConsole(OSAResults osaResults, Logger log) {
+    public static void printOSAResultsToConsole(OSAResults osaResults, boolean enableViolations, Logger log) {
         OSASummaryResults osaSummaryResults = osaResults.getResults();
         log.info("----------------------------Checkmarx Scan Results(CxOSA):-------------------------------");
         log.info("");
@@ -119,9 +119,13 @@ public abstract class OSAUtils {
         log.info("Vulnerable and updated: " + osaSummaryResults.getVulnerableAndUpdated());
         log.info("Non-vulnerable libraries: " + osaSummaryResults.getNonVulnerableLibraries());
         log.info("");
+
+        if (enableViolations && !osaResults.getOsaPolicies().isEmpty()) {
+            log.info("OSA violated policies names: " + StringUtils.join(osaResults.getOsaPolicies(), ','));
+        }
         log.info("OSA scan results location: " + osaResults.getOsaProjectSummaryLink());
         log.info("-----------------------------------------------------------------------------------------");
-    }//todo add policy violation
+    }
 
     public static void writeJsonToFile(String name, Object jsonObj, File workDirectory, Logger log) {
         try {

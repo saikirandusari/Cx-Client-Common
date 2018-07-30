@@ -3,8 +3,12 @@ package com.cx.restclient.osa.dto;
 import com.cx.restclient.cxArm.dto.Violation;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.cx.restclient.common.ShragaUtils.formatDate;
 
 /**
  * Created by Galn on 07/02/2018.
@@ -24,7 +28,8 @@ public class OSAResults implements Serializable {
     private String scanStartTime;
     private String scanEndTime;
 
-    private List<OsaViolation> osaViolations = new ArrayList<>();
+    private List<String> osaPolicies = new ArrayList<>();
+    private List<Violation> osaViolations = new ArrayList<>();
 
 
     public OSAResults() {
@@ -157,19 +162,6 @@ public class OSAResults implements Serializable {
         this.scanEndTime = formatDate(status.getEndAnalyzeTime(), "yyyy-MM-dd'T'HH:mm:ss.SSSSSSS", "dd/MM/yy HH:mm");
     }
 
-    private String formatDate(String date, String fromFormat, String toFormat) {
-        SimpleDateFormat fromDate = new SimpleDateFormat(fromFormat);
-        SimpleDateFormat toDate = new SimpleDateFormat(toFormat);
-        String ret = "";
-        try {
-            ret = toDate.format(fromDate.parse(date));
-        } catch (Exception ignored) {
-
-        }
-        return ret;
-    }
-
-
     public void setOsaHighCVEReportTable(List<CVEReportTableRow> osaHighCVEReportTable) {
         this.osaHighCVEReportTable = osaHighCVEReportTable;
     }
@@ -190,19 +182,23 @@ public class OSAResults implements Serializable {
         this.scanEndTime = scanEndTime;
     }
 
-    public List<OsaViolation> getOsaViolations() {
+    public List<Violation> getOsaViolations() {
         return osaViolations;
     }
 
-    public void setOsaViolations(List<OsaViolation> osaViolations) {
+    public void setOsaViolations(List<Violation> osaViolations) {
         this.osaViolations = osaViolations;
     }
 
-    public void addOsaViolation(Violation violation, String policyName) {
-        String date =  new Date(violation.getDate()).toString();//todo!!
-        date = formatDate(date, "E MMM dd hh:mm:ss Z yyyy", "dd/MM/yy");
+    public void addAllViolations(List<Violation> violations) {
+        this.osaViolations.addAll(violations);
+    }
 
-        OsaViolation osaViolation = new OsaViolation(violation.getSource(), policyName, violation.getRuleName(),date);
-        this.osaViolations.add(osaViolation);
+    public List<String> getOsaPolicies() {
+        return osaPolicies;
+    }
+
+    public void setOsaPolicies(List<String> osaPolicies) {
+        this.osaPolicies = osaPolicies;
     }
 }

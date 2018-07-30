@@ -2,6 +2,10 @@ package com.cx.restclient.cxArm.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Date;
+
+import static com.cx.restclient.common.ShragaUtils.formatDate;
+
 /**
  * Created by Galn on 7/5/2018.
  */
@@ -40,6 +44,10 @@ public class Violation {
     private String status;
 
     private String state;
+
+    private String policyName;
+
+    private String detectionDate;
 
 
     public String getRuleId() {
@@ -176,5 +184,25 @@ public class Violation {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getPolicyName() {
+        return policyName;
+    }
+
+    public void setPolicyName(String policyName) {
+        this.policyName = policyName;
+    }
+
+    public String getDetectionDate() {
+        if (detectionDate == null){
+            String date = new Date(firstDetectionDateByArm).toString();
+            detectionDate = formatDate(date, "E MMM dd hh:mm:ss Z yyyy", "dd/MM/yy");
+        }
+        return detectionDate;
+    }
+
+    public void setDetectionDate(String detectionDate) {
+        this.detectionDate = detectionDate;
     }
 }

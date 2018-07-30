@@ -3,9 +3,6 @@ package com.cx.restclient;
 import com.cx.restclient.common.summary.SummaryUtils;
 import com.cx.restclient.configuration.CxScanConfig;
 import com.cx.restclient.cxArm.dto.CxArmConfig;
-import com.cx.restclient.cxArm.dto.CxProviders;
-import com.cx.restclient.cxArm.dto.Policy;
-import com.cx.restclient.cxArm.dto.Violation;
 import com.cx.restclient.dto.Team;
 import com.cx.restclient.dto.ThresholdResult;
 import com.cx.restclient.exception.CxClientException;
@@ -20,7 +17,6 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -74,6 +70,9 @@ public class CxShragaClient {
         if (config.getSastEnabled()) {
             resolvePreset();
         }
+        if (config.getEnablePolicyViolations()){
+            resolveCxARMUrl();
+        }
         resolveTeam();
         resolveProject();
     }
@@ -120,46 +119,8 @@ public class CxShragaClient {
         return new ThresholdResult(isFail, res.toString());
     }
 
-    public List<Policy> getProjectViolations() throws IOException, CxClientException {
-
-        List<Policy> projectViolations = new ArrayList<Policy>();
-        try {
-            String cxARMUrl = getCxARMConfig().getCxARMPolicyURL();
-            projectViolations = getProjectViolations(cxARMUrl);
-            resolveProjectViolations(projectViolations);
-
-        } catch (Exception ex) {
-            log.error("CxARM is not available: " + ex.getMessage()); //TODO liran
-        }
-
-        return projectViolations;
-    }
-
     private CxArmConfig getCxARMConfig() throws IOException, CxClientException {
-        return httpClient.getRequest(CX_ARM_URL, CONTENT_TYPE_APPLICATION_JSON_V1, CxArmConfig.class, 200, "CxARM URL", false); //todo fail messgae
-    }
-
-    private void resolveProjectViolations(List<Policy> projectViolations) {
-        for (Policy policy : projectViolations) {
-            for (Violation violation : policy.getViolations()) {
-                String provider = violation.getProvider();
-                switch (CxProviders.valueOf(provider)) {
-                    case OPEN_SOURCE:
-                        if (config.getOsaEnabled()) {
-                            osaResults.addOsaViolation(violation, policy.getPolicyName());
-                        }
-                        break;
-                    case SAST:
-                        if (config.getSastEnabled()) {
-
-                        }
-                        break;
-                    default:
-                        log.warn("CxARM: unknown provider type");//todo
-                        break;
-                }
-            }
-        }
+        return httpClient.getRequest(CX_ARM_URL, CONTENT_TYPE_APPLICATION_JSON_V1, CxArmConfig.class, 200, "CxARM URL", false);
     }
 
     public String generateHTMLSummary() throws Exception {
@@ -196,7 +157,7 @@ public class CxShragaClient {
     public String getTeamIdByName(String teamName) throws CxClientException, IOException {
         List<Team> allTeams = getTeamList();
         for (Team team : allTeams) {
-            if (team.getFullName().equalsIgnoreCase(teamName)) { //TODO caseSenesitive- checkkk and REMOVE The WA "\"
+            if (team.getFullName().equalsIgnoreCase(teamName)) { //TODO caseSenesitive
                 return team.getId();
             }
         }
@@ -240,7 +201,7 @@ public class CxShragaClient {
         return (List<CxNameObj>) httpClient.getRequest(SAST_ENGINE_CONFIG, CONTENT_TYPE_APPLICATION_JSON_V1, CxNameObj.class, 200, "engine configurations", true);
     }
 
-    public void setOsaFSAProperties(Properties fsaConfig){  //For CxMaven plugin
+    public void setOsaFSAProperties(Properties fsaConfig) {  //For CxMaven plugin
         config.setOsaFsaConfig(fsaConfig);
     }
 
@@ -250,6 +211,14 @@ public class CxShragaClient {
             config.setTeamId(getTeamIdByName(config.getTeamPath()));
         }
         printTeamPath();
+    }
+
+    private void resolveCxARMUrl() {
+        try {
+            this.config.setCxARMUrl(getCxARMConfig().getCxARMPolicyURL());
+        } catch (Exception ex) {
+            log.error("CxARM is not available. Policy violations cannot be calculated: " + ex.getMessage());
+        }
     }
 
     private void resolvePreset() throws CxClientException, IOException {
@@ -317,10 +286,5 @@ public class CxShragaClient {
         String json = convertToJson(request);
         StringEntity entity = new StringEntity(json);
         return httpClient.postRequest(CREATE_PROJECT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, Project.class, 201, "create new project: " + request.getName());
-    }
-
-    private List<Policy> getProjectViolations(String cxARMUrl) throws IOException, CxClientException {
-        String relativePath = CX_ARM_VIOLATION.replace("{projectId}", Long.toString(projectId));
-        return (List<Policy>) httpClient.getRequest(cxARMUrl, relativePath, CONTENT_TYPE_APPLICATION_JSON_V1, null, Policy.class, 200, "CxARM violations", true); //todo fail messgae
     }
 }
