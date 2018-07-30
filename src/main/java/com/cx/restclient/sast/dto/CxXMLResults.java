@@ -6,137 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * <p>Java class for anonymous complex type.
- *
- * <p>The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="Query" maxOccurs="unbounded" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="Result" maxOccurs="unbounded" minOccurs="0">
- *                     &lt;complexType>
- *                       &lt;complexContent>
- *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                           &lt;sequence>
- *                             &lt;element name="Path">
- *                               &lt;complexType>
- *                                 &lt;complexContent>
- *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                     &lt;sequence>
- *                                       &lt;element name="PathNode" maxOccurs="unbounded" minOccurs="0">
- *                                         &lt;complexType>
- *                                           &lt;complexContent>
- *                                             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                               &lt;sequence>
- *                                                 &lt;element name="FileName" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *                                                 &lt;element name="Line" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *                                                 &lt;element name="Column" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *                                                 &lt;element name="NodeId" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *                                                 &lt;element name="Name" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *                                                 &lt;element name="Type" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *                                                 &lt;element name="Length" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *                                                 &lt;element name="Snippet">
- *                                                   &lt;complexType>
- *                                                     &lt;complexContent>
- *                                                       &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                                         &lt;sequence>
- *                                                           &lt;element name="Line">
- *                                                             &lt;complexType>
- *                                                               &lt;complexContent>
- *                                                                 &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                                                   &lt;sequence>
- *                                                                     &lt;element name="Number" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *                                                                     &lt;element name="Code" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *                                                                   &lt;/sequence>
- *                                                                 &lt;/restriction>
- *                                                               &lt;/complexContent>
- *                                                             &lt;/complexType>
- *                                                           &lt;/element>
- *                                                         &lt;/sequence>
- *                                                       &lt;/restriction>
- *                                                     &lt;/complexContent>
- *                                                   &lt;/complexType>
- *                                                 &lt;/element>
- *                                               &lt;/sequence>
- *                                             &lt;/restriction>
- *                                           &lt;/complexContent>
- *                                         &lt;/complexType>
- *                                       &lt;/element>
- *                                     &lt;/sequence>
- *                                     &lt;attribute name="ResultId" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                     &lt;attribute name="PathId" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                     &lt;attribute name="SimilarityId" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                   &lt;/restriction>
- *                                 &lt;/complexContent>
- *                               &lt;/complexType>
- *                             &lt;/element>
- *                           &lt;/sequence>
- *                           &lt;attribute name="NodeId" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="FileName" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="SASTScanStatus" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="Line" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="Column" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="FalsePositive" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="Severity" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="AssignToUser" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="state" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="Remark" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="DeepLink" type="{http://www.w3.org/2001/XMLSchema}anyURI" />
- *                           &lt;attribute name="SeverityIndex" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                         &lt;/restriction>
- *                       &lt;/complexContent>
- *                     &lt;/complexType>
- *                   &lt;/element>
- *                 &lt;/sequence>
- *                 &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="categories" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="cweId" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="group" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="Severity" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="Language" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="LanguageHash" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="LanguageChangeDate" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
- *                 &lt;attribute name="SeverityIndex" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="QueryPath" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="QueryVersionCode" type="{http://www.w3.org/2001/XMLSchema}string" />
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *       &lt;/sequence>
- *       &lt;attribute name="InitiatorName" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="Owner" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="ScanId" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="ProjectId" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="ProjectName" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="TeamFullPathOnReportDate" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="DeepLink" type="{http://www.w3.org/2001/XMLSchema}anyURI" />
- *       &lt;attribute name="ScanStart" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="Preset" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="ScanTime" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="LinesOfCodeScanned" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="FilesScanned" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="ReportCreationTime" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="Team" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="CheckmarxVersion" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="ScanComments" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="ScanType" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="SourceOrigin" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="Visibility" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
         "query"
@@ -213,7 +82,7 @@ public class CxXMLResults {
         return scanId;
     }
 
-   public void setScanId(String value) {
+    public void setScanId(String value) {
         this.scanId = value;
     }
 
@@ -714,7 +583,6 @@ public class CxXMLResults {
             }
 
 
-
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "", propOrder = {
                     "pathNode"
@@ -767,7 +635,6 @@ public class CxXMLResults {
                 public void setSimilarityId(String value) {
                     this.similarityId = value;
                 }
-
 
 
                 @XmlAccessorType(XmlAccessType.FIELD)
@@ -881,7 +748,6 @@ public class CxXMLResults {
                     }
 
 
-
                     @XmlAccessorType(XmlAccessType.FIELD)
                     @XmlType(name = "", propOrder = {
                             "line"
@@ -900,7 +766,6 @@ public class CxXMLResults {
                         public void setLine(Line value) {
                             this.line = value;
                         }
-
 
 
                         @XmlAccessorType(XmlAccessType.FIELD)
