@@ -32,6 +32,7 @@ public abstract class SummaryUtils {
 
         boolean buildFailed = false;
         boolean policyViolated = false;
+        int policyViolatedCount = 0;
         //sast:
         if (config.getSastEnabled() && sastResults.isSastResultsReady()) {
             boolean sastThresholdExceeded = ShragaUtils.isThresholdExceeded(config, sastResults, null, new StringBuilder());
@@ -52,6 +53,7 @@ public abstract class SummaryUtils {
             templateData.put("sastHighRecurrentHeight", sastHighRecurrentHeight);
             if (config.getEnablePolicyViolations() && !sastResults.getSastViolations().isEmpty()){
                 policyViolated = true;
+                policyViolatedCount+= sastResults.getSastViolations().size();
             }
 
             //sast medium bars
@@ -78,6 +80,8 @@ public abstract class SummaryUtils {
             buildFailed |= osaThresholdExceeded;
             if (config.getEnablePolicyViolations() && !osaResults.getOsaViolations().isEmpty()){
                 policyViolated = true;
+                policyViolatedCount+= osaResults.getOsaViolations().size();
+
             }
             //calculate osa bars:
             OSASummaryResults osaSummaryResults = osaResults.getResults();
@@ -97,6 +101,7 @@ public abstract class SummaryUtils {
         }
 
         templateData.put("policyViolated", policyViolated);
+        templateData.put("policyViolatedCount", policyViolatedCount);
         buildFailed |= policyViolated;
         templateData.put("buildFailed", buildFailed);
 

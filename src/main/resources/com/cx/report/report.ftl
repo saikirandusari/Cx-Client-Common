@@ -934,7 +934,7 @@
                    </p>
                    <ul>
                    <#if policyViolated>
-                       <li> Policies Violated</li>
+                       <li> ${policyViolatedCount} Policies Violated</li>
                    </#if>
                    <#if config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded)>
                        <li>CxSAST Threshold Exceeded</li>
@@ -1990,13 +1990,13 @@
                                 </div>
                                 <table id="sast-policy-violations-table" class="cve-table sast-cve-table osa-policy-violations">
                                     <tr>
-                                        <th>Library Name</th>
+                                        <th>Name</th>
                                         <th>Policy</th>
                                         <th>Rule</th>
                                         <th>Detection Date</th>
                                     </tr>
                                     <#list sast.sastViolations as sastViolation>
-                                        <td>${sastViolation.source}</td>
+                                        <td>${sastViolation.name}</td>
                                         <td>${sastViolation.policyName}</td>
                                         <td>${sastViolation.ruleName}</td>
                                         <td>${sastViolation.detectionDate}</td>
