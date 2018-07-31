@@ -62,9 +62,9 @@ public abstract class SASTUtils {
         log.info("Low severity results: " + sastResults.getLow() + lowNew);
         log.info("Information severity results: " + sastResults.getInformation() + infoNew);
         log.info("");
-        if (enableViolations && !sastResults.getSastPolicies().isEmpty()) {
+       /* if (enableViolations && !sastResults.getSastPolicies().isEmpty()) {
             log.info("SAST violated policies names: " + StringUtils.join(sastResults.getSastPolicies(), ','));
-        }
+        }*/
         log.info("Scan results location: " + sastResults.getSastScanLink());
         log.info("------------------------------------------------------------------------------------------\n");
     }

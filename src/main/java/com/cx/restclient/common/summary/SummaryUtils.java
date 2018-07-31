@@ -51,10 +51,10 @@ public abstract class SummaryUtils {
             templateData.put("sastHighTotalHeight", sastHighTotalHeight);
             templateData.put("sastHighNewHeight", sastHighNewHeight);
             templateData.put("sastHighRecurrentHeight", sastHighRecurrentHeight);
-            if (config.getEnablePolicyViolations() && !sastResults.getSastViolations().isEmpty()){
+            /*if (config.getEnablePolicyViolations() && !sastResults.getSastViolations().isEmpty()){
                 policyViolated = true;
                 policyViolatedCount+= sastResults.getSastViolations().size();
-            }
+            }*/
 
             //sast medium bars
             float sastMediumTotalHeight = (float) sastResults.getMedium() / sastBarNorm * 238f;

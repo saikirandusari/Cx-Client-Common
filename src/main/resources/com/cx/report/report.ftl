@@ -937,10 +937,10 @@
                        <li> ${policyViolatedCount} Policies Violated</li>
                    </#if>
                    <#if config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded)>
-                       <li>CxSAST Threshold Exceeded</li>
+                       <li>CxSAST Vulnerability Threshold Exceeded</li>
                    </#if>
                    <#if config.osaEnabled && osa.osaResultsReady && osaThresholdExceeded>
-                       <li>CxOSA Threshold Exceeded</li>
+                       <li>CxOSA Vulnerability Threshold Exceeded</li>
                    </#if>
                    </ul>
                </div>
@@ -1988,7 +1988,7 @@
                                     <div class="severity-title-name">Policy Violations</div>
                                     <div class="severity-count">${sast.sastViolations?size}</div>
                                 </div>
-                                <table id="sast-policy-violations-table" class="cve-table sast-cve-table osa-policy-violations">
+                               <!-- <table id="sast-policy-violations-table" class="cve-table sast-cve-table osa-policy-violations">
                                     <tr>
                                         <th>Name</th>
                                         <th>Policy</th>
@@ -2002,10 +2002,9 @@
                                         <td>${sastViolation.detectionDate}</td>
                                         </tr>
                                     </#list>
-                                </table>
+                                </table>-->
                             </div>
                         </#if>
-
                     </div>
                 </div>
             </div>

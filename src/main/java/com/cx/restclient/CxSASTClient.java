@@ -129,9 +129,9 @@ class CxSASTClient {
 
         //retrieve SAST scan results
         sastResults = retrieveSASTResults(scanId, projectId);
-        if (config.getEnablePolicyViolations()) {
+      /*  if (config.getEnablePolicyViolations()) {
             resolveSASTViolation(sastResults, projectId);
-        }
+        }*/
         SASTUtils.printSASTResultsToConsole(sastResults, config.getEnablePolicyViolations(), log);
 
         //PDF report
