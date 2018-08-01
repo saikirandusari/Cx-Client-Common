@@ -100,6 +100,9 @@ public abstract class SummaryUtils {
             templateData.put("osaLowTotalHeight", osaLowTotalHeight);
         }
 
+        String policyLabel = policyViolatedCount == 1? "Policy": "Policies";
+        templateData.put("policyLabel", policyLabel);
+
         templateData.put("policyViolated", policyViolated);
         templateData.put("policyViolatedCount", policyViolatedCount);
         buildFailed |= policyViolated;

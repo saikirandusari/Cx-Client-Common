@@ -934,7 +934,7 @@
                    </p>
                    <ul>
                    <#if policyViolated>
-                       <li> ${policyViolatedCount} Policies Violated</li>
+                       <li> ${policyViolatedCount} ${policyLabel} Violated</li>
                    </#if>
                    <#if config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded)>
                        <li>CxSAST Vulnerability Threshold Exceeded</li>
