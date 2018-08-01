@@ -92,6 +92,11 @@ public abstract class OSAUtils {
             ret.put("npm.runPreStep", "true");
             ret.put("bower.runPreStep", "false");
             ret.put("npm.ignoreScripts", "true");
+
+            ret.put("nuget.resolveDependencies", "true");
+            ret.put("nuget.restoreDependencies", "true");
+            ret.put("python.resolveDependencies", "true");
+            ret.put("python.ignorePipInstallErrors", "true");
         }
 
         ret.put("d", scanFolder);
