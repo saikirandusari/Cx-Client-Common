@@ -215,6 +215,19 @@
             </properties>
         </developer>
         <developer>
+            <name>Dor Golan</name>
+            <email>dor.golan@checkmarx.com</email>
+            <organization>Checkmarx</organization>
+            <organizationUrl>https://www.checkmarx.com/</organizationUrl>
+            <roles>
+                <role>Architect</role>
+                <role>Developer</role>
+            </roles>
+            <properties>
+                <picUrl>http://i.imgur.com/44Iil53.png</picUrl>
+            </properties>
+        </developer>
+        <developer>
         <name>Shaul Valero</name>
         <email>shaul.valero@checkmarx.com</email>
         <organization>Checkmarx</organization>
