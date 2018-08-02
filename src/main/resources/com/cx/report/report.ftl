@@ -801,7 +801,6 @@
         font-family: Roboto, sans-serif;
         font-size: 12px;
         line-height: 16px;
-        margin-top: -5px
     }
 
     .scan-status .content-scan-status ul {
