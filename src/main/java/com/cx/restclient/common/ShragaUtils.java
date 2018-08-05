@@ -148,14 +148,4 @@ public abstract class ShragaUtils {
         }
         return ret;
     }
-
-    public static boolean isPolicyViolated(CxScanConfig config, OSAResults osaResults, StringBuilder failDescription) {
-        boolean isPolicyViolated = config.getEnablePolicyViolations() && osaResults.getOsaViolations().size() > 0? true : false;
-        if(isPolicyViolated) {
-            failDescription.append("Project policy status: violated");
-        }
-        return isPolicyViolated;
-    }
-
-
 }

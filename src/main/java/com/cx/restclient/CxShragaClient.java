@@ -119,6 +119,15 @@ public class CxShragaClient {
         return new ThresholdResult(isFail, res.toString());
     }
 
+    public boolean isPolicyViolated(StringBuilder failDescription) {
+        boolean isPolicyViolated = config.getEnablePolicyViolations() && osaResults.getOsaViolations().size() > 0;
+        if(isPolicyViolated) {
+            failDescription.append("Project policy status: violated");
+        }
+        return isPolicyViolated;
+    }
+
+
     private CxArmConfig getCxARMConfig() throws IOException, CxClientException {
         return httpClient.getRequest(CX_ARM_URL, CONTENT_TYPE_APPLICATION_JSON_V1, CxArmConfig.class, 200, "CxARM URL", false);
     }
