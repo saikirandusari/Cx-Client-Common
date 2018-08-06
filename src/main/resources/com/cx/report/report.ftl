@@ -936,10 +936,11 @@
                    <#if policyViolated>
                        <li> ${policyViolatedCount} ${policyLabel} Violated</li>
                    </#if>
-                   <#if config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded)>
+                    <#if config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded) && config.osaEnabled && osa.osaResultsReady && osaThresholdExceeded>
+                        <li>CxSAST and CxOSA Vulnerability Thresholds Exceeded</li>
+                   <#elseif config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded)>
                        <li>CxSAST Vulnerability Threshold Exceeded</li>
-                   </#if>
-                   <#if config.osaEnabled && osa.osaResultsReady && osaThresholdExceeded>
+                   <#elseif config.osaEnabled && osa.osaResultsReady && osaThresholdExceeded>
                        <li>CxOSA Vulnerability Threshold Exceeded</li>
                    </#if>
                    </ul>
