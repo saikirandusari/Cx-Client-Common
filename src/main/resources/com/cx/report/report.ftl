@@ -791,9 +791,9 @@
 
 
     .scan-status {
-
         display: flex;
         margin-top: 26px;
+        min-height: 45px;
     }
 
     .scan-status .content-scan-status {
@@ -808,7 +808,8 @@
         margin-left: -7px;
     }
     .scan-status .content-scan-status li {
-        margin-top: 5px;
+        margin-top: 6px;
+        margin-bottom: 6px;
     }
 
     .scan-status.success {

@@ -124,9 +124,13 @@ public abstract class OSAUtils {
         log.info("Vulnerable and updated: " + osaSummaryResults.getVulnerableAndUpdated());
         log.info("Non-vulnerable libraries: " + osaSummaryResults.getNonVulnerableLibraries());
         log.info("");
-
-        if (enableViolations && !osaResults.getOsaPolicies().isEmpty()) {
-            log.info("OSA violated policies names: " + StringUtils.join(osaResults.getOsaPolicies(), ','));
+        if (enableViolations) {
+            if (osaResults.getOsaPolicies().isEmpty()){
+                log.info("Project policy status: compliant");
+            }else{
+                log.info("Project policy status: violated");
+                log.info("OSA violated policies names: " +  StringUtils.join(osaResults.getOsaPolicies(), ','));
+            }
         }
         log.info("OSA scan results location: " + osaResults.getOsaProjectSummaryLink());
         log.info("-----------------------------------------------------------------------------------------");
