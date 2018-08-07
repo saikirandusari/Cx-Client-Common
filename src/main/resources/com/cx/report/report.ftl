@@ -428,7 +428,6 @@
 
     .cx-report .results-report .libraries-vulnerable-number{
         font-size: 18px;
-        margin: auto auto auto 10px;
     }
 
 
@@ -625,14 +624,16 @@
         padding-bottom: 5px;
     }
 
-    .cx-report .pdf-report.download-icon,
     .cx-report .html-report.download-icon {
         margin-right: 6px;
+    }
+    .cx-report .pdf-report.download-icon, {
+        margin-right: 6px;
+        border-left: solid 1px #d5d5d
     }
 
     .cx-report .summary-section .html-report {
         margin-right: 10px;
-        border-right: solid 1px #d5d5d5;
     }
 
     .cx-report .link-to-result a {
@@ -822,6 +823,7 @@
 
     .scan-status .indicator-scan-status {
         width: 50px;
+        padding-top: 10px;
     }
 
 
@@ -837,6 +839,7 @@
         margin-top: 5px;
         text-align: center;
         border: 1px solid #ffffff;
+        padding-left: 5px ;
     }
 
     .scan-status .indicator-scan-status.success .icon-scan-status {
@@ -867,7 +870,12 @@
         color: #38d87d;
     }
 
-
+    #ruleName {
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 
 </style>
 
@@ -938,7 +946,7 @@
                    </p>
                    <ul>
                    <#if policyViolated>
-                       <li> ${policyViolatedCount} ${policyLabel} Violated</li>
+                       <li>${osa.osaPolicies?size} ${policyLabel} Violated</li>
                    </#if>
                     <#if config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded) && config.osaEnabled && osa.osaResultsReady && osaThresholdExceeded>
                         <li>CxSAST and CxOSA Vulnerability Thresholds Exceeded</li>
@@ -2402,7 +2410,7 @@
                                     <#list osa.osaViolations as osaViolation>
                                         <td>${osaViolation.source}</td>
                                         <td>${osaViolation.policyName}</td>
-                                        <td>${osaViolation.ruleName}</td>
+                                        <td id="ruleName">${osaViolation.ruleName}</td>
                                         <td>${osaViolation.detectionDate}</td>
                                     </tr>
                                     </#list>

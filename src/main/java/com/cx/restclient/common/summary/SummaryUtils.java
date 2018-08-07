@@ -53,7 +53,6 @@ public abstract class SummaryUtils {
             templateData.put("sastHighRecurrentHeight", sastHighRecurrentHeight);
             /*if (config.getEnablePolicyViolations() && !sastResults.getSastViolations().isEmpty()){
                 policyViolated = true;
-                policyViolatedCount+= sastResults.getSastViolations().size();
             }*/
 
             //sast medium bars
@@ -104,7 +103,6 @@ public abstract class SummaryUtils {
         templateData.put("policyLabel", policyLabel);
 
         templateData.put("policyViolated", policyViolated);
-        templateData.put("policyViolatedCount", policyViolatedCount);
         buildFailed |= policyViolated;
         templateData.put("buildFailed", buildFailed);
 
