@@ -857,7 +857,11 @@
     }
 
     .scan-status .title-scan-status.failure {
+        padding-top: 7px;
         color: #DD3D56;
+        padding-bottom: 3px;
+    }
+
     }
     .scan-status .title-scan-status.success {
         color: #38d87d;
