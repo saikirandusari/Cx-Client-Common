@@ -122,7 +122,7 @@ public class CxShragaClient {
     public boolean isPolicyViolated(StringBuilder failDescription) {
         boolean isPolicyViolated = config.getEnablePolicyViolations() && osaResults.getOsaViolations().size() > 0;
         if(isPolicyViolated) {
-            failDescription.append("Project policy status: violated");
+            failDescription.append("Project policy status: violated").append("\n");;
         }
         return isPolicyViolated;
     }
