@@ -1,5 +1,6 @@
 package com.cx.restclient.osa.utils;
 
+import com.cx.restclient.common.CxGlobalMessage;
 import com.cx.restclient.common.ShragaUtils;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.osa.dto.OSASummaryResults;
@@ -126,9 +127,9 @@ public abstract class OSAUtils {
         log.info("");
         if (enableViolations) {
             if (osaResults.getOsaPolicies().isEmpty()){
-                log.info("Project policy status: compliant");
+                log.info(CxGlobalMessage.PROJECT_POLICY_COMPLAINT_STATUS.getMessage());
             }else{
-                log.info("Project policy status: violated");
+                log.info(CxGlobalMessage.PROJECT_POLICY_VIOLATED_STATUS.getMessage());
                 log.info("OSA violated policies names: " +  StringUtils.join(osaResults.getOsaPolicies(), ','));
             }
         }

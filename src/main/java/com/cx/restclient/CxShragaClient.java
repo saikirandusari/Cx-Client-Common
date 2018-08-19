@@ -1,5 +1,6 @@
 package com.cx.restclient;
 
+import com.cx.restclient.common.CxGlobalMessage;
 import com.cx.restclient.common.summary.SummaryUtils;
 import com.cx.restclient.configuration.CxScanConfig;
 import com.cx.restclient.cxArm.dto.CxArmConfig;
@@ -122,7 +123,7 @@ public class CxShragaClient {
     public boolean isPolicyViolated(StringBuilder failDescription) {
         boolean isPolicyViolated = config.getEnablePolicyViolations() && osaResults.getOsaViolations().size() > 0;
         if(isPolicyViolated) {
-            failDescription.append("Project policy status: violated").append("\n");;
+            failDescription.append(CxGlobalMessage.PROJECT_POLICY_VIOLATED_STATUS.getMessage()).append("\n");
         }
         return isPolicyViolated;
     }
