@@ -20,7 +20,7 @@ public abstract class SummaryUtils {
     public static String generateSummary(SASTResults sastResults, OSAResults osaResults, CxScanConfig config) throws IOException, TemplateException {
 
         Configuration cfg = new Configuration(new Version("2.3.23"));
-        cfg.setClassForTemplateLoading(SummaryUtils.class, "/com/cx/report/");
+        cfg.setClassForTemplateLoading(SummaryUtils.class, "/com/cx/report");
         Template template = cfg.getTemplate("report.ftl");
 
         Map<String, Object> templateData = new HashMap<String, Object>();
