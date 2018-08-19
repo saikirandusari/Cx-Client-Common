@@ -942,7 +942,7 @@
                </div>
                <div class='content-scan-status'>
                    <p class="title-scan-status failure">
-                       Checkmarx scan ended successfully with the following issues:
+                       Checkmarx scan found the following issues:
                    </p>
                    <ul>
                    <#if policyViolated>
