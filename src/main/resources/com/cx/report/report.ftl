@@ -942,18 +942,18 @@
                </div>
                <div class='content-scan-status'>
                    <p class="title-scan-status failure">
-                      Checkmarx Scan Failed
+                       Checkmarx scan ended successfully with the following issues:
                    </p>
                    <ul>
                    <#if policyViolated>
                        <li>${osa.osaPolicies?size} ${policyLabel} Violated</li>
                    </#if>
                     <#if config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded) && config.osaEnabled && osa.osaResultsReady && osaThresholdExceeded>
-                        <li>CxSAST and CxOSA Vulnerability Thresholds Exceeded</li>
+                        <li>Exceeded CxSAST and CxOSA Vulnerability Thresholds</li>
                    <#elseif config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded)>
-                       <li>CxSAST Vulnerability Threshold Exceeded</li>
+                       <li>Exceeded CxSAST Vulnerability Threshold</li>
                    <#elseif config.osaEnabled && osa.osaResultsReady && osaThresholdExceeded>
-                       <li>CxOSA Vulnerability Threshold Exceeded</li>
+                       <li>Exceeded CxOSA Vulnerability Threshold</li>
                    </#if>
                    </ul>
                </div>
