@@ -16,6 +16,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.ssl.TrustStrategy;
 import org.slf4j.Logger;
@@ -69,6 +70,7 @@ public class CxHttpClient {
         this.cxOrigin = origin;
         //create httpclient
         HttpClientBuilder builder = HttpClientBuilder.create().addInterceptorFirst(requestFilter);
+        setSSLTls(builder, "TLSv1.2", logi);
         if (disableSSLValidation) {
             builder = disableCertificateValidation(builder, logi);
         }
@@ -174,6 +176,16 @@ public class CxHttpClient {
         }
 
         return builder;
+    }
+
+    private void setSSLTls(HttpClientBuilder builder, String protocol, Logger log) {
+        SSLContext sslContext = null;
+        try {
+            sslContext = SSLContextBuilder.create().useProtocol(protocol).build();
+            builder.setSslcontext(sslContext);
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            log.warn("Failed to set SSL TLS : " + e.getMessage());
+        }
     }
 
 }
