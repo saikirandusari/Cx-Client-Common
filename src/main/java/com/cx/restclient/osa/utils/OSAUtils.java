@@ -93,16 +93,21 @@ public abstract class OSAUtils {
             ret.put("npm.runPreStep", "true");
             ret.put("bower.runPreStep", "false");
             ret.put("npm.ignoreScripts", "true");
-
-            ret.put("nuget.resolveDependencies", "true");
-            ret.put("nuget.restoreDependencies", "true");
-            ret.put("python.resolveDependencies", "true");
-            ret.put("python.ignorePipInstallErrors", "true");
+            setResolveDependencies(ret,"true");
+        }else {
+            setResolveDependencies(ret,"false");
         }
 
         ret.put("d", scanFolder);
 
         return ret;
+    }
+
+    private static void setResolveDependencies(Properties ret, String resolveDependencies) {
+        ret.put("nuget.resolveDependencies", resolveDependencies);
+        ret.put("nuget.restoreDependencies", resolveDependencies);
+        ret.put("python.resolveDependencies", resolveDependencies);
+        ret.put("python.ignorePipInstallErrors", resolveDependencies);
     }
 
     public static void printOSAResultsToConsole(OSAResults osaResults, boolean enableViolations, Logger log) {
