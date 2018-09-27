@@ -74,6 +74,7 @@ public class CxHttpClient {
         if (disableSSLValidation) {
             builder = disableCertificateValidation(builder, logi);
         }
+        builder.useSystemProperties();
         apacheClient = builder.build();
     }
 
