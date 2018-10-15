@@ -24,6 +24,7 @@ public class CxScanConfig implements Serializable {
     private String teamPath;
     private String teamId;
     private Boolean denyProject = false;
+    private Boolean hideResults = false;
     private Boolean isPublic = true;
     private Boolean forceScan = false;
     private String presetName;
@@ -442,5 +443,13 @@ public class CxScanConfig implements Serializable {
 
     public void setCxARMUrl(String cxARMUrl) {
         this.cxARMUrl = cxARMUrl;
+    }
+
+    public Boolean getHideResults() {
+        return hideResults;
+    }
+
+    public void setHideResults(Boolean hideResults) {
+        this.hideResults = hideResults;
     }
 }
