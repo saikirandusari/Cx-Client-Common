@@ -57,6 +57,7 @@ public class CxScanConfig implements Serializable {
     private Integer osaLowThreshold;
     private Properties osaFsaConfig; //for MAVEN
     private String osaDependenciesJson;
+    private Boolean avoidDuplicateProjectScans = false;
 
     public CxScanConfig() {
     }
@@ -419,5 +420,13 @@ public class CxScanConfig implements Serializable {
 
     public void setOsaGenerateJsonReport(Boolean osaGenerateJsonReport) {
         this.osaGenerateJsonReport = osaGenerateJsonReport;
+    }
+
+    public Boolean isAvoidDuplicateProjectScans() {
+        return avoidDuplicateProjectScans;
+    }
+
+    public void setAvoidDuplicateProjectScans(Boolean avoidDuplicateProjectScans) {
+        this.avoidDuplicateProjectScans = avoidDuplicateProjectScans;
     }
 }
