@@ -56,7 +56,7 @@ public class CxScanConfig implements Serializable {
     private Integer osaLowThreshold;
     private Properties osaFsaConfig; //for MAVEN
     private String osaDependenciesJson;
-
+    private Boolean avoidDuplicateProjectScans = false;
     private boolean enablePolicyViolations = false;
 
     private String cxARMUrl;
@@ -442,5 +442,14 @@ public class CxScanConfig implements Serializable {
 
     public void setCxARMUrl(String cxARMUrl) {
         this.cxARMUrl = cxARMUrl;
+    }
+
+
+    public Boolean isAvoidDuplicateProjectScans() {
+        return avoidDuplicateProjectScans;
+    }
+
+    public void setAvoidDuplicateProjectScans(Boolean avoidDuplicateProjectScans) {
+        this.avoidDuplicateProjectScans = avoidDuplicateProjectScans;
     }
 }
