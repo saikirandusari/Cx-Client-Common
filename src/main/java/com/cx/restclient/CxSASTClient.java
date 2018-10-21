@@ -84,8 +84,12 @@ class CxSASTClient {
     //CREATE SAST scan
     long createSASTScan(long projectId) throws IOException, CxClientException {
         log.info("-----------------------------------Create CxSAST Scan:------------------------------------");
-        ScanSettingResponse scanSettingResponse = getScanSetting(projectId);
 
+        if (config.isAvoidDuplicateProjectScans()!= null && config.isAvoidDuplicateProjectScans() && projectHasQueuedScans(projectId)) {
+            throw new CxClientException("\nAvoid duplicate project scans in queue\n");
+        }
+
+        ScanSettingResponse scanSettingResponse = getScanSetting(projectId);
         ScanSettingRequest scanSettingRequest = new ScanSettingRequest();
         scanSettingRequest.setEngineConfigurationId(scanSettingResponse.getEngineConfiguration().getId());//todo check for null
         scanSettingRequest.setProjectId(projectId);
@@ -194,6 +198,30 @@ class CxSASTClient {
 
 
     //**------ Private Methods  ------**//
+    private boolean projectHasQueuedScans(long projectId) throws IOException, CxClientException {
+        List<ResponseQueueScanStatus> queuedScans = getQueueScans(projectId);
+        for (ResponseQueueScanStatus scan : queuedScans) {
+            if (isStatusToAvoid(scan.getStage().getValue()) && scan.getProject().getId() == projectId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isStatusToAvoid(String status) {
+        QueueStatus qStatus =  QueueStatus.valueOf(status);
+
+        switch (qStatus) {
+            case New:
+            case PreScan:
+            case SourcePullingAndDeployment:
+            case Queued:
+            case Scanning:
+            case PostScan:
+                return true;
+        }
+        return false;
+    }
 
     private ScanSettingResponse getScanSetting(long projectId) throws IOException, CxClientException {
         return httpClient.getRequest(SAST_GET_SCAN_SETTINGS.replace("{projectId}", Long.toString(projectId)), CONTENT_TYPE_APPLICATION_JSON_V1, ScanSettingResponse.class, 200, "Scan setting", false);
@@ -224,6 +252,10 @@ class CxSASTClient {
 
     private List<LastScanResponse> getLatestSASTStatus(long projectId) throws CxClientException, IOException {
         return (List<LastScanResponse>) httpClient.getRequest(SAST_GET_PROJECT_SCANS.replace("{projectId}", Long.toString(projectId)), CONTENT_TYPE_APPLICATION_JSON_V1, LastScanResponse.class, 200, "last SAST scan ID", true);
+    }
+
+    private List<ResponseQueueScanStatus> getQueueScans(long projectId) throws IOException, CxClientException {
+        return (List<ResponseQueueScanStatus>) httpClient.getRequest(SAST_GET_QUEUED_SCANS.replace("{projectId}", Long.toString(projectId)), CONTENT_TYPE_APPLICATION_JSON_V1, ResponseQueueScanStatus.class, 200, "scans in the queue. (projectId: )" + projectId, true);
     }
 
     private CreateReportResponse createScanReport(CreateReportRequest reportRequest) throws CxClientException, IOException {
