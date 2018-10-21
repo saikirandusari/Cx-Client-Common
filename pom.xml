@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.checkmarx</groupId>
   <artifactId>cx-client-common</artifactId>
-  <version>8.80.1-SNAPSHOT</version>
+  <version>8.80.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Checkmarx Client</name>
   <description>Enables web services access Checkmarx SAST and OSA scan.</description>
