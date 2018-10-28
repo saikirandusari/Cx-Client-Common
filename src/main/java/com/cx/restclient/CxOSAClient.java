@@ -8,6 +8,8 @@ import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.osa.dto.*;
 import com.cx.restclient.osa.utils.OSAUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
 import org.whitesource.fs.ComponentScan;
@@ -69,7 +71,7 @@ class CxOSAClient {
         return sendOSAScan(osaDependenciesJson, projectId);
     }
 
-    private String resolveOSADependencies() {
+    private String resolveOSADependencies() throws JsonProcessingException {
         log.info("Scanning for CxOSA compatible files");
         Properties scannerProperties = config.getOsaFsaConfig();
         if (scannerProperties == null) {
@@ -81,8 +83,16 @@ class CxOSAClient {
                     config.getOsaRunInstall(),
                     log);
         }
+        ObjectMapper mapper = new ObjectMapper();
+        log.info("Scanner properties: " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(scannerProperties.toString()));
+        log.info("#########################################");
+        log.info("  WhiteSource- Starting FSA component scan:");
+        log.info("#########################################");
         ComponentScan componentScan = new ComponentScan(scannerProperties);
         String osaDependenciesJson = componentScan.scan();
+        log.info("##########################################");
+        log.info(" WhiteSource- FSA component scan ended.");
+        log.info("##########################################");
         OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
 
         return osaDependenciesJson;
