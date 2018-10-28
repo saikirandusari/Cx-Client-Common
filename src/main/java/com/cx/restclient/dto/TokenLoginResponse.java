@@ -1,8 +1,11 @@
 package com.cx.restclient.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Galn on 19/03/2018.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TokenLoginResponse {
     private String access_token;
     private long expires_in;

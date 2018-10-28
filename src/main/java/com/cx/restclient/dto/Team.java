@@ -1,8 +1,12 @@
 package com.cx.restclient.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Galn on 14/02/2018.
  */
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Team {
     public String id;
     public String fullName;
