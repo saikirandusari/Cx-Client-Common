@@ -16,11 +16,11 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.ssl.TrustStrategy;
 import org.slf4j.Logger;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -180,11 +180,11 @@ public class CxHttpClient {
     }
 
     private void setSSLTls(HttpClientBuilder builder, String protocol, Logger log) {
-        SSLContext sslContext = null;
         try {
-            sslContext = SSLContextBuilder.create().useProtocol(protocol).build();
-            builder.setSslcontext(sslContext);
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            final SSLContext sslContext =SSLContext.getInstance(protocol);
+            sslContext.init(null,null,null);
+            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+            } catch (NoSuchAlgorithmException | KeyManagementException e) {
             log.warn("Failed to set SSL TLS : " + e.getMessage());
         }
     }
