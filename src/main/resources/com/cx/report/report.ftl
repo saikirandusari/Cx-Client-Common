@@ -946,6 +946,12 @@
                     <#if policyViolated>
                         <li>${policyViolatedCount} ${policyLabel}  Violated</li>
                     </#if>
+                    <#if config.sastEnabled && !sast.sastResultsReady>
+                        <li>SAST Scan Failed</li>
+                    </#if>
+                    <#if  config.osaEnabled && !osa.osaResultsReady>
+                        <li>OSA Scan Failed</li>
+                    </#if>
                     <#if config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded) && config.osaEnabled && osa.osaResultsReady && osaThresholdExceeded>
                         <li>Exceeded CxSAST and CxOSA Vulnerability Thresholds</li>
                     <#elseif config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded)>
@@ -1388,15 +1394,6 @@
                                     </div>
                                     <div class="libraries-vulnerable-text">
                                         No Known Vulnerability Libraries
-                                    </div>
-                                </div>
-                                <!--osa-policy-violated-->
-                                <div class="libraries-vulnerable">
-                                    <div class="libraries-icon-number">
-                                        <div class="libraries-vulnerable-number">${osa.osaViolations?size }</div>
-                                    </div>
-                                    <div class="libraries-vulnerable-text">
-                                        Policy Violated Libraries
                                     </div>
                                 </div>
                             </div>
@@ -1966,7 +1963,7 @@
     </#if>
 
     <#if config.osaEnabled && osa.osaResultsReady>
-        <#if osa.osaHighCVEReportTable?size gt 0 || osa.osaMediumCVEReportTable?size gt 0 || osa.osaLowCVEReportTable?size gt 0 || osa.osaViolations?size gt 0>
+        <#if osa.osaHighCVEReportTable?size gt 0 || osa.osaMediumCVEReportTable?size gt 0 || osa.osaLowCVEReportTable?size gt 0>
             <div id="osa-full" class="osa-full full-results-section">
                 <div class="summary-table-row cxosa-full">
                     <div class="title-column">

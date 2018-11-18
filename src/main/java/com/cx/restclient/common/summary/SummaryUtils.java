@@ -34,92 +34,100 @@ public abstract class SummaryUtils {
         boolean policyViolated = false;
         int policyViolatedCount = 0;
         //sast:
-        if (config.getSastEnabled() && sastResults.isSastResultsReady()) {
-            boolean sastThresholdExceeded = ShragaUtils.isThresholdExceeded(config, sastResults, null, new StringBuilder());
-            boolean sastNewResultsExceeded = ShragaUtils.isThresholdForNewResultExceeded(config, sastResults, new StringBuilder());
-            templateData.put("sastThresholdExceeded", sastThresholdExceeded);
-            templateData.put("sastNewResultsExceeded", sastNewResultsExceeded);
-            buildFailed = sastThresholdExceeded || sastNewResultsExceeded;
-            //calculate sast bars:
-            float maxCount = Math.max(sastResults.getHigh(), Math.max(sastResults.getMedium(), sastResults.getLow()));
-            float sastBarNorm = maxCount * 10f / 9f;
+        if (config.getSastEnabled()) {
+            if (sastResults.isSastResultsReady()) {
+                boolean sastThresholdExceeded = ShragaUtils.isThresholdExceeded(config, sastResults, null, new StringBuilder());
+                boolean sastNewResultsExceeded = ShragaUtils.isThresholdForNewResultExceeded(config, sastResults, new StringBuilder());
+                templateData.put("sastThresholdExceeded", sastThresholdExceeded);
+                templateData.put("sastNewResultsExceeded", sastNewResultsExceeded);
+                buildFailed = sastThresholdExceeded || sastNewResultsExceeded;
+                //calculate sast bars:
+                float maxCount = Math.max(sastResults.getHigh(), Math.max(sastResults.getMedium(), sastResults.getLow()));
+                float sastBarNorm = maxCount * 10f / 9f;
 
-            //sast high bars
-            float sastHighTotalHeight = (float) sastResults.getHigh() / sastBarNorm * 238f;
-            float sastHighNewHeight = calculateNewBarHeight(sastResults.getNewHigh(), sastResults.getHigh(), sastHighTotalHeight);
-            float sastHighRecurrentHeight = sastHighTotalHeight - sastHighNewHeight;
-            templateData.put("sastHighTotalHeight", sastHighTotalHeight);
-            templateData.put("sastHighNewHeight", sastHighNewHeight);
-            templateData.put("sastHighRecurrentHeight", sastHighRecurrentHeight);
+                //sast high bars
+                float sastHighTotalHeight = (float) sastResults.getHigh() / sastBarNorm * 238f;
+                float sastHighNewHeight = calculateNewBarHeight(sastResults.getNewHigh(), sastResults.getHigh(), sastHighTotalHeight);
+                float sastHighRecurrentHeight = sastHighTotalHeight - sastHighNewHeight;
+                templateData.put("sastHighTotalHeight", sastHighTotalHeight);
+                templateData.put("sastHighNewHeight", sastHighNewHeight);
+                templateData.put("sastHighRecurrentHeight", sastHighRecurrentHeight);
             /*if (config.getEnablePolicyViolations() && !sastResults.getSastViolations().isEmpty()){
                 policyViolated = true;
             }*/
 
-            //sast medium bars
-            float sastMediumTotalHeight = (float) sastResults.getMedium() / sastBarNorm * 238f;
-            float sastMediumNewHeight = calculateNewBarHeight(sastResults.getNewMedium(), sastResults.getMedium(), sastMediumTotalHeight);
-            float sastMediumRecurrentHeight = sastMediumTotalHeight - sastMediumNewHeight;
-            templateData.put("sastMediumTotalHeight", sastMediumTotalHeight);
-            templateData.put("sastMediumNewHeight", sastMediumNewHeight);
-            templateData.put("sastMediumRecurrentHeight", sastMediumRecurrentHeight);
+                //sast medium bars
+                float sastMediumTotalHeight = (float) sastResults.getMedium() / sastBarNorm * 238f;
+                float sastMediumNewHeight = calculateNewBarHeight(sastResults.getNewMedium(), sastResults.getMedium(), sastMediumTotalHeight);
+                float sastMediumRecurrentHeight = sastMediumTotalHeight - sastMediumNewHeight;
+                templateData.put("sastMediumTotalHeight", sastMediumTotalHeight);
+                templateData.put("sastMediumNewHeight", sastMediumNewHeight);
+                templateData.put("sastMediumRecurrentHeight", sastMediumRecurrentHeight);
 
-            //sast low bars
-            float sastLowTotalHeight = (float) sastResults.getLow() / sastBarNorm * 238f;
-            float sastLowNewHeight = calculateNewBarHeight(sastResults.getNewLow(), sastResults.getLow(), sastLowTotalHeight);
-            float sastLowRecurrentHeight = sastLowTotalHeight - sastLowNewHeight;
-            templateData.put("sastLowTotalHeight", sastLowTotalHeight);
-            templateData.put("sastLowNewHeight", sastLowNewHeight);
-            templateData.put("sastLowRecurrentHeight", sastLowRecurrentHeight);
-        }
-
-        //osa:
-        if (config.getOsaEnabled() && osaResults.isOsaResultsReady()) {
-            boolean osaThresholdExceeded = ShragaUtils.isThresholdExceeded(config, null, osaResults, new StringBuilder());
-            templateData.put("osaThresholdExceeded", osaThresholdExceeded);
-            buildFailed |= osaThresholdExceeded;
-
-            //calculate osa bars:
-            OSASummaryResults osaSummaryResults = osaResults.getResults();
-            int osaHigh = osaSummaryResults.getTotalHighVulnerabilities();
-            int osaMedium = osaSummaryResults.getTotalMediumVulnerabilities();
-            int osaLow = osaSummaryResults.getTotalLowVulnerabilities();
-            float osaMaxCount = Math.max(osaHigh, Math.max(osaMedium, osaLow));
-            float osaBarNorm = osaMaxCount * 10f / 9f;
-
-            float osaHighTotalHeight = (float) osaHigh / osaBarNorm * 238f;
-            float osaMediumTotalHeight = (float) osaMedium / osaBarNorm * 238f;
-            float osaLowTotalHeight = (float) osaLow / osaBarNorm * 238f;
-
-            templateData.put("osaHighTotalHeight", osaHighTotalHeight);
-            templateData.put("osaMediumTotalHeight", osaMediumTotalHeight);
-            templateData.put("osaLowTotalHeight", osaLowTotalHeight);
-        }
-
-
-        if (config.getEnablePolicyViolations()) {
-            if (config.getSastEnabled() && sastResults.getSastPolicies().size() > 0) {
-                policyViolated = true;
-                policyViolatedCount++;
+                //sast low bars
+                float sastLowTotalHeight = (float) sastResults.getLow() / sastBarNorm * 238f;
+                float sastLowNewHeight = calculateNewBarHeight(sastResults.getNewLow(), sastResults.getLow(), sastLowTotalHeight);
+                float sastLowRecurrentHeight = sastLowTotalHeight - sastLowNewHeight;
+                templateData.put("sastLowTotalHeight", sastLowTotalHeight);
+                templateData.put("sastLowNewHeight", sastLowNewHeight);
+                templateData.put("sastLowRecurrentHeight", sastLowRecurrentHeight);
+            } else {
+                buildFailed = true;
             }
-            if (config.getOsaEnabled() && osaResults.getOsaPolicies().size() > 0) {
-                policyViolated = true;
-                policyViolatedCount++;
-            }
-            String policyLabel = policyViolatedCount == 1 ? "Policy" : "Policies";
-            templateData.put("policyLabel", policyLabel);
-            templateData.put("policyViolatedCount", policyViolatedCount);
         }
 
+            //osa:
+            if (config.getOsaEnabled()) {
+                if (osaResults.isOsaResultsReady()) {
+                    boolean osaThresholdExceeded = ShragaUtils.isThresholdExceeded(config, null, osaResults, new StringBuilder());
+                    templateData.put("osaThresholdExceeded", osaThresholdExceeded);
+                    buildFailed |= osaThresholdExceeded;
 
-        templateData.put("policyViolated", policyViolated);
-        buildFailed |= policyViolated;
-        templateData.put("buildFailed", buildFailed);
+                    //calculate osa bars:
+                    OSASummaryResults osaSummaryResults = osaResults.getResults();
+                    int osaHigh = osaSummaryResults.getTotalHighVulnerabilities();
+                    int osaMedium = osaSummaryResults.getTotalMediumVulnerabilities();
+                    int osaLow = osaSummaryResults.getTotalLowVulnerabilities();
+                    float osaMaxCount = Math.max(osaHigh, Math.max(osaMedium, osaLow));
+                    float osaBarNorm = osaMaxCount * 10f / 9f;
 
-        //generate the report:
-        StringWriter writer = new StringWriter();
-        template.process(templateData, writer);
-        return writer.toString();
-    }
+                    float osaHighTotalHeight = (float) osaHigh / osaBarNorm * 238f;
+                    float osaMediumTotalHeight = (float) osaMedium / osaBarNorm * 238f;
+                    float osaLowTotalHeight = (float) osaLow / osaBarNorm * 238f;
+
+                    templateData.put("osaHighTotalHeight", osaHighTotalHeight);
+                    templateData.put("osaMediumTotalHeight", osaMediumTotalHeight);
+                    templateData.put("osaLowTotalHeight", osaLowTotalHeight);
+                } else {
+                    buildFailed = true;
+                }
+            }
+
+
+            if (config.getEnablePolicyViolations()) {
+                if (config.getSastEnabled() && sastResults.getSastPolicies().size() > 0) {
+                    policyViolated = true;
+                    policyViolatedCount++;
+                }
+                if (config.getOsaEnabled() && osaResults.getOsaPolicies().size() > 0) {
+                    policyViolated = true;
+                    policyViolatedCount++;
+                }
+                String policyLabel = policyViolatedCount == 1 ? "Policy" : "Policies";
+                templateData.put("policyLabel", policyLabel);
+                templateData.put("policyViolatedCount", policyViolatedCount);
+            }
+
+
+            templateData.put("policyViolated", policyViolated);
+            buildFailed |= policyViolated;
+            templateData.put("buildFailed", buildFailed);
+
+            //generate the report:
+            StringWriter writer = new StringWriter();
+            template.process(templateData, writer);
+            return writer.toString();
+        }
 
     private static float calculateNewBarHeight(int newCount, int count, float totalHeight) {
         int minimalVisibilityHeight = 5;
