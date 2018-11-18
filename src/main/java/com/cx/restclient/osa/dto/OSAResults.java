@@ -1,6 +1,6 @@
 package com.cx.restclient.osa.dto;
 
-import com.cx.restclient.cxArm.dto.Violation;
+import com.cx.restclient.cxArm.dto.Policy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.cx.restclient.common.ShragaUtils.formatDate;
+import static com.cx.restclient.cxArm.utils.CxARMUtils.getPolicyList;
 
 /**
  * Created by Galn on 07/02/2018.
@@ -28,9 +29,7 @@ public class OSAResults implements Serializable {
     private String scanStartTime;
     private String scanEndTime;
 
-    private List<String> osaPolicies = new ArrayList<>();
-    private List<Violation> osaViolations = new ArrayList<>();
-
+    private List<Policy> osaPolicies = new ArrayList<>();
 
     public OSAResults() {
     }
@@ -182,23 +181,15 @@ public class OSAResults implements Serializable {
         this.scanEndTime = scanEndTime;
     }
 
-    public List<Violation> getOsaViolations() {
-        return osaViolations;
+    public void addPolicy(Policy policy) {
+        this.osaPolicies.addAll(getPolicyList(policy));
     }
 
-    public void setOsaViolations(List<Violation> osaViolations) {
-        this.osaViolations = osaViolations;
-    }
-
-    public void addAllViolations(List<Violation> violations) {
-        this.osaViolations.addAll(violations);
-    }
-
-    public List<String> getOsaPolicies() {
+    public List<Policy> getOsaPolicies() {
         return osaPolicies;
     }
 
-    public void setOsaPolicies(List<String> osaPolicies) {
+    public void setOsaPolicies(List<Policy> osaPolicies) {
         this.osaPolicies = osaPolicies;
     }
 }

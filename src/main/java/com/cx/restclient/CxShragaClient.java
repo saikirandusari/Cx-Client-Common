@@ -11,6 +11,7 @@ import com.cx.restclient.exception.CxHTTPClientException;
 import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.sast.dto.*;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
@@ -121,13 +122,32 @@ public class CxShragaClient {
     }
 
     public boolean isPolicyViolated(StringBuilder failDescription) {
-        boolean isPolicyViolated = config.getEnablePolicyViolations() && osaResults.getOsaViolations().size() > 0;
+        boolean isPolicyViolated = config.getEnablePolicyViolations() && osaResults.getOsaPolicies().size() > 0;
         if(isPolicyViolated) {
             failDescription.append(CxGlobalMessage.PROJECT_POLICY_VIOLATED_STATUS.getMessage()).append("\n");
         }
         return isPolicyViolated;
     }
 
+    public void printIsProjectViolated(){
+        log.info("-----------------------------------------------------------------------------------------");
+        if (config.getEnablePolicyViolations()) {
+            if (sastResults.getSastPolicies().isEmpty() && osaResults.getOsaPolicies().isEmpty()){
+                log.info(CxGlobalMessage.PROJECT_POLICY_COMPLAINT_STATUS.getMessage());
+                log.info("-----------------------------------------------------------------------------------------");
+            }else {
+                log.info(CxGlobalMessage.PROJECT_POLICY_VIOLATED_STATUS.getMessage());
+                if (!sastResults.getSastPolicies().isEmpty()) {
+
+                    log.info("SAST violated policies names: " + sastResults.getSastPoliciesNames());
+                }
+                if (!osaResults.getOsaPolicies().isEmpty()) {
+                    log.info("OSA violated policies names: " + StringUtils.join(osaResults.getOsaPolicies(), ','));
+                }
+                log.info("-----------------------------------------------------------------------------------------");
+            }
+        }
+    }
 
     private CxArmConfig getCxARMConfig() throws IOException, CxClientException {
         return httpClient.getRequest(CX_ARM_URL, CONTENT_TYPE_APPLICATION_JSON_V1, CxArmConfig.class, 200, "CxARM URL", false);

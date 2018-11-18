@@ -34,7 +34,7 @@
         background-color: #372F51;
     }
 
-    .cx-report .legend-color-box.new-legend-color  {
+    .cx-report .legend-color-box.new-legend-color {
         background: linear-gradient(45deg, white 25%, #373050 25%, #373050 50%, white 50%, white 75%, #373050 75%);
         background-size: 4px 4px;
     }
@@ -371,10 +371,9 @@
         background-color: #373050;
     }
 
-
-     .threshold-exceeded,
-     .threshold-compliance,
-     .policy-compliance{
+    .threshold-exceeded,
+    .threshold-compliance,
+    .policy-compliance {
         min-width: 100%;
         display: inline-flex;
         font-size: 14px;
@@ -383,21 +382,21 @@
         padding: 4px 9px;
     }
 
-     .threshold-exceeded {
+    .threshold-exceeded {
         background-color: #DA2945;
         color: white;
         border-radius: 2px;
         font-weight: bold;
     }
-    .policy-compliance{
+
+    .policy-compliance {
         border-radius: 2px;
         font-weight: bold;
     }
 
-
     .threshold-exceeded-icon,
     .threshold-compliance-icon,
-    .policy-compliance{
+    .policy-compliance {
         display: inline-flex;
         padding-right: 6px;
         margin: auto 0;
@@ -426,10 +425,9 @@
         overflow: hidden;
     }
 
-    .cx-report .results-report .libraries-vulnerable-number{
+    .cx-report .results-report .libraries-vulnerable-number {
         font-size: 18px;
     }
-
 
     .cx-report .results-report .libraries-vulnerable-text {
         font-size: 12px;
@@ -627,6 +625,7 @@
     .cx-report .html-report.download-icon {
         margin-right: 6px;
     }
+
     .cx-report .pdf-report.download-icon, {
         margin-right: 6px;
         border-left: solid 1px #d5d5d
@@ -808,6 +807,7 @@
         margin-top: -3px;
         margin-left: -7px;
     }
+
     .scan-status .content-scan-status li {
         margin-top: 6px;
         margin-bottom: 6px;
@@ -826,7 +826,6 @@
         padding-top: 10px;
     }
 
-
     .scan-status .indicator-scan-status.success {
         background-color: #38d87d;
     }
@@ -839,7 +838,7 @@
         margin-top: 5px;
         text-align: center;
         border: 1px solid #ffffff;
-        padding-left: 5px ;
+        padding-left: 5px;
     }
 
     .scan-status .indicator-scan-status.success .icon-scan-status {
@@ -849,9 +848,6 @@
     .scan-status .indicator-scan-status.failure .icon-scan-status {
         border: 1px solid #DD3D56;
     }
-
-
-
 
     .scan-status .title-scan-status {
         font-size: 12px;
@@ -909,91 +905,96 @@
 </#macro>
 
 
-
 <div id="cx-report" class="cx-report">
     <div class="report-title">
         <div class="cx-report-title">Checkmarx Report</div>
 
 
-        <#if buildFailed>
-           <div class='scan-status failure'>
-               <div class='indicator-scan-status failure'>
-                   <div class='icon-scan-status'>
-                       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="22px" height="22px" viewBox="0 0 22 22" version="1.1">
-                           <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
-                           <title>error</title>
-                           <desc>Created with Sketch.</desc>
-                           <defs/>
-                           <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                               <g id="Jenkins-eport-policy-stat" transform="translate(-90.000000, -32.000000)" fill="#FFFFFF">
-                                   <g id="Group-13" transform="translate(79.000000, 24.000000)">
-                                       <g id="Group-15-Copy">
-                                           <g id="Group-14" transform="translate(11.000000, 8.000000)">
-                                               <g id="error">
-                                                   <path d="M8.88864088,11.0488591 L5.97182541,13.9656746 L7.91636906,15.9102182 L10.8331845,12.9934028 L13.75,15.9102182 L15.6945436,13.9656746 L12.7777282,11.0488591 L15.6945436,8.13204365 L13.75,6.1875 L10.8331845,9.10431547 L7.91636906,6.1875 L5.97182541,8.13204365 L8.88864088,11.0488591 Z M11,22 C4.92486775,22 0,17.0751322 0,11 C0,4.92486775 4.92486775,0 11,0 C17.0751322,0 22,4.92486775 22,11 C22,17.0751322 17.0751322,22 11,22 Z" id="Combined-Shape"/>
-                                               </g>
-                                           </g>
-                                       </g>
-                                   </g>
-                               </g>
-                           </g>
-                       </svg>
-                   </div>
-               </div>
-               <div class='content-scan-status'>
-                   <p class="title-scan-status failure">
-                       Checkmarx scan found the following issues:
-                   </p>
-                   <ul>
-                   <#if policyViolated>
-                       <li>${osa.osaPolicies?size} ${policyLabel} Violated</li>
-                   </#if>
+    <#if buildFailed>
+        <div class='scan-status failure'>
+            <div class='indicator-scan-status failure'>
+                <div class='icon-scan-status'>
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="22px"
+                         height="22px" viewBox="0 0 22 22" version="1.1">
+                        <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+                        <title>error</title>
+                        <desc>Created with Sketch.</desc>
+                        <defs/>
+                        <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g id="Jenkins-eport-policy-stat" transform="translate(-90.000000, -32.000000)"
+                               fill="#FFFFFF">
+                                <g id="Group-13" transform="translate(79.000000, 24.000000)">
+                                    <g id="Group-15-Copy">
+                                        <g id="Group-14" transform="translate(11.000000, 8.000000)">
+                                            <g id="error">
+                                                <path d="M8.88864088,11.0488591 L5.97182541,13.9656746 L7.91636906,15.9102182 L10.8331845,12.9934028 L13.75,15.9102182 L15.6945436,13.9656746 L12.7777282,11.0488591 L15.6945436,8.13204365 L13.75,6.1875 L10.8331845,9.10431547 L7.91636906,6.1875 L5.97182541,8.13204365 L8.88864088,11.0488591 Z M11,22 C4.92486775,22 0,17.0751322 0,11 C0,4.92486775 4.92486775,0 11,0 C17.0751322,0 22,4.92486775 22,11 C22,17.0751322 17.0751322,22 11,22 Z"
+                                                      id="Combined-Shape"/>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+            <div class='content-scan-status'>
+                <p class="title-scan-status failure">
+                    Checkmarx scan found the following issues:
+                </p>
+                <ul>
+                    <#if policyViolated>
+                        <li>${policyViolatedCount} ${policyLabel}  Violated</li>
+                    </#if>
                     <#if config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded) && config.osaEnabled && osa.osaResultsReady && osaThresholdExceeded>
                         <li>Exceeded CxSAST and CxOSA Vulnerability Thresholds</li>
-                   <#elseif config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded)>
-                       <li>Exceeded CxSAST Vulnerability Threshold</li>
-                   <#elseif config.osaEnabled && osa.osaResultsReady && osaThresholdExceeded>
-                       <li>Exceeded CxOSA Vulnerability Threshold</li>
-                   </#if>
-                   </ul>
-               </div>
-           </div>
-       <#else>
-           <div class='scan-status success'>
-               <div class='indicator-scan-status success'>
-                   <div class='icon-scan-status'>
-                       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                           <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
-                           <title>OK</title>
-                           <desc>Created with Sketch.</desc>
-                           <defs/>
-                           <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                               <g id="Jenkins-eport-policy-stat" transform="translate(-89.000000, -130.000000)">
-                                   <g id="Group-13-Copy" transform="translate(79.000000, 124.000000)">
-                                       <g id="Group-15-Copy">
-                                           <g id="Group-14" transform="translate(10.000000, 6.000000)">
-                                               <g id="disconected">
-                                                   <g id="OK">
-                                                       <circle id="Oval" fill="#FFFFFF" cx="12" cy="12" r="12"/>
-                                                       <path d="M9.45495129,11.7049513 L18.4549513,11.7049513 L18.4549513,14.7049513 L6.45495129,14.7049513 L6.45495129,11.7049513 L6.45495129,7.20495129 L9.45495129,7.20495129 L9.45495129,11.7049513 Z" id="Combined-Shape" fill="#38D87D" transform="translate(12.454951, 10.954951) rotate(-50.000000) translate(-12.454951, -10.954951) "/>
-                                                   </g>
-                                               </g>
-                                           </g>
-                                       </g>
-                                   </g>
-                               </g>
-                           </g>
-                       </svg>
-                   </div>
-               </div>
-               <div class='content-scan-status'>
-                   <p class="title-scan-status success">
-                       Checkmarx Scan Passed
-                   </p>
-               </div>
-           </div>
+                    <#elseif config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded)>
+                        <li>Exceeded CxSAST Vulnerability Threshold</li>
+                    <#elseif config.osaEnabled && osa.osaResultsReady && osaThresholdExceeded>
+                        <li>Exceeded CxOSA Vulnerability Threshold</li>
+                    </#if>
+                </ul>
+            </div>
+        </div>
+    <#else>
+        <div class='scan-status success'>
+            <div class='indicator-scan-status success'>
+                <div class='icon-scan-status'>
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                         height="24px" viewBox="0 0 24 24" version="1.1">
+                        <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+                        <title>OK</title>
+                        <desc>Created with Sketch.</desc>
+                        <defs/>
+                        <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g id="Jenkins-eport-policy-stat" transform="translate(-89.000000, -130.000000)">
+                                <g id="Group-13-Copy" transform="translate(79.000000, 124.000000)">
+                                    <g id="Group-15-Copy">
+                                        <g id="Group-14" transform="translate(10.000000, 6.000000)">
+                                            <g id="disconected">
+                                                <g id="OK">
+                                                    <circle id="Oval" fill="#FFFFFF" cx="12" cy="12" r="12"/>
+                                                    <path d="M9.45495129,11.7049513 L18.4549513,11.7049513 L18.4549513,14.7049513 L6.45495129,14.7049513 L6.45495129,11.7049513 L6.45495129,7.20495129 L9.45495129,7.20495129 L9.45495129,11.7049513 Z"
+                                                          id="Combined-Shape" fill="#38D87D"
+                                                          transform="translate(12.454951, 10.954951) rotate(-50.000000) translate(-12.454951, -10.954951) "/>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+            <div class='content-scan-status'>
+                <p class="title-scan-status success">
+                    Checkmarx Scan Passed
+                </p>
+            </div>
+        </div>
 
-       </#if>
+    </#if>
 
 
     </div>
@@ -1013,7 +1014,7 @@
                                         <div class="results-link-icon link-icon">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="14"
                                                  viewBox="0 0 12 14">
-                                                 viewBox="0 0 12 14">
+                                                viewBox="0 0 12 14">
                                                 <g fill="none" fill-rule="evenodd">
                                                     <circle stroke="#4A90E2" stroke-width="2" cx="5" cy="5"
                                                             r="4"></circle>
@@ -1958,66 +1959,6 @@
                                 </table>
                             </div>
                         </#if>
-
-                        <#if sast.sastViolations?size gt 0>
-                            <div id="sast-policy-violations-container">
-                                <div class="full-severity-title">
-                                    <div class="severity-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="19px" height="22px" viewBox="0 0 19 22" version="1.1">
-                                            <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
-                                            <title>Policy violation</title>
-                                            <desc>Created with Sketch.</desc>
-                                            <defs>
-                                                <path d="M0,0 L15,0 L15,17 L0,17 L0,0 Z M3,1 L3,3 L12,3 L12,1 L3,1 Z M14,11 L14,11 C17.3137085,11 20,13.6862915 20,17 L20,17 C20,20.3137085 17.3137085,23 14,23 L14,23 C10.6862915,23 8,20.3137085 8,17 L8,17 C8,13.6862915 10.6862915,11 14,11 Z" id="path-1"/>
-                                            </defs>
-                                            <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                <g id="Jenkins-eport" transform="translate(-525.000000, -2433.000000)">
-                                                    <g id="Osa-Full" transform="translate(272.000000, 1523.000000)">
-                                                        <g id="high-copy-2" transform="translate(249.000000, 909.000000)">
-                                                            <g id="TTL" transform="translate(4.000000, 0.000000)">
-                                                                <g id="Policy-mgmt" transform="translate(0.000000, 1.000000)">
-                                                                    <mask id="mask-2" fill="white">
-                                                                        <use xlink:href="#path-1"/>
-                                                                    </mask>
-                                                                    <g id="Mask"/>
-                                                                    <rect id="Rectangle-6" stroke="#373050" stroke-width="2" mask="url(#mask-2)" x="1" y="2" width="13" height="14"/>
-                                                                    <rect id="Rectangle-2" fill="#373050" mask="url(#mask-2)" x="4" y="6" width="7" height="1"/>
-                                                                    <rect id="Rectangle-2-Copy" fill="#373050" mask="url(#mask-2)" x="4" y="9" width="7" height="1"/>
-                                                                    <rect id="Rectangle-2-Copy-2" fill="#373050" mask="url(#mask-2)" x="4" y="12" width="7" height="1"/>
-                                                                    <rect id="Rectangle-2-Copy-3" fill="#373050" x="5" y="0" width="5" height="3"/>
-                                                                    <g id="Alert_general_hover" transform="translate(9.000000, 12.000000)">
-                                                                        <rect id="Rectangle-6-Copy" fill="#DA2946" x="0" y="0" width="10" height="10" rx="5"/>
-                                                                        <rect id="Rectangle-7" fill="#FFFFFF" x="4" y="2" width="2" height="4"/>
-                                                                        <rect id="Rectangle-7-Copy" fill="#FFFFFF" x="4" y="7" width="2" height="1"/>
-                                                                    </g>
-                                                                </g>
-                                                            </g>
-                                                        </g>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </div>
-                                    <div class="severity-title-name">Policy Violations</div>
-                                    <div class="severity-count">${sast.sastViolations?size}</div>
-                                </div>
-                               <!-- <table id="sast-policy-violations-table" class="cve-table sast-cve-table osa-policy-violations">
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Policy</th>
-                                        <th>Rule</th>
-                                        <th>Detection Date</th>
-                                    </tr>
-                                    <#list sast.sastViolations as sastViolation>
-                                        <td>${sastViolation.name}</td>
-                                        <td>${sastViolation.policyName}</td>
-                                        <td>${sastViolation.ruleName}</td>
-                                        <td>${sastViolation.detectionDate}</td>
-                                        </tr>
-                                    </#list>
-                                </table>-->
-                            </div>
-                        </#if>
                     </div>
                 </div>
             </div>
@@ -2184,7 +2125,8 @@
                                     <div class="full-start-end-text">
                                         Libraries:
                                     </div>
-                                    <div class="full-start-end-date" id="osa-full-files">${osa.results.totalLibraries}</div>
+                                    <div class="full-start-end-date"
+                                         id="osa-full-files">${osa.results.totalLibraries}</div>
                                 </div>
                             </div>
                         </div>
@@ -2358,71 +2300,136 @@
                             </div>
                         </#if>
 
-                        <#if osa.osaViolations?size gt 0>
-                            <div id="osa-policy-violations-container">
-                                <div class="full-severity-title">
-                                    <div class="severity-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="19px" height="22px" viewBox="0 0 19 22" version="1.1">
-                                            <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
-                                            <title>Policy violation</title>
-                                            <desc>Created with Sketch.</desc>
-                                            <defs>
-                                                <path d="M0,0 L15,0 L15,17 L0,17 L0,0 Z M3,1 L3,3 L12,3 L12,1 L3,1 Z M14,11 L14,11 C17.3137085,11 20,13.6862915 20,17 L20,17 C20,20.3137085 17.3137085,23 14,23 L14,23 C10.6862915,23 8,20.3137085 8,17 L8,17 C8,13.6862915 10.6862915,11 14,11 Z" id="path-1"/>
-                                            </defs>
-                                            <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                <g id="Jenkins-eport" transform="translate(-525.000000, -2433.000000)">
-                                                    <g id="Osa-Full" transform="translate(272.000000, 1523.000000)">
-                                                        <g id="high-copy-2" transform="translate(249.000000, 909.000000)">
-                                                            <g id="TTL" transform="translate(4.000000, 0.000000)">
-                                                                <g id="Policy-mgmt" transform="translate(0.000000, 1.000000)">
-                                                                    <mask id="mask-2" fill="white">
-                                                                        <use xlink:href="#path-1"/>
-                                                                    </mask>
-                                                                    <g id="Mask"/>
-                                                                    <rect id="Rectangle-6" stroke="#373050" stroke-width="2" mask="url(#mask-2)" x="1" y="2" width="13" height="14"/>
-                                                                    <rect id="Rectangle-2" fill="#373050" mask="url(#mask-2)" x="4" y="6" width="7" height="1"/>
-                                                                    <rect id="Rectangle-2-Copy" fill="#373050" mask="url(#mask-2)" x="4" y="9" width="7" height="1"/>
-                                                                    <rect id="Rectangle-2-Copy-2" fill="#373050" mask="url(#mask-2)" x="4" y="12" width="7" height="1"/>
-                                                                    <rect id="Rectangle-2-Copy-3" fill="#373050" x="5" y="0" width="5" height="3"/>
-                                                                    <g id="Alert_general_hover" transform="translate(9.000000, 12.000000)">
-                                                                        <rect id="Rectangle-6-Copy" fill="#DA2946" x="0" y="0" width="10" height="10" rx="5"/>
-                                                                        <rect id="Rectangle-7" fill="#FFFFFF" x="4" y="2" width="2" height="4"/>
-                                                                        <rect id="Rectangle-7-Copy" fill="#FFFFFF" x="4" y="7" width="2" height="1"/>
-                                                                    </g>
-                                                                </g>
-                                                            </g>
-                                                        </g>
-                                                    </g>
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </div>
-                                    <div class="severity-title-name">Policy Violations</div>
-                                    <div class="severity-count">${osa.osaViolations?size}</div>
-                                </div>
-                                <table id="osa-policy-violations-table" class="cve-table sast-cve-table osa-policy-violations">
-                                    <tr>
-                                        <th>Library Name</th>
-                                        <th>Policy</th>
-                                        <th>Rule</th>
-                                        <th>Detection Date</th>
-                                    </tr>
-                                    <#list osa.osaViolations as osaViolation>
-                                        <td>${osaViolation.source}</td>
-                                        <td>${osaViolation.policyName}</td>
-                                        <td id="ruleName">${osaViolation.ruleName}</td>
-                                        <td>${osaViolation.detectionDate}</td>
-                                    </tr>
-                                    </#list>
-                                </table>
-                            </div>
-                        </#if>
+
                     </div>
                 </div>
             </div>
         </#if>
     </#if>
 
+    <#if (config.osaEnabled || config.sastEnabled) &&  policyViolated>
+
+        <#if policyViolatedCount gt 0>
+        <div class="osa-full full-results-section">
+        <div class="summary-table-row cxosa-full">
+            <div class="title-column">
+                <div class="summary-title">
+                    <div class="sum1">Policy</div>
+                    <div class="sum1">Management</div>
+                </div>
+                <div class="detailed-report">
+                    <div class="full-downloads osa-downloads">
+                        <div class="report-link">
+                            <a href="${config.cxARMUrl}/cxarm/webclient/" class="html-report" id="arm-html-link">
+                                <div class="link-to-result">
+                                    <div class="results-link-icon link-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="14"
+                                             viewBox="0 0 12 14">
+                                            <title>analyze</title>
+                                            <g fill="none" fill-rule="evenodd">
+                                                <circle stroke="#4A90E2" stroke-width="2" cx="5" cy="5" r="4"/>
+                                                <path fill="#4A90E2"
+                                                      d="M6.366 8.366l1.732-1 3.268 5.66-1.732 1z"/>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    <div class="link-text">Analyze Results</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-column">
+            <div id="osa-policy-violations-container">
+                <div class="full-severity-title">
+                    <div class="severity-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="19px"
+                             height="22px" viewBox="0 0 19 22" version="1.1">
+                            <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+                            <title>Policy violation</title>
+                            <desc>Created with Sketch.</desc>
+                            <defs>
+                                <path d="M0,0 L15,0 L15,17 L0,17 L0,0 Z M3,1 L3,3 L12,3 L12,1 L3,1 Z M14,11 L14,11 C17.3137085,11 20,13.6862915 20,17 L20,17 C20,20.3137085 17.3137085,23 14,23 L14,23 C10.6862915,23 8,20.3137085 8,17 L8,17 C8,13.6862915 10.6862915,11 14,11 Z"
+                                      id="path-1"/>
+                            </defs>
+                            <g id="Policy-mgmt" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <g id="Jenkins-eport" transform="translate(-525.000000, -2433.000000)">
+                                    <g id="Osa-Full" transform="translate(272.000000, 1523.000000)">
+                                        <g id="high-copy-2" transform="translate(249.000000, 909.000000)">
+                                            <g id="TTL" transform="translate(4.000000, 0.000000)">
+                                                <g id="Policy-mgmt" transform="translate(0.000000, 1.000000)">
+                                                    <mask id="mask-2" fill="white">
+                                                        <use xlink:href="#path-1"/>
+                                                    </mask>
+                                                    <g id="Mask"/>
+                                                    <rect id="Rectangle-6" stroke="#373050" stroke-width="2"
+                                                          mask="url(#mask-2)" x="1" y="2" width="13" height="14"/>
+                                                    <rect id="Rectangle-2" fill="#373050" mask="url(#mask-2)" x="4"
+                                                          y="6" width="7" height="1"/>
+                                                    <rect id="Rectangle-2-Copy" fill="#373050" mask="url(#mask-2)" x="4"
+                                                          y="9" width="7" height="1"/>
+                                                    <rect id="Rectangle-2-Copy-2" fill="#373050" mask="url(#mask-2)"
+                                                          x="4" y="12" width="7" height="1"/>
+                                                    <rect id="Rectangle-2-Copy-3" fill="#373050" x="5" y="0" width="5"
+                                                          height="3"/>
+                                                    <g id="Alert_general_hover"
+                                                       transform="translate(9.000000, 12.000000)">
+                                                        <rect id="Rectangle-6-Copy" fill="#DA2946" x="0" y="0"
+                                                              width="10" height="10" rx="5"/>
+                                                        <rect id="Rectangle-7" fill="#FFFFFF" x="4" y="2" width="2"
+                                                              height="4"/>
+                                                        <rect id="Rectangle-7-Copy" fill="#FFFFFF" x="4" y="7" width="2"
+                                                              height="1"/>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="severity-title-name">Policy Violations</div>
+                    <div class="severity-count">${policyViolatedCount}</div>
+                </div>
+                <table id="policy-violations-table" class="cve-table sast-cve-table osa-policy-violations">
+                    <tr>
+                        <th>Policy</th>
+                        <th>Rule</th>
+                        <th>Type</th>
+                        <th># of Rule Violations</th>
+                        <th>First Detection Date</th>
+                    </tr>
+                    <#if sast.sastPolicies?size gt 0>
+                        <#list sast.sastPolicies as sastPoliciy>
+                            <td>${sastPoliciy.policyName}</td>
+                            <td id="ruleName">${sastPoliciy.ruleName}</td>
+                            <td>SAST</td>
+                            <td>${sastPoliciy.violations?size}</td>
+                            <td>${sastPoliciy.firstDetectionDate}</td>
+                        </#list>
+                    </#if>
+                    <#if osa.osaPolicies?size gt 0>
+                        <#list osa.osaPolicies as osaPolicy>
+                            <td>${osaPolicy.policyName}</td>
+                            <td id="ruleName">${osaPolicy.ruleName}</td>
+                            <td>OSA</td>
+                            <td>${osaPolicy.violations?size}</td>
+                            <td>${osaPolicy.firstDetectionDate}</td>
+                        </#list>
+                    </#if>
+                </table>
+            </div>
+        </#if>
+
+    </div>
+    </div>
+    </div>
+
+
+
+    </#if>
     </div>
 </div>
 

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Properties;
 
 import static com.cx.restclient.cxArm.dto.CxProviders.OPEN_SOURCE;
-import static com.cx.restclient.cxArm.utils.CxARMUtils.getProjectViolations;
+import static com.cx.restclient.cxArm.utils.CxARMUtils.getProjectViolatedPolicies;
 import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON_V1;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.convertToJson;
 import static com.cx.restclient.osa.utils.OSAParam.*;
@@ -134,10 +134,8 @@ class CxOSAClient {
 
     private void resolveOSAViolation(OSAResults osaResults, long projectId){
         try {
-            for (Policy policy : getProjectViolations(httpClient, config.getCxARMUrl(), projectId, OPEN_SOURCE.value())) {
-                osaResults.getOsaPolicies().add(policy.getPolicyName());
-                osaResults.addAllViolations(policy.getViolations());
-            }
+            getProjectViolatedPolicies(httpClient, config.getCxARMUrl(), projectId, OPEN_SOURCE.value())
+                    .forEach(osaResults::addPolicy);
         }catch (Exception ex) {
             log.error("CxARM is not available. Policy violations for OSA cannot be calculated: " + ex.getMessage());
         }

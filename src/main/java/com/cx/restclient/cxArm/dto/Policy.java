@@ -13,7 +13,21 @@ import java.util.List;
 public class Policy implements Serializable {
     long policyId;
     String policyName;
+    String ruleName;
+    String firstDetectionDate;
      List<Violation> violations = new ArrayList<Violation>();
+
+    public Policy() {
+    }
+
+
+    public Policy(long policyId, String policyName, String ruleName, List<Violation> violations, String firstDate) {
+        this.policyId = policyId;
+        this.policyName = policyName;
+        this.ruleName = ruleName;
+        this.violations = violations;
+        this.firstDetectionDate = firstDate;
+    }
 
     public long getPolicyId() {
         return policyId;
@@ -36,11 +50,22 @@ public class Policy implements Serializable {
     }
 
     public void setViolations(List<Violation> violations) {
-        //Add the policy name to the violations for the report
-            for(Violation violation: violations){
-                violation.setPolicyName(policyName);
-            }
-
         this.violations = violations;
+    }
+
+    public String getRuleName() {
+        return ruleName;
+    }
+
+    public void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
+    }
+
+    public String getFirstDetectionDate() {
+        return firstDetectionDate;
+    }
+
+    public void setFirstDetectionDate(String firstDetectionDate) {
+        this.firstDetectionDate = firstDetectionDate;
     }
 }

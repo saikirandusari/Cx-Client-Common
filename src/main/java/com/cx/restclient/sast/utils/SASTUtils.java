@@ -62,22 +62,18 @@ public abstract class SASTUtils {
         log.info("Low severity results: " + sastResults.getLow() + lowNew);
         log.info("Information severity results: " + sastResults.getInformation() + infoNew);
         log.info("");
-       /* if (enableViolations && !sastResults.getSastPolicies().isEmpty()) {
-            log.info("SAST violated policies names: " + StringUtils.join(sastResults.getSastPolicies(), ','));
-        }*/
         log.info("Scan results location: " + sastResults.getSastScanLink());
         log.info("------------------------------------------------------------------------------------------\n");
     }
 
     //PDF Report
-    public static String writePDFReport(byte[] scanReport, File workspace, Logger log) {
-        String now = new SimpleDateFormat("dd_MM_yyyy-HH_mm_ss").format(new Date());
-        String pdfFileName = PDF_REPORT_NAME + "_" + now + ".pdf";
+    public static String writePDFReport(byte[] scanReport, File workspace, String pdfFileName,  Logger log) {
         try {
             FileUtils.writeByteArrayToFile(new File(workspace + CX_REPORT_LOCATION, pdfFileName), scanReport);
             log.info("PDF report location: " + workspace + CX_REPORT_LOCATION + File.separator + pdfFileName);
         } catch (Exception e) {
             log.error("Failed to write PDF report to workspace: ", e.getMessage());
+            pdfFileName ="";
         }
         return pdfFileName;
     }

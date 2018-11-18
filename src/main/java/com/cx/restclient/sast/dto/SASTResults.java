@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.cx.restclient.cxArm.utils.CxARMUtils.getPolicyList;
 import static com.cx.restclient.sast.utils.SASTParam.PROJECT_LINK_FORMAT;
 import static com.cx.restclient.sast.utils.SASTParam.SCAN_LINK_FORMAT;
 
@@ -48,8 +49,7 @@ public class SASTResults implements Serializable {
     private byte[] PDFReport;
     private String pdfFileName;
 
-    private List<String> sastPolicies = new ArrayList<>();
-    private List<Violation> sastViolations = new ArrayList<>();
+    private List<Policy> sastPolicies = new ArrayList<>();
 
 
     public enum Severity {
@@ -99,6 +99,10 @@ public class SASTResults implements Serializable {
         setInformation(statisticsResults.getInfoSeverity());
         setSastScanLink(url, scanId, projectId);
         setSastProjectLink(url, projectId);
+    }
+
+    public void addPolicy(Policy policy) {
+        this.sastPolicies.addAll(getPolicyList(policy));
     }
 
     public long getScanId() {
@@ -203,6 +207,10 @@ public class SASTResults implements Serializable {
 
     public void setSastPDFLink(String sastPDFLink) {
         this.sastPDFLink = sastPDFLink;
+    }
+
+    public void setSastPDFLink(String url, long projectId) {
+        this.sastPDFLink = String.format(url + PROJECT_LINK_FORMAT, projectId);
     }
 
     public String getScanStart() {
@@ -348,27 +356,25 @@ public class SASTResults implements Serializable {
     }
 
     private Date createEndDate(Date scanStartDate, Date scanTimeDate) {
-        long time /*no c*/ = scanStartDate.getTime() + scanTimeDate.getTime();
+        long time = scanStartDate.getTime() + scanTimeDate.getTime();
         return new Date(time);
     }
 
-    public List<Violation> getSastViolations() {
-        return sastViolations;
-    }
-
-    public void setSastViolations(List<Violation> sastViolations) {
-        this.sastViolations = sastViolations;
-    }
-
-    public void addAllViolations(List<Violation> violations) {
-        this.sastViolations.addAll(violations);
-    }
-
-    public List<String> getSastPolicies() {
+    public List<Policy> getSastPolicies() {
         return sastPolicies;
     }
 
-    public void setSastPolicies(List<String> sastPolicies) {
+    public String getSastPoliciesNames() {
+        String str ="";
+        for (Policy policy : sastPolicies){
+            str += "," + policy.getPolicyName();
+        }
+        str = str.substring(1, str.length());
+        return str;
+    }
+
+    public void setSastPolicies(List<Policy> sastPolicies) {
         this.sastPolicies = sastPolicies;
     }
+
 }

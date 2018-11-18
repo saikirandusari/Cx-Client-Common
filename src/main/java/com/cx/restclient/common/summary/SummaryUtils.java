@@ -32,6 +32,7 @@ public abstract class SummaryUtils {
 
         boolean buildFailed = false;
         boolean policyViolated = false;
+        int policyViolatedCount = 0;
         //sast:
         if (config.getSastEnabled() && sastResults.isSastResultsReady()) {
             boolean sastThresholdExceeded = ShragaUtils.isThresholdExceeded(config, sastResults, null, new StringBuilder());
@@ -76,9 +77,7 @@ public abstract class SummaryUtils {
             boolean osaThresholdExceeded = ShragaUtils.isThresholdExceeded(config, null, osaResults, new StringBuilder());
             templateData.put("osaThresholdExceeded", osaThresholdExceeded);
             buildFailed |= osaThresholdExceeded;
-            if (config.getEnablePolicyViolations() && !osaResults.getOsaViolations().isEmpty()){
-                policyViolated = true;
-            }
+
             //calculate osa bars:
             OSASummaryResults osaSummaryResults = osaResults.getResults();
             int osaHigh = osaSummaryResults.getTotalHighVulnerabilities();
@@ -96,8 +95,21 @@ public abstract class SummaryUtils {
             templateData.put("osaLowTotalHeight", osaLowTotalHeight);
         }
 
-        String policyLabel = osaResults.getOsaPolicies().size() == 1? "Policy": "Policies";
-        templateData.put("policyLabel", policyLabel);
+
+        if (config.getEnablePolicyViolations()) {
+            if (config.getSastEnabled() && sastResults.getSastPolicies().size() > 0) {
+                policyViolated = true;
+                policyViolatedCount++;
+            }
+            if (config.getOsaEnabled() && osaResults.getOsaPolicies().size() > 0) {
+                policyViolated = true;
+                policyViolatedCount++;
+            }
+            String policyLabel = policyViolatedCount == 1 ? "Policy" : "Policies";
+            templateData.put("policyLabel", policyLabel);
+            templateData.put("policyViolatedCount", policyViolatedCount);
+        }
+
 
         templateData.put("policyViolated", policyViolated);
         buildFailed |= policyViolated;

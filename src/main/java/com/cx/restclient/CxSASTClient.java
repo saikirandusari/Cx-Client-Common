@@ -9,6 +9,7 @@ import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.sast.dto.*;
 import com.cx.restclient.sast.utils.SASTUtils;
 import com.cx.restclient.sast.utils.zip.CxZipUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -20,10 +21,12 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static com.cx.restclient.cxArm.dto.CxProviders.SAST;
-import static com.cx.restclient.cxArm.utils.CxARMUtils.getProjectViolations;
+import static com.cx.restclient.cxArm.utils.CxARMUtils.getProjectViolatedPolicies;
 import static com.cx.restclient.httpClient.utils.ContentType.*;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.convertToJson;
 import static com.cx.restclient.sast.utils.SASTParam.*;
@@ -133,9 +136,9 @@ class CxSASTClient {
 
         //retrieve SAST scan results
         sastResults = retrieveSASTResults(scanId, projectId);
-      /*  if (config.getEnablePolicyViolations()) {
+         if (config.getEnablePolicyViolations()) {
             resolveSASTViolation(sastResults, projectId);
-        }*/
+        }
         SASTUtils.printSASTResultsToConsole(sastResults, config.getEnablePolicyViolations(), log);
 
         //PDF report
@@ -144,8 +147,13 @@ class CxSASTClient {
             byte[] pdfReport = getScanReport(sastResults.getScanId(), ReportType.PDF, CONTENT_TYPE_APPLICATION_PDF_V1);
             sastResults.setPDFReport(pdfReport);
             if (config.getReportsDir() != null) {
-                String pdfFileName = writePDFReport(pdfReport, config.getReportsDir(), log);
+                String now = new SimpleDateFormat("dd_MM_yyyy-HH_mm_ss").format(new Date());
+                String pdfFileName = PDF_REPORT_NAME + "_" + now + ".pdf";
+                pdfFileName = writePDFReport(pdfReport, config.getReportsDir(), pdfFileName, log);
                 sastResults.setPdfFileName(pdfFileName);
+                if (!StringUtils.isEmpty(config.getCxOrigin()) && config.getCxOrigin().equalsIgnoreCase("jenkins")) {
+                //    sastResults.setSastPDFLink();
+                }
             }
         }
         return sastResults;
@@ -153,10 +161,9 @@ class CxSASTClient {
 
     private void resolveSASTViolation(SASTResults sastResults, long projectId) {
         try {
-            for (Policy policy : getProjectViolations(httpClient, config.getCxARMUrl(), projectId, SAST.value())) {
-                sastResults.getSastPolicies().add(policy.getPolicyName());
-                sastResults.addAllViolations(policy.getViolations());
-            }
+
+            getProjectViolatedPolicies(httpClient, config.getCxARMUrl(), projectId, SAST.value())
+                    .forEach(sastResults::addPolicy);
         }catch (Exception ex) {
             log.error("CxARM is not available. Policy violations for SAST cannot be calculated: " + ex.getMessage());
         }

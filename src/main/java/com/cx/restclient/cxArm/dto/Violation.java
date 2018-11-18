@@ -47,9 +47,6 @@ public class Violation {
 
     private String policyName;
 
-    private String detectionDate;
-
-
     public String getRuleId() {
         return ruleId;
     }
@@ -192,17 +189,5 @@ public class Violation {
 
     public void setPolicyName(String policyName) {
         this.policyName = policyName;
-    }
-
-    public String getDetectionDate() {
-        if (detectionDate == null){
-            String date = new Date(firstDetectionDateByArm).toString();
-            detectionDate = formatDate(date, "E MMM dd hh:mm:ss Z yyyy", "dd/MM/yy");
-        }
-        return detectionDate;
-    }
-
-    public void setDetectionDate(String detectionDate) {
-        this.detectionDate = detectionDate;
     }
 }
