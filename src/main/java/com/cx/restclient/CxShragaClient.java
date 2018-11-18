@@ -5,7 +5,6 @@ import com.cx.restclient.common.summary.SummaryUtils;
 import com.cx.restclient.configuration.CxScanConfig;
 import com.cx.restclient.cxArm.dto.CxArmConfig;
 import com.cx.restclient.dto.Team;
-import com.cx.restclient.dto.ThresholdResult;
 import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.exception.CxHTTPClientException;
 import com.cx.restclient.httpClient.CxHttpClient;
@@ -115,10 +114,13 @@ public class CxShragaClient {
         return osaResults;
     }
 
-    public ThresholdResult getThresholdResult() {
+    public String getBuildFailureResult() {
         StringBuilder res = new StringBuilder("");
-        boolean isFail = isThresholdExceeded(config, sastResults, osaResults, res);
-        return new ThresholdResult(isFail, res.toString());
+        isThresholdExceeded(config, sastResults, osaResults, res);
+        if (config.getEnablePolicyViolations()){
+            isPolicyViolated(res);
+        }
+        return res.toString();
     }
 
     public boolean isPolicyViolated(StringBuilder failDescription) {
