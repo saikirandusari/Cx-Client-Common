@@ -107,11 +107,11 @@ public abstract class SummaryUtils {
             if (config.getEnablePolicyViolations()) {
                 if (config.getSastEnabled() && sastResults.getSastPolicies().size() > 0) {
                     policyViolated = true;
-                    policyViolatedCount++;
+                    policyViolatedCount += sastResults.getSastPolicies().size();
                 }
                 if (config.getOsaEnabled() && osaResults.getOsaPolicies().size() > 0) {
                     policyViolated = true;
-                    policyViolatedCount++;
+                    policyViolatedCount += osaResults.getOsaPolicies().size();
                 }
                 String policyLabel = policyViolatedCount == 1 ? "Policy" : "Policies";
                 templateData.put("policyLabel", policyLabel);

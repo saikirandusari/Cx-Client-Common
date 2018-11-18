@@ -853,6 +853,7 @@
         font-size: 12px;
         font-weight: bold;
         padding-left: 16px;
+        padding-top: 10px;
     }
 
     .scan-status .content-scan-status .title-scan-status.failure {
@@ -943,14 +944,14 @@
                     Checkmarx scan found the following issues:
                 </p>
                 <ul>
-                    <#if policyViolated>
-                        <li>${policyViolatedCount} ${policyLabel}  Violated</li>
-                    </#if>
                     <#if config.sastEnabled && !sast.sastResultsReady>
                         <li>SAST Scan Failed</li>
                     </#if>
                     <#if  config.osaEnabled && !osa.osaResultsReady>
                         <li>OSA Scan Failed</li>
+                    </#if>
+                    <#if policyViolated>
+                        <li>${policyViolatedCount} ${policyLabel}  Violated</li>
                     </#if>
                     <#if config.sastEnabled && sast.sastResultsReady && (sastThresholdExceeded || sastNewResultsExceeded) && config.osaEnabled && osa.osaResultsReady && osaThresholdExceeded>
                         <li>Exceeded CxSAST and CxOSA Vulnerability Thresholds</li>
@@ -2400,20 +2401,24 @@
                     </tr>
                     <#if sast.sastPolicies?size gt 0>
                         <#list sast.sastPolicies as sastPoliciy>
-                            <td>${sastPoliciy.policyName}</td>
-                            <td id="ruleName">${sastPoliciy.ruleName}</td>
-                            <td>SAST</td>
-                            <td>${sastPoliciy.violations?size}</td>
-                            <td>${sastPoliciy.firstDetectionDate}</td>
+                            <tr>
+                                <td>${sastPoliciy.policyName}</td>
+                                <td id="ruleName">${sastPoliciy.ruleName}</td>
+                                <td>SAST</td>
+                                <td>${sastPoliciy.violations?size}</td>
+                                <td>${sastPoliciy.firstDetectionDate}</td>
+                            </tr>
                         </#list>
                     </#if>
                     <#if osa.osaPolicies?size gt 0>
                         <#list osa.osaPolicies as osaPolicy>
-                            <td>${osaPolicy.policyName}</td>
-                            <td id="ruleName">${osaPolicy.ruleName}</td>
-                            <td>OSA</td>
-                            <td>${osaPolicy.violations?size}</td>
-                            <td>${osaPolicy.firstDetectionDate}</td>
+                            <tr>
+                                <td>${osaPolicy.policyName}</td>
+                                <td id="ruleName">${osaPolicy.ruleName}</td>
+                                <td>OSA</td>
+                                <td>${osaPolicy.violations?size}</td>
+                                <td>${osaPolicy.firstDetectionDate}</td>
+                            </tr>
                         </#list>
                     </#if>
                 </table>

@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import static com.cx.restclient.common.CxPARAM.*;
 import static com.cx.restclient.common.ShragaUtils.isThresholdExceeded;
+import static com.cx.restclient.cxArm.utils.CxARMUtils.getPoliciesNames;
 import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON_V1;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.convertToJson;
 import static com.cx.restclient.sast.utils.SASTParam.*;
@@ -133,6 +134,8 @@ public class CxShragaClient {
 
     public void printIsProjectViolated(){
         log.info("-----------------------------------------------------------------------------------------");
+        log.info("Policy Management: ");
+        log.info("--------------------");
         if (config.getEnablePolicyViolations()) {
             if (sastResults.getSastPolicies().isEmpty() && osaResults.getOsaPolicies().isEmpty()){
                 log.info(CxGlobalMessage.PROJECT_POLICY_COMPLAINT_STATUS.getMessage());
@@ -140,11 +143,10 @@ public class CxShragaClient {
             }else {
                 log.info(CxGlobalMessage.PROJECT_POLICY_VIOLATED_STATUS.getMessage());
                 if (!sastResults.getSastPolicies().isEmpty()) {
-
-                    log.info("SAST violated policies names: " + sastResults.getSastPoliciesNames());
+                    log.info("SAST violated policies names: " + getPoliciesNames(sastResults.getSastPolicies()));
                 }
                 if (!osaResults.getOsaPolicies().isEmpty()) {
-                    log.info("OSA violated policies names: " + StringUtils.join(osaResults.getOsaPolicies(), ','));
+                    log.info("OSA violated policies names: " + getPoliciesNames(osaResults.getOsaPolicies()));
                 }
                 log.info("-----------------------------------------------------------------------------------------");
             }

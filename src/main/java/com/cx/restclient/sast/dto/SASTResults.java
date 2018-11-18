@@ -364,15 +364,6 @@ public class SASTResults implements Serializable {
         return sastPolicies;
     }
 
-    public String getSastPoliciesNames() {
-        String str ="";
-        for (Policy policy : sastPolicies){
-            str += "," + policy.getPolicyName();
-        }
-        str = str.substring(1, str.length());
-        return str;
-    }
-
     public void setSastPolicies(List<Policy> sastPolicies) {
         this.sastPolicies = sastPolicies;
     }

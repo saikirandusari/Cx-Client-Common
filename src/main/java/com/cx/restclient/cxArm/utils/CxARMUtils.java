@@ -63,4 +63,13 @@ public abstract class CxARMUtils {
         String firstDate = formatDate(firstDetectionDate.toString(), "E MMM dd hh:mm:ss Z yyyy", "dd/MM/yy");
         return firstDate;
     }
+
+    public static String getPoliciesNames(List<Policy> policies) {
+        String str ="";
+        for (Policy policy : policies){
+            str += "," + policy.getPolicyName();
+        }
+        str = str.substring(1, str.length());
+        return str;
+    }
 }
