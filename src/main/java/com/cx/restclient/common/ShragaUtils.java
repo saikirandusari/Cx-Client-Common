@@ -18,6 +18,23 @@ import java.util.Map;
  */
 public abstract class ShragaUtils {
     //Util methods
+    public static String getBuildFailureResult(CxScanConfig config, SASTResults sastResults, OSAResults osaResults) {
+        StringBuilder res = new StringBuilder("");
+        isThresholdExceeded(config, sastResults, osaResults, res);
+        isThresholdForNewResultExceeded(config, sastResults, res);
+        isPolicyViolated(config, sastResults, osaResults, res);
+
+        return res.toString();
+    }
+
+    public static boolean isPolicyViolated(CxScanConfig config, SASTResults sastResults, OSAResults osaResults, StringBuilder res) {
+        boolean isPolicyViolated = config.getEnablePolicyViolations() && (osaResults.getOsaPolicies().size() > 0 || sastResults.getSastPolicies().size() > 0);
+        if(isPolicyViolated) {
+            res.append(CxGlobalMessage.PROJECT_POLICY_VIOLATED_STATUS.getMessage()).append("\n");
+        }
+        return isPolicyViolated;
+    }
+
     public static boolean isThresholdExceeded(CxScanConfig config, SASTResults sastResults, OSAResults osaResults, StringBuilder res) {
         boolean thresholdExceeded = false;
         if (config.isSASTThresholdEffectivelyEnabled() && sastResults != null && sastResults.isSastResultsReady()) {

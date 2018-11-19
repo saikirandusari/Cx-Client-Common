@@ -116,23 +116,6 @@ public class CxShragaClient {
         return osaResults;
     }
 
-    public String getBuildFailureResult() {
-        StringBuilder res = new StringBuilder("");
-        isThresholdExceeded(config, sastResults, osaResults, res);
-        isThresholdForNewResultExceeded(config, sastResults, res);
-        isPolicyViolated(res);
-
-        return res.toString();
-    }
-
-    public boolean isPolicyViolated(StringBuilder failDescription) {
-        boolean isPolicyViolated = config.getEnablePolicyViolations() && osaResults.getOsaPolicies().size() > 0;
-        if(isPolicyViolated) {
-            failDescription.append(CxGlobalMessage.PROJECT_POLICY_VIOLATED_STATUS.getMessage()).append("\n");
-        }
-        return isPolicyViolated;
-    }
-
     public void printIsProjectViolated(){
         log.info("-----------------------------------------------------------------------------------------");
         log.info("Policy Management: ");
