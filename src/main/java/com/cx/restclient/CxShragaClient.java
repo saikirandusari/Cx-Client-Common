@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import static com.cx.restclient.common.CxPARAM.*;
 import static com.cx.restclient.common.ShragaUtils.isThresholdExceeded;
+import static com.cx.restclient.common.ShragaUtils.isThresholdForNewResultExceeded;
 import static com.cx.restclient.cxArm.utils.CxARMUtils.getPoliciesNames;
 import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON_V1;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.convertToJson;
@@ -118,9 +119,9 @@ public class CxShragaClient {
     public String getBuildFailureResult() {
         StringBuilder res = new StringBuilder("");
         isThresholdExceeded(config, sastResults, osaResults, res);
-        if (config.getEnablePolicyViolations()){
-            isPolicyViolated(res);
-        }
+        isThresholdForNewResultExceeded(config, sastResults, res);
+        isPolicyViolated(res);
+
         return res.toString();
     }
 

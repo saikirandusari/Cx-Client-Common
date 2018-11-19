@@ -2,6 +2,7 @@ package com.cx.restclient.common.summary;
 
 import com.cx.restclient.common.ShragaUtils;
 import com.cx.restclient.configuration.CxScanConfig;
+import com.cx.restclient.cxArm.dto.Policy;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.osa.dto.OSASummaryResults;
 import com.cx.restclient.sast.dto.SASTResults;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class SummaryUtils {
 
@@ -105,14 +107,21 @@ public abstract class SummaryUtils {
 
 
             if (config.getEnablePolicyViolations()) {
+                Map<String, String> policies = new HashMap<String, String>();
+
                 if (config.getSastEnabled() && sastResults.getSastPolicies().size() > 0) {
                     policyViolated = true;
-                    policyViolatedCount += sastResults.getSastPolicies().size();
+                    policies = sastResults.getSastPolicies().stream().collect(
+                            Collectors.toMap(Policy::getPolicyName,Policy::getRuleName));
                 }
                 if (config.getOsaEnabled() && osaResults.getOsaPolicies().size() > 0) {
                     policyViolated = true;
-                    policyViolatedCount += osaResults.getOsaPolicies().size();
+                    policies = osaResults.getOsaPolicies().stream().collect(
+                            Collectors.toMap(Policy::getPolicyName,Policy::getRuleName));
                 }
+
+
+                policyViolatedCount = policies.size();
                 String policyLabel = policyViolatedCount == 1 ? "Policy" : "Policies";
                 templateData.put("policyLabel", policyLabel);
                 templateData.put("policyViolatedCount", policyViolatedCount);
