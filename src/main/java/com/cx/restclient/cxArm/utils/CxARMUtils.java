@@ -67,7 +67,7 @@ public abstract class CxARMUtils {
     public static String getPoliciesNames(List<Policy> policies) {
         String str ="";
         for (Policy policy : policies){
-            str += "," + policy.getPolicyName();
+            str += ", " + policy.getPolicyName();
         }
         str = str.substring(1, str.length());
         return str;

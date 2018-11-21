@@ -85,14 +85,14 @@ class CxOSAClient {
         }
         ObjectMapper mapper = new ObjectMapper();
         log.info("Scanner properties: " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(scannerProperties.toString()));
-        log.info("#########################################");
+        log.info("############################################");
         log.info("  WhiteSource- Starting FSA component scan:");
-        log.info("#########################################");
+        log.info("############################################");
         ComponentScan componentScan = new ComponentScan(scannerProperties);
         String osaDependenciesJson = componentScan.scan();
-        log.info("##########################################");
+        log.info("#############################################");
         log.info(" WhiteSource- FSA component scan ended.");
-        log.info("##########################################");
+        log.info("#############################################");
         OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
 
         return osaDependenciesJson;
@@ -217,7 +217,7 @@ class CxOSAClient {
     }
 
     private OSAScanStatus resolveOSAStatus(OSAScanStatus scanStatus) throws CxClientException {
-        if (Status.FAILED == scanStatus.getBaseStatus()) {
+        if (scanStatus ==null || Status.FAILED == scanStatus.getBaseStatus()) {
             String failedMsg = scanStatus.getState() == null ? "" : "status [" + scanStatus.getState().getName() + "]. Reason: " + scanStatus.getState().getFailureReason();
             throw new CxClientException("OSA scan cannot be completed. " + failedMsg);
         }

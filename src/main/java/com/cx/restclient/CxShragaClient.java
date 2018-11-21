@@ -10,7 +10,6 @@ import com.cx.restclient.exception.CxHTTPClientException;
 import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.sast.dto.*;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
@@ -22,8 +21,6 @@ import java.util.List;
 import java.util.Properties;
 
 import static com.cx.restclient.common.CxPARAM.*;
-import static com.cx.restclient.common.ShragaUtils.isThresholdExceeded;
-import static com.cx.restclient.common.ShragaUtils.isThresholdForNewResultExceeded;
 import static com.cx.restclient.cxArm.utils.CxARMUtils.getPoliciesNames;
 import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON_V1;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.convertToJson;

@@ -2388,7 +2388,7 @@
                             </g>
                         </svg>
                     </div>
-                    <div class="severity-title-name">Policy Violations</div>
+                    <div class="severity-title-name">Violated ${policyLabel}</div>
                     <div class="severity-count">${policyViolatedCount}</div>
                 </div>
                 <table id="policy-violations-table" class="cve-table sast-cve-table osa-policy-violations">

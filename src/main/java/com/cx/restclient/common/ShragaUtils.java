@@ -28,7 +28,7 @@ public abstract class ShragaUtils {
     }
 
     public static boolean isPolicyViolated(CxScanConfig config, SASTResults sastResults, OSAResults osaResults, StringBuilder res) {
-        boolean isPolicyViolated = config.getEnablePolicyViolations() && (osaResults.getOsaPolicies().size() > 0 || sastResults.getSastPolicies().size() > 0);
+        boolean isPolicyViolated = config.getEnablePolicyViolations() && ((osaResults!=null && osaResults.getOsaPolicies().size() > 0) || (sastResults != null && sastResults.getSastPolicies().size() > 0));
         if(isPolicyViolated) {
             res.append(CxGlobalMessage.PROJECT_POLICY_VIOLATED_STATUS.getMessage()).append("\n");
         }

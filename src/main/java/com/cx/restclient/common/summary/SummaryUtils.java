@@ -78,65 +78,69 @@ public abstract class SummaryUtils {
             }
         }
 
-            //osa:
-            if (config.getOsaEnabled()) {
-                if (osaResults.isOsaResultsReady()) {
-                    boolean osaThresholdExceeded = ShragaUtils.isThresholdExceeded(config, null, osaResults, new StringBuilder());
-                    templateData.put("osaThresholdExceeded", osaThresholdExceeded);
-                    buildFailed |= osaThresholdExceeded;
+        //osa:
+        if (config.getOsaEnabled()) {
+            if (osaResults.isOsaResultsReady()) {
+                boolean osaThresholdExceeded = ShragaUtils.isThresholdExceeded(config, null, osaResults, new StringBuilder());
+                templateData.put("osaThresholdExceeded", osaThresholdExceeded);
+                buildFailed |= osaThresholdExceeded;
 
-                    //calculate osa bars:
-                    OSASummaryResults osaSummaryResults = osaResults.getResults();
-                    int osaHigh = osaSummaryResults.getTotalHighVulnerabilities();
-                    int osaMedium = osaSummaryResults.getTotalMediumVulnerabilities();
-                    int osaLow = osaSummaryResults.getTotalLowVulnerabilities();
-                    float osaMaxCount = Math.max(osaHigh, Math.max(osaMedium, osaLow));
-                    float osaBarNorm = osaMaxCount * 10f / 9f;
+                //calculate osa bars:
+                OSASummaryResults osaSummaryResults = osaResults.getResults();
+                int osaHigh = osaSummaryResults.getTotalHighVulnerabilities();
+                int osaMedium = osaSummaryResults.getTotalMediumVulnerabilities();
+                int osaLow = osaSummaryResults.getTotalLowVulnerabilities();
+                float osaMaxCount = Math.max(osaHigh, Math.max(osaMedium, osaLow));
+                float osaBarNorm = osaMaxCount * 10f / 9f;
 
-                    float osaHighTotalHeight = (float) osaHigh / osaBarNorm * 238f;
-                    float osaMediumTotalHeight = (float) osaMedium / osaBarNorm * 238f;
-                    float osaLowTotalHeight = (float) osaLow / osaBarNorm * 238f;
+                float osaHighTotalHeight = (float) osaHigh / osaBarNorm * 238f;
+                float osaMediumTotalHeight = (float) osaMedium / osaBarNorm * 238f;
+                float osaLowTotalHeight = (float) osaLow / osaBarNorm * 238f;
 
-                    templateData.put("osaHighTotalHeight", osaHighTotalHeight);
-                    templateData.put("osaMediumTotalHeight", osaMediumTotalHeight);
-                    templateData.put("osaLowTotalHeight", osaLowTotalHeight);
-                } else {
-                    buildFailed = true;
-                }
+                templateData.put("osaHighTotalHeight", osaHighTotalHeight);
+                templateData.put("osaMediumTotalHeight", osaMediumTotalHeight);
+                templateData.put("osaLowTotalHeight", osaLowTotalHeight);
+            } else {
+                buildFailed = true;
             }
-
-
-            if (config.getEnablePolicyViolations()) {
-                Map<String, String> policies = new HashMap<String, String>();
-
-                if (config.getSastEnabled() && sastResults.getSastPolicies().size() > 0) {
-                    policyViolated = true;
-                    policies = sastResults.getSastPolicies().stream().collect(
-                            Collectors.toMap(Policy::getPolicyName,Policy::getRuleName));
-                }
-                if (config.getOsaEnabled() && osaResults.getOsaPolicies().size() > 0) {
-                    policyViolated = true;
-                    policies = osaResults.getOsaPolicies().stream().collect(
-                            Collectors.toMap(Policy::getPolicyName,Policy::getRuleName));
-                }
-
-
-                policyViolatedCount = policies.size();
-                String policyLabel = policyViolatedCount == 1 ? "Policy" : "Policies";
-                templateData.put("policyLabel", policyLabel);
-                templateData.put("policyViolatedCount", policyViolatedCount);
-            }
-
-
-            templateData.put("policyViolated", policyViolated);
-            buildFailed |= policyViolated;
-            templateData.put("buildFailed", buildFailed);
-
-            //generate the report:
-            StringWriter writer = new StringWriter();
-            template.process(templateData, writer);
-            return writer.toString();
         }
+
+
+        if (config.getEnablePolicyViolations()) {
+            Map<String, String> policies = new HashMap<String, String>();
+
+            if (config.getSastEnabled() && sastResults.getSastPolicies().size() > 0) {
+                policyViolated = true;
+                policies = sastResults.getSastPolicies().stream().collect(
+                        Collectors.toMap(Policy::getPolicyName,
+                                Policy::getRuleName,
+                                (left, right) -> {
+                                    return left;
+                                }
+                        ));
+            }
+            if (config.getOsaEnabled() && osaResults.getOsaPolicies().size() > 0) {
+                policyViolated = true;
+                policies = osaResults.getOsaPolicies().stream().collect(
+                        Collectors.toMap(Policy::getPolicyName, Policy::getRuleName));
+            }
+
+            policyViolatedCount = policies.size();
+            String policyLabel = policyViolatedCount == 1 ? "Policy" : "Policies";
+            templateData.put("policyLabel", policyLabel);
+            templateData.put("policyViolatedCount", policyViolatedCount);
+        }
+
+
+        templateData.put("policyViolated", policyViolated);
+        buildFailed |= policyViolated;
+        templateData.put("buildFailed", buildFailed);
+
+        //generate the report:
+        StringWriter writer = new StringWriter();
+        template.process(templateData, writer);
+        return writer.toString();
+    }
 
     private static float calculateNewBarHeight(int newCount, int count, float totalHeight) {
         int minimalVisibilityHeight = 5;

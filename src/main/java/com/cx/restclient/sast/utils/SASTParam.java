@@ -23,6 +23,8 @@ public class SASTParam {
     public static final String SAST_CREATE_REPORT = "reports/sastScan/"; //Create new report (get ID)
     public static final String SAST_GET_REPORT_STATUS = "reports/sastScan/{reportId}/status"; //Get report status
     public static final String SAST_GET_REPORT = "reports/sastScan/{reportId}"; //Get report status
+    public static final String SAST_GET_CXARM_STATUS = "sast/projects/{projectId}/publisher/policyFindings/status"; //Get report status
+
 
     //ZIP PARAMS
     public static final long MAX_ZIP_SIZE_BYTES = 2147483648L;

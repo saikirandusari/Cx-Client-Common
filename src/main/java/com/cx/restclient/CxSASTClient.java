@@ -42,6 +42,7 @@ class CxSASTClient {
     private CxHttpClient httpClient;
     private CxScanConfig config;
     private int reportTimeoutSec = 500;
+    private int cxARMTimeoutSec = 500;
     private Waiter<ResponseQueueScanStatus> sastWaiter = new Waiter<ResponseQueueScanStatus>("CxSAST scan", 20) {
         @Override
         public ResponseQueueScanStatus getStatus(String id) throws CxClientException, IOException {
@@ -76,6 +77,23 @@ class CxSASTClient {
         }
     };
 
+    private Waiter<CxARMStatus> cxARMWaiter = new Waiter<CxARMStatus>("CxARM policy violations", 5) {
+        @Override
+        public CxARMStatus getStatus(String id) throws CxClientException, IOException {
+            return getCxARMStatus(id);
+        }
+
+        @Override
+        public void printProgress(CxARMStatus cxARMStatus) {
+            printCxARMProgress(cxARMStatus, getStartTimeSec());
+        }
+
+        @Override
+        public CxARMStatus resolveStatus(CxARMStatus cxARMStatus) throws CxClientException {
+            return resolveCxARMStatus(cxARMStatus);
+        }
+    };
+
     CxSASTClient(CxHttpClient client, Logger log, CxScanConfig config) {
         this.log = log;
         this.httpClient = client;
@@ -88,7 +106,7 @@ class CxSASTClient {
     long createSASTScan(long projectId) throws IOException, CxClientException {
         log.info("-----------------------------------Create CxSAST Scan:------------------------------------");
 
-        if (config.isAvoidDuplicateProjectScans()!= null && config.isAvoidDuplicateProjectScans() && projectHasQueuedScans(projectId)) {
+        if (config.isAvoidDuplicateProjectScans() != null && config.isAvoidDuplicateProjectScans() && projectHasQueuedScans(projectId)) {
             throw new CxClientException("\nAvoid duplicate project scans in queue\n");
         }
 
@@ -136,7 +154,7 @@ class CxSASTClient {
 
         //retrieve SAST scan results
         sastResults = retrieveSASTResults(scanId, projectId);
-         if (config.getEnablePolicyViolations()) {
+        if (config.getEnablePolicyViolations()) {
             resolveSASTViolation(sastResults, projectId);
         }
         SASTUtils.printSASTResultsToConsole(sastResults, config.getEnablePolicyViolations(), log);
@@ -152,7 +170,7 @@ class CxSASTClient {
                 pdfFileName = writePDFReport(pdfReport, config.getReportsDir(), pdfFileName, log);
                 sastResults.setPdfFileName(pdfFileName);
                 if (!StringUtils.isEmpty(config.getCxOrigin()) && config.getCxOrigin().equalsIgnoreCase("jenkins")) {
-                //    sastResults.setSastPDFLink();
+                    //    sastResults.setSastPDFLink();
                 }
             }
         }
@@ -161,10 +179,10 @@ class CxSASTClient {
 
     private void resolveSASTViolation(SASTResults sastResults, long projectId) {
         try {
-
+            cxARMWaiter.waitForTaskToFinish(Long.toString(projectId), cxARMTimeoutSec, log);
             getProjectViolatedPolicies(httpClient, config.getCxARMUrl(), projectId, SAST.value())
                     .forEach(sastResults::addPolicy);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             log.error("CxARM is not available. Policy violations for SAST cannot be calculated: " + ex.getMessage());
         }
     }
@@ -216,7 +234,7 @@ class CxSASTClient {
     }
 
     private boolean isStatusToAvoid(String status) {
-        QueueStatus qStatus =  QueueStatus.valueOf(status);
+        QueueStatus qStatus = QueueStatus.valueOf(status);
 
         switch (qStatus) {
             case New:
@@ -315,7 +333,7 @@ class CxSASTClient {
     }
 
     private ResponseQueueScanStatus resolveSASTStatus(ResponseQueueScanStatus scanStatus) throws CxClientException {
-        if (Status.SUCCEEDED == scanStatus.getBaseStatus()) {
+        if (scanStatus != null && Status.SUCCEEDED == scanStatus.getBaseStatus()) {
             log.info("SAST scan finished successfully.");
             return scanStatus;
         } else {
@@ -326,14 +344,14 @@ class CxSASTClient {
     //Report Waiter - overload methods
     private ReportStatus getReportStatus(String reportId) throws CxClientException, IOException {
         ReportStatus reportStatus = httpClient.getRequest(SAST_GET_REPORT_STATUS.replace("{reportId}", reportId), CONTENT_TYPE_APPLICATION_JSON_V1, ReportStatus.class, 200, " report status", false);
-
+        reportStatus.setBaseId(reportId);
         String currentStatus = reportStatus.getStatus().getValue();
         if (currentStatus.equals(ReportStatusEnum.INPROCESS.value())) {
             reportStatus.setBaseStatus(Status.IN_PROGRESS);
         } else if (currentStatus.equals(ReportStatusEnum.FAILED.value())) {
             reportStatus.setBaseStatus(Status.FAILED);
         } else {
-            reportStatus.setBaseStatus(Status.SUCCEEDED);
+            reportStatus.setBaseStatus(Status.SUCCEEDED); //todo fix it!!
         }
 
         return reportStatus;
@@ -345,10 +363,43 @@ class CxSASTClient {
     }
 
     private ReportStatus resolveReportStatus(ReportStatus reportStatus) throws CxClientException {
-        if (Status.SUCCEEDED == reportStatus.getBaseStatus()) {
+        if (reportStatus != null && Status.SUCCEEDED == reportStatus.getBaseStatus()) {
             return reportStatus;
         } else {
             throw new CxClientException("Generation of scan report [id=" + reportStatus.getBaseId() + "] failed.");
         }
     }
+
+
+    //CxARM Waiter - overload methods
+    private CxARMStatus getCxARMStatus(String projectId) throws CxClientException, IOException {
+        CxARMStatus cxARMStatus = httpClient.getRequest(SAST_GET_CXARM_STATUS.replace("{projectId}", projectId), CONTENT_TYPE_APPLICATION_JSON_V1, CxARMStatus.class, 200, " cxARM status", false);
+        cxARMStatus.setBaseId(projectId);
+
+        String currentStatus = cxARMStatus.getStatus();
+        if (currentStatus.equals(CxARMStatusEnum.IN_PROGRESS.value())) {
+            cxARMStatus.setBaseStatus(Status.IN_PROGRESS);
+        } else if (currentStatus.equals(CxARMStatusEnum.FAILED.value())) {
+            cxARMStatus.setBaseStatus(Status.FAILED);
+        } else if (currentStatus.equals(CxARMStatusEnum.FINISHED.value())) {
+            cxARMStatus.setBaseStatus(Status.SUCCEEDED);
+        } else {
+            cxARMStatus.setBaseStatus(Status.FAILED);
+        }
+
+        return cxARMStatus;
+    }
+
+    private void printCxARMProgress(CxARMStatus cxARMStatus, long startTime) {
+        log.info("Waiting for server to get Policy violations. " + (startTime + cxARMTimeoutSec - (System.currentTimeMillis() / 1000)) + " seconds left to timeout"); //todo Liran
+    }
+
+    private CxARMStatus resolveCxARMStatus(CxARMStatus cxARMStatus) throws CxClientException {
+        if (cxARMStatus != null && Status.SUCCEEDED == cxARMStatus.getBaseStatus()) {
+            return cxARMStatus;
+        } else {
+            throw new CxClientException("Getting policy violations of project [id=" + cxARMStatus.getBaseId() + "] failed."); //todo Liran
+        }
+    }
+
 }

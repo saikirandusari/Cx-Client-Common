@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public abstract class Waiter<T> {
 
-    private int retry = 5;
+    private int retry = 3;
     private String scanType;
     private int sleepIntervalSec;
 
@@ -29,29 +29,35 @@ public abstract class Waiter<T> {
     public T waitForTaskToFinish(String taskId, Integer scanTimeoutSec, Logger log) throws CxClientException, InterruptedException {
         startTimeSec = System.currentTimeMillis() / 1000;
         long elapsedTimeSec = 0L;
-        status = Status.IN_PROGRESS;
-        T obj = null;
+        T obj;
 
-        while (status.equals(Status.IN_PROGRESS) && (scanTimeoutSec <= 0 || elapsedTimeSec < scanTimeoutSec)) {
-            Thread.sleep(sleepIntervalSec * 1000);
-            try {
-                obj = getStatus(taskId);
-                status = ((BaseStatus) obj).getBaseStatus();
-            } catch (Exception e) {
-                log.debug("Failed to get status from " + scanType + ". retrying (" + (retry - 1) + " tries left). Error message: " + e.getMessage());
-                if (retry <= 0) {
-                    throw new CxClientException("Failed to get status from " + scanType + ". Error message: " + e.getMessage(), e);
+        try {
+            obj = getStatus(taskId);
+            status = ((BaseStatus) obj).getBaseStatus();
+
+            while (status.equals(Status.IN_PROGRESS) && (scanTimeoutSec <= 0 || elapsedTimeSec < scanTimeoutSec)) {
+                Thread.sleep(sleepIntervalSec * 1000);
+                try {
+                    obj = getStatus(taskId);
+                    status = ((BaseStatus) obj).getBaseStatus();
+                } catch (Exception e) {
+                    log.debug("Failed to get status from " + scanType + ". retrying (" + (retry - 1) + " tries left). Error message: " + e.getMessage());
+                    retry--;
+                    if (retry <= 0) {
+                        throw new CxClientException("Failed to get status from " + scanType + ". Error message: " + e.getMessage(), e);
+                    }
+                    continue;
                 }
-                retry--;
-                continue;
-            }
-            elapsedTimeSec = (new Date()).getTime() / 1000 - startTimeSec;
-            printProgress(obj);
+                elapsedTimeSec = (new Date()).getTime() / 1000 - startTimeSec;
+                printProgress(obj);
 
-        }
-        if (scanTimeoutSec > 0 && scanTimeoutSec <= elapsedTimeSec) {
-            throw new CxClientException( "Failed to perform " + scanType + ": " + scanType + " has been automatically aborted: reached the user-specified timeout (" + scanTimeoutSec / 60 + " minutes)");
-        }
+            }
+            if (scanTimeoutSec > 0 && scanTimeoutSec <= elapsedTimeSec) {
+                throw new CxClientException("Failed to perform " + scanType + ": " + scanType + " has been automatically aborted: reached the user-specified timeout (" + scanTimeoutSec / 60 + " minutes)");
+            }
+        } catch (Exception e) {
+            throw new CxClientException("Failed to get status from " + scanType + ". Error message: " + e.getMessage(), e);
+            }
         return resolveStatus(obj);
     }
 
