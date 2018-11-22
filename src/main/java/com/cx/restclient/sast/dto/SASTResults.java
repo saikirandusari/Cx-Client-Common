@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.cx.restclient.cxArm.utils.CxARMUtils.getPolicyList;
+import static com.cx.restclient.sast.utils.SASTParam.PDF_LINK_FORMAT;
 import static com.cx.restclient.sast.utils.SASTParam.PROJECT_LINK_FORMAT;
 import static com.cx.restclient.sast.utils.SASTParam.SCAN_LINK_FORMAT;
 
@@ -209,8 +210,8 @@ public class SASTResults implements Serializable {
         this.sastPDFLink = sastPDFLink;
     }
 
-    public void setSastPDFLink(String url, long projectId) {
-        this.sastPDFLink = String.format(url + PROJECT_LINK_FORMAT, projectId);
+    public void setSastPDFLink(String url, String projectName, String buildId) {
+        this.sastPDFLink = String.format(url + PDF_LINK_FORMAT, projectName, buildId);
     }
 
     public String getScanStart() {

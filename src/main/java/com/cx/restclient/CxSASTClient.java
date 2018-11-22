@@ -38,6 +38,7 @@ import static com.cx.restclient.sast.utils.SASTUtils.*;
  */
 
 class CxSASTClient {
+    public static final String JENKINS = "jenkins";
     private Logger log;
     private CxHttpClient httpClient;
     private CxScanConfig config;
@@ -169,8 +170,9 @@ class CxSASTClient {
                 String pdfFileName = PDF_REPORT_NAME + "_" + now + ".pdf";
                 pdfFileName = writePDFReport(pdfReport, config.getReportsDir(), pdfFileName, log);
                 sastResults.setPdfFileName(pdfFileName);
-                if (!StringUtils.isEmpty(config.getCxOrigin()) && config.getCxOrigin().equalsIgnoreCase("jenkins")) {
-                    //    sastResults.setSastPDFLink();
+                if (JENKINS.equalsIgnoreCase(config.getCxOrigin())) {
+                    //TODO need to find where to retrieve buildID (PDF link is http://localhost:8080/job/AAA/3/checkmarx/pdfReport)
+                    sastResults.setSastPDFLink(config.getUrl(), config.getProjectName(), "0");
                 }
             }
         }
