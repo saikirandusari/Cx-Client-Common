@@ -1,6 +1,8 @@
 package com.cx.restclient.configuration;
 
 
+import com.cx.restclient.dto.RemoteSourceTypes;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.Properties;
@@ -14,7 +16,10 @@ public class CxScanConfig implements Serializable {
     private Boolean osaEnabled = false;
 
     private String cxOrigin;
+
     private boolean disableCertificateValidation = false;
+    private boolean useSSOLogin = false;
+
     private String sourceDir;
     private File reportsDir;
     private String username;
@@ -61,6 +66,17 @@ public class CxScanConfig implements Serializable {
     private boolean enablePolicyViolations = false;
 
     private String cxARMUrl;
+    private String[] paths;
+    //remote source control
+    RemoteSourceTypes remoteType = null;
+    private String remoteSrcUser;
+    private String remoteSrcPass;
+    private String remoteSrcUrl;
+    private int remoteSrcPort;
+    private byte[] remoteSrcKeyFile;
+    private String remoteSrcBranch;
+    private String preforceMode;
+
 
     public CxScanConfig() {
     }
@@ -103,6 +119,18 @@ public class CxScanConfig implements Serializable {
 
     public void setDisableCertificateValidation(boolean disableCertificateValidation) {
         this.disableCertificateValidation = disableCertificateValidation;
+    }
+
+    public boolean isUseSSOLogin() {
+        return useSSOLogin;
+    }
+
+    public void setUseSSOLogin(boolean useSSOLogin) {
+        this.useSSOLogin = useSSOLogin;
+    }
+
+    public Boolean getAvoidDuplicateProjectScans() {
+        return avoidDuplicateProjectScans;
     }
 
     public String getSourceDir() {
@@ -463,5 +491,77 @@ public class CxScanConfig implements Serializable {
 
     public void setAvoidDuplicateProjectScans(Boolean avoidDuplicateProjectScans) {
         this.avoidDuplicateProjectScans = avoidDuplicateProjectScans;
+    }
+
+    public String getRemoteSrcUser() {
+        return remoteSrcUser;
+    }
+
+    public void setRemoteSrcUser(String remoteSrcUser) {
+        this.remoteSrcUser = remoteSrcUser;
+    }
+
+    public String getRemoteSrcPass() {
+        return remoteSrcPass;
+    }
+
+    public void setRemoteSrcPass(String remoteSrcPass) {
+        this.remoteSrcPass = remoteSrcPass;
+    }
+
+    public String getRemoteSrcUrl() {
+        return remoteSrcUrl;
+    }
+
+    public void setRemoteSrcUrl(String remoteSrcUrl) {
+        this.remoteSrcUrl = remoteSrcUrl;
+    }
+
+    public int getRemoteSrcPort() {
+        return remoteSrcPort;
+    }
+
+    public void setRemoteSrcPort(int remoteSrcPort) {
+        this.remoteSrcPort = remoteSrcPort;
+    }
+
+    public byte[] getRemoteSrcKeyFile() {
+        return remoteSrcKeyFile;
+    }
+
+    public void setRemoteSrcKeyFile(byte[] remoteSrcKeyFile) {
+        this.remoteSrcKeyFile = remoteSrcKeyFile;
+    }
+
+    public RemoteSourceTypes getRemoteType() {
+        return remoteType;
+    }
+
+    public void setRemoteType(RemoteSourceTypes remoteType) {
+        this.remoteType = remoteType;
+    }
+
+    public String[] getPaths() {
+        return paths;
+    }
+
+    public void setPaths(String[] paths) {
+        this.paths = paths;
+    }
+
+    public String getRemoteSrcBranch() {
+        return remoteSrcBranch;
+    }
+
+    public void setRemoteSrcBranch(String remoteSrcBranch) {
+        this.remoteSrcBranch = remoteSrcBranch;
+    }
+
+    public String getPreforceMode() {
+        return preforceMode;
+    }
+
+    public void setPreforceMode(String preforceMode) {
+        this.preforceMode = preforceMode;
     }
 }

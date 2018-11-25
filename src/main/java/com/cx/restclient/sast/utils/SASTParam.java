@@ -18,6 +18,10 @@ public class SASTParam {
     public static final String SAST_GET_QUEUED_SCANS = "sast/scansQueue?projectId={projectId}";
 
 
+    public static final String SAST_CREATE_REMOTE_SOURCE_SCAN = "projects/{projectId}/sourceCode/remoteSettings/{sourceType}";//todo maybe with ssh?
+
+
+
     //Once it has results
     public static final String SAST_SCAN_RESULTS_STATISTICS = "sast/scans/{scanId}/resultsStatistics";
     public static final String SAST_CREATE_REPORT = "reports/sastScan/"; //Create new report (get ID)

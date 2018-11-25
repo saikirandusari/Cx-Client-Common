@@ -2,13 +2,15 @@ package com.cx.restclient;
 
 import com.cx.restclient.common.Waiter;
 import com.cx.restclient.configuration.CxScanConfig;
-import com.cx.restclient.cxArm.dto.Policy;
+import com.cx.restclient.dto.RemoteSourceRequest;
+import com.cx.restclient.dto.RemoteSourceTypes;
 import com.cx.restclient.dto.Status;
 import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.httpClient.CxHttpClient;
 import com.cx.restclient.sast.dto.*;
 import com.cx.restclient.sast.utils.SASTUtils;
 import com.cx.restclient.sast.utils.zip.CxZipUtils;
+import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
@@ -16,6 +18,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -23,7 +26,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.cx.restclient.cxArm.dto.CxProviders.SAST;
 import static com.cx.restclient.cxArm.utils.CxARMUtils.getProjectViolatedPolicies;
@@ -106,10 +111,17 @@ class CxSASTClient {
     //CREATE SAST scan
     long createSASTScan(long projectId) throws IOException, CxClientException {
         log.info("-----------------------------------Create CxSAST Scan:------------------------------------");
-
         if (config.isAvoidDuplicateProjectScans() != null && config.isAvoidDuplicateProjectScans() && projectHasQueuedScans(projectId)) {
             throw new CxClientException("\nAvoid duplicate project scans in queue\n");
         }
+        if (config.getRemoteType() != null) { //scan is local
+            return createLocalSASTScan(projectId);
+        }else{
+            return createRemoteSourceScan(projectId);
+        }
+    }
+
+    private long createLocalSASTScan(long projectId) throws IOException, CxClientException {
 
         ScanSettingResponse scanSettingResponse = getScanSetting(projectId);
         ScanSettingRequest scanSettingRequest = new ScanSettingRequest();
@@ -142,6 +154,55 @@ class CxSASTClient {
 
         return createScanResponse.getId();
     }
+
+    private long createRemoteSourceScan(long projectId) throws IOException, CxClientException {
+        HttpEntity entity;
+        RemoteSourceRequest req = new RemoteSourceRequest(config);
+        RemoteSourceTypes type = req.getType();
+
+        switch (type) {
+            case SVN:
+            case TFS:
+                MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+                builder.addBinaryBody("privateKey", req.getPrivateKey(), ContentType.APPLICATION_JSON, null);
+                builder.addTextBody("absoluteUrl", req.getUrl(), ContentType.APPLICATION_JSON);
+                builder.addTextBody("port", String.valueOf(req.getPort()), ContentType.APPLICATION_JSON);
+                builder.addTextBody("paths", StringUtils.join(req.getPaths(), ";"), ContentType.APPLICATION_JSON);
+                entity = builder.build();
+                break;
+            case PERFORCE:
+                if (config.getPreforceMode() != null) {
+                    req.setBrowseMode("Workspace");
+                } else {
+                    req.setBrowseMode("Depot");
+                }
+                entity = new StringEntity(convertToJson(req), ContentType.APPLICATION_JSON);
+                break;
+            case SHARED:
+                entity = new StringEntity(new Gson().toJson(req), ContentType.APPLICATION_JSON);
+                break;
+            case GIT:
+                if (req.getPrivateKey().length < 1) {
+                    Map<String, String> content = new HashMap<>();
+                    content.put("url", config.getRemoteSrcUrl());
+                    content.put("branch", config.getRemoteSrcBranch());
+                    entity = new StringEntity(new JSONObject(content).toString(), ContentType.APPLICATION_JSON);
+                } else {
+                    builder = MultipartEntityBuilder.create();
+                    builder.addTextBody("url", req.getUrl(), ContentType.APPLICATION_JSON);
+                    builder.addTextBody("branch", config.getRemoteSrcBranch(), ContentType.APPLICATION_JSON); //todo add branch to req OR using without this else??
+                    builder.addBinaryBody("privateKey", req.getPrivateKey(), ContentType.MULTIPART_FORM_DATA, null);
+                    entity = builder.build();
+                }
+                break;
+            default:
+                log.error("todo");
+                entity = new StringEntity("");
+
+        }
+        return createRemoteSourceScan(projectId, entity, type.value()).getId();
+    }
+
 
     //GET SAST results + reports
     public SASTResults waitForSASTResults(long scanId, long projectId) throws InterruptedException, IOException, CxClientException {
@@ -271,6 +332,11 @@ class CxSASTClient {
     private CxID createScan(CreateScanRequest request) throws CxClientException, IOException {
         StringEntity entity = new StringEntity(convertToJson(request));
         return httpClient.postRequest(SAST_CREATE_SCAN, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CxID.class, 201, "create new SAST Scan");
+    }
+
+
+    private CxID createRemoteSourceScan(long projectId, HttpEntity entity, String sourceType) throws IOException, CxClientException {
+        return httpClient.postRequest(SAST_CREATE_REMOTE_SOURCE_SCAN.replace("{projectId}", Long.toString(projectId)).replace("{sourceType}", sourceType), CONTENT_TYPE_APPLICATION_JSON_V1, entity, CxID.class, 204, "create " + sourceType + " remote source scan setting");
     }
 
     private SASTStatisticsResponse getScanStatistics(long scanId) throws CxClientException, IOException {

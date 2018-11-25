@@ -54,7 +54,7 @@ public class CxShragaClient {
                 config.getUsername(),
                 config.getPassword(),
                 config.getCxOrigin(),
-                config.isDisableCertificateValidation(), log);
+                config.isDisableCertificateValidation(),config.isUseSSOLogin(), log);
         sastClient = new CxSASTClient(httpClient, log, config);
         osaClient = new CxOSAClient(httpClient, log, config);
     }

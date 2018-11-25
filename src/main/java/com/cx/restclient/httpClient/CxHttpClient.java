@@ -7,12 +7,15 @@ import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.exception.CxHTTPClientException;
 import com.cx.restclient.exception.CxTokenExpiredException;
 import org.apache.http.*;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
@@ -34,8 +37,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.cx.restclient.common.CxPARAM.AUTHENTICATION;
-import static com.cx.restclient.common.CxPARAM.ORIGIN_HEADER;
+import static com.cx.restclient.common.CxPARAM.*;
 import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.*;
 
@@ -52,6 +54,12 @@ public class CxHttpClient {
     private final String password;
     private String cxOrigin;
 
+    private CookieStore cookieStore;
+    private String cookies;
+    private String csrfToken;
+
+    private Boolean useSSo = false;
+
 
     private final HttpRequestInterceptor requestFilter = new HttpRequestInterceptor() {
         public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
@@ -59,10 +67,35 @@ public class CxHttpClient {
             if (token != null) {
                 httpRequest.addHeader(HttpHeaders.AUTHORIZATION, token.getToken_type() + " " + token.getAccess_token());
             }
+            if (csrfToken != null) {
+                httpRequest.addHeader(CSRF_TOKEN_HEADER, csrfToken);
+            }
+            if (cookies != null) {
+                httpRequest.addHeader("cookie", cookies);
+            }
         }
     };
 
-    public CxHttpClient(String hostname, String username, String password, String origin, boolean disableSSLValidation, Logger logi) throws MalformedURLException {
+
+    private final HttpResponseInterceptor responseFilter = new HttpResponseInterceptor() {
+
+        public void process(HttpResponse httpResponse, HttpContext httpContext) throws HttpException, IOException {
+            for (org.apache.http.cookie.Cookie c : cookieStore.getCookies()) {
+                if (CSRF_TOKEN_HEADER.equals(c.getName())) {
+                    csrfToken = c.getValue();
+                }
+            }
+            Header[] setCookies = httpResponse.getHeaders("Set-Cookie");
+            StringBuilder sb = new StringBuilder();
+            for (Header h : setCookies) {
+                sb.append(h.getValue()).append(";");
+            }
+            cookies = (cookies == null ? "" : cookies) + sb.toString();
+        }
+    };
+
+
+    public CxHttpClient(String hostname, String username, String password, String origin, boolean disableSSLValidation, boolean isSSO, Logger logi) throws MalformedURLException {
         this.logi = logi;
         this.username = username;
         this.password = password;
@@ -70,6 +103,11 @@ public class CxHttpClient {
         this.cxOrigin = origin;
         //create httpclient
         HttpClientBuilder builder = HttpClientBuilder.create().addInterceptorFirst(requestFilter);
+        if (isSSO) {
+            this.useSSo = true;
+            cookieStore = new BasicCookieStore();
+            builder.addInterceptorLast(responseFilter).setDefaultCookieStore(cookieStore);
+        }
         setSSLTls(builder, "TLSv1.2", logi);
         if (disableSSLValidation) {
             builder = disableCertificateValidation(builder, logi);
@@ -79,9 +117,16 @@ public class CxHttpClient {
     }
 
     public void login() throws IOException, CxClientException {
-        UrlEncodedFormEntity requestEntity = generateUrlEncodedFormEntity();
-        HttpPost post = new HttpPost(rootUri + AUTHENTICATION);
-        token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
+
+        if (useSSo) {
+            HttpPost post = new HttpPost(rootUri + SSO_AUTHENTICATION);
+            request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), new StringEntity(""), TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
+        } else {
+            UrlEncodedFormEntity requestEntity = generateUrlEncodedFormEntity();
+            HttpPost post = new HttpPost(rootUri + AUTHENTICATION);
+            token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
+
+        }
     }
 
     private UrlEncodedFormEntity generateUrlEncodedFormEntity() throws UnsupportedEncodingException {
@@ -98,7 +143,7 @@ public class CxHttpClient {
 
     //GET REQUEST
     public <T> T getRequest(String relPath, String contentType, Class<T> responseType, int expectStatus, String failedMsg, boolean isCollection) throws IOException, CxClientException {
-            return getRequest(rootUri, relPath, CONTENT_TYPE_APPLICATION_JSON, contentType, responseType, expectStatus, failedMsg, isCollection);
+        return getRequest(rootUri, relPath, CONTENT_TYPE_APPLICATION_JSON, contentType, responseType, expectStatus, failedMsg, isCollection);
     }
 
     public <T> T getRequest(String rootURL, String relPath, String acceptHeader, String contentType, Class<T> responseType, int expectStatus, String failedMsg, boolean isCollection) throws IOException, CxClientException {
@@ -144,7 +189,7 @@ public class CxHttpClient {
 
             //extract response as object and return the link
             return convertToObject(response, responseType, isCollection);
-        } catch (UnknownHostException e){
+        } catch (UnknownHostException e) {
             throw new CxHTTPClientException(ErrorMessage.CHECKMARX_SERVER_CONNECTION_FAILED.getErrorMessage());
         } catch (CxTokenExpiredException ex) {
             if (retry) {
@@ -181,10 +226,10 @@ public class CxHttpClient {
 
     private void setSSLTls(HttpClientBuilder builder, String protocol, Logger log) {
         try {
-            final SSLContext sslContext =SSLContext.getInstance(protocol);
-            sslContext.init(null,null,null);
+            final SSLContext sslContext = SSLContext.getInstance(protocol);
+            sslContext.init(null, null, null);
             HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
-            } catch (NoSuchAlgorithmException | KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
             log.warn("Failed to set SSL TLS : " + e.getMessage());
         }
     }
