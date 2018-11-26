@@ -1,6 +1,8 @@
 package com.cx.restclient.configuration;
 
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
@@ -155,7 +157,7 @@ public class CxScanConfig implements Serializable {
     }
 
     public void setTeamPath(String teamPath) {
-        if(!teamPath.startsWith("\\")){
+        if(!StringUtils.isEmpty(teamPath) && !teamPath.startsWith("\\")){
             teamPath = "\\" + teamPath;
         }
         this.teamPath = teamPath;
