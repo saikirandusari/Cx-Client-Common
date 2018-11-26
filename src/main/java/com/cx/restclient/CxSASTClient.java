@@ -114,7 +114,7 @@ class CxSASTClient {
         if (config.isAvoidDuplicateProjectScans() != null && config.isAvoidDuplicateProjectScans() && projectHasQueuedScans(projectId)) {
             throw new CxClientException("\nAvoid duplicate project scans in queue\n");
         }
-        if (config.getRemoteType() != null) { //scan is local
+        if (config.getRemoteType() == null) { //scan is local
             return createLocalSASTScan(projectId);
         }else{
             return createRemoteSourceScan(projectId);
