@@ -233,7 +233,7 @@ class CxSASTClient {
                 sastResults.setPdfFileName(pdfFileName);
                 if (JENKINS.equalsIgnoreCase(config.getCxOrigin())) {
                     //TODO need to find where to retrieve buildID (PDF link is http://localhost:8080/job/AAA/3/checkmarx/pdfReport)
-                    sastResults.setSastPDFLink(config.getUrl(), config.getProjectName(), "0");
+                    sastResults.setSastPDFLink(config.getUrl(), config.getProjectName(), Integer.toString(config.getJenkinsJob()));
                 }
             }
         }
