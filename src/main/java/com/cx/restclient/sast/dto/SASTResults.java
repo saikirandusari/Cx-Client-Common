@@ -210,7 +210,7 @@ public class SASTResults implements Serializable {
         this.sastPDFLink = sastPDFLink;
     }
 
-    public void setSastPDFLink(String url, String projectName, String buildId) {
+    public void setSastPDFLink(String projectName, String buildId) {
         this.sastPDFLink = String.format(PDF_LINK_FORMAT, projectName, buildId);
     }
 
