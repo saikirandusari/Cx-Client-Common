@@ -232,7 +232,7 @@ class CxSASTClient {
                 pdfFileName = writePDFReport(pdfReport, config.getReportsDir(), pdfFileName, log);
                 sastResults.setPdfFileName(pdfFileName);
                 if (JENKINS.equalsIgnoreCase(config.getCxOrigin())) {
-                    sastResults.setSastPDFLink(config.getUrl(), config.getProjectName(), Integer.toString(config.getJenkinsJob()));
+                    sastResults.setSastPDFLink(JENKINS_URL_FORMAT, config.getProjectName(), Integer.toString(config.getJenkinsJob()));
                 }
             }
         }

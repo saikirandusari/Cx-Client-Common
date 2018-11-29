@@ -90,11 +90,10 @@ class CxOSAClient {
         log.info("############################################");
         ComponentScan componentScan = new ComponentScan(scannerProperties);
         String osaDependenciesJson = componentScan.scan();
+        OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
         log.info("#############################################");
         log.info(" WhiteSource- FSA component scan ended.");
         log.info("#############################################");
-        OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
-
         return osaDependenciesJson;
     }
 

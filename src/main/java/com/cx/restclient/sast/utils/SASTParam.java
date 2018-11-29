@@ -38,9 +38,10 @@ public class SASTParam {
     public static final String LINK_FORMAT = "/CxWebClient/portal#/projectState/%d/Summary";
     public static final String SCAN_LINK_FORMAT = "/CxWebClient/ViewerMain.aspx?scanId=%s&ProjectID=%s";
     public static final String PROJECT_LINK_FORMAT = "/CxWebClient/portal#/projectState/%d/Summary";
-    public static final String PDF_LINK_FORMAT = "{jenkinsUrl}/job/%s/%s/checkmarx/pdfReport";
+    public static final String PDF_LINK_FORMAT = "/job/%s/%s/checkmarx/pdfReport";
 
     //REPORT PARAMS
     public static final String PDF_REPORT_NAME = "CxSASTReport";
+    public static final String JENKINS_URL_FORMAT = "{JenkinsBaseURL}";
 }
 
