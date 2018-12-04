@@ -119,10 +119,14 @@ public abstract class SummaryUtils {
                                 }
                         ));
             }
+
             if (config.getOsaEnabled() && osaResults.getOsaPolicies().size() > 0) {
                 policyViolated = true;
                 policies = osaResults.getOsaPolicies().stream().collect(
-                        Collectors.toMap(Policy::getPolicyName, Policy::getRuleName));
+                        Collectors.toMap(Policy::getPolicyName, Policy::getRuleName,
+                        (left, right) -> {
+                            return left;
+                        }));
             }
 
             policyViolatedCount = policies.size();
