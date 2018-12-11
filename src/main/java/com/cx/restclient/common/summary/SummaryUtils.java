@@ -54,9 +54,6 @@ public abstract class SummaryUtils {
                 templateData.put("sastHighTotalHeight", sastHighTotalHeight);
                 templateData.put("sastHighNewHeight", sastHighNewHeight);
                 templateData.put("sastHighRecurrentHeight", sastHighRecurrentHeight);
-            /*if (config.getEnablePolicyViolations() && !sastResults.getSastViolations().isEmpty()){
-                policyViolated = true;
-            }*/
 
                 //sast medium bars
                 float sastMediumTotalHeight = (float) sastResults.getMedium() / sastBarNorm * 238f;
@@ -122,11 +119,11 @@ public abstract class SummaryUtils {
 
             if (config.getOsaEnabled() && osaResults.getOsaPolicies().size() > 0) {
                 policyViolated = true;
-                policies = osaResults.getOsaPolicies().stream().collect(
+                policies.putAll(osaResults.getOsaPolicies().stream().collect(
                         Collectors.toMap(Policy::getPolicyName, Policy::getRuleName,
                         (left, right) -> {
                             return left;
-                        }));
+                        })));
             }
 
             policyViolatedCount = policies.size();
