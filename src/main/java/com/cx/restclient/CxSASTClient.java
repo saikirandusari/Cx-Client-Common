@@ -48,7 +48,7 @@ class CxSASTClient {
     private CxHttpClient httpClient;
     private CxScanConfig config;
     private int reportTimeoutSec = 500;
-    private int cxARMTimeoutSec = 1200;
+    private int cxARMTimeoutSec = 1000;
     private Waiter<ResponseQueueScanStatus> sastWaiter = new Waiter<ResponseQueueScanStatus>("CxSAST scan", 20) {
         @Override
         public ResponseQueueScanStatus getStatus(String id) throws CxClientException, IOException {
@@ -458,7 +458,7 @@ class CxSASTClient {
     }
 
     private void printCxARMProgress(CxARMStatus cxARMStatus, long startTime) {
-        log.info("Waiting for server to retrieve policy violations. (This can take up to 15 minutes.) " + (startTime + cxARMTimeoutSec - (System.currentTimeMillis() / 1000)) + " seconds left to timeout"); //todo Liran
+        log.info("Waiting for server to retrieve policy violations. " + (startTime + cxARMTimeoutSec - (System.currentTimeMillis() / 1000)) + " seconds left to timeout"); //todo Liran
     }
 
     private CxARMStatus resolveCxARMStatus(CxARMStatus cxARMStatus) throws CxClientException {

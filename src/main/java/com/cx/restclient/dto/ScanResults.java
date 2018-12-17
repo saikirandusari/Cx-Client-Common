@@ -7,9 +7,8 @@ import com.cx.restclient.sast.dto.SASTResults;
 import java.io.Serializable;
 
 public class ScanResults implements Serializable {
-
-    private SASTResults sastResults;
-    private OSAResults osaResults;
+    private SASTResults sastResults = new SASTResults();
+    private OSAResults osaResults = new OSAResults();
 
     private Exception sastCreateException = null;
     private Exception sastWaitException = null;
