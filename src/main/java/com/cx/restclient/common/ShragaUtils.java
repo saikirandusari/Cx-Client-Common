@@ -139,10 +139,10 @@ public abstract class ShragaUtils {
         for (String filter : filters) {
             if (StringUtils.isNotEmpty(filter)) {
                 if (!filter.startsWith("!")) {
-                    inclusions.add(filter);
+                    inclusions.add(filter.trim());
                 } else if (filter.length() > 1) {
                     filter = filter.substring(1); // Trim the "!"
-                    exclusions.add(filter);
+                    exclusions.add(filter.trim());
                 }
             }
         }

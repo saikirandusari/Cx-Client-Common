@@ -2,7 +2,6 @@ package com.cx.restclient;
 
 import com.cx.restclient.common.Waiter;
 import com.cx.restclient.configuration.CxScanConfig;
-import com.cx.restclient.cxArm.dto.Policy;
 import com.cx.restclient.dto.Status;
 import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.httpClient.CxHttpClient;
@@ -13,10 +12,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
 import org.whitesource.fs.ComponentScan;
+import org.whitesource.fs.FSAConfigProperties;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 
 import static com.cx.restclient.cxArm.dto.CxProviders.OPEN_SOURCE;
 import static com.cx.restclient.cxArm.utils.CxARMUtils.getProjectViolatedPolicies;
@@ -73,7 +72,7 @@ class CxOSAClient {
 
     private String resolveOSADependencies() throws JsonProcessingException {
         log.info("Scanning for CxOSA compatible files");
-        Properties scannerProperties = config.getOsaFsaConfig();
+        FSAConfigProperties scannerProperties = config.getOsaFsaConfig();
         if (scannerProperties == null) {
             scannerProperties = OSAUtils.generateOSAScanConfiguration(
                     config.getOsaFolderExclusions(),
@@ -85,15 +84,9 @@ class CxOSAClient {
         }
         ObjectMapper mapper = new ObjectMapper();
         log.info("Scanner properties: " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(scannerProperties.toString()));
-        log.info("############################################");
-        log.info("  WhiteSource- Starting FSA component scan:");
-        log.info("############################################");
         ComponentScan componentScan = new ComponentScan(scannerProperties);
         String osaDependenciesJson = componentScan.scan();
         OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
-        log.info("#############################################");
-        log.info(" WhiteSource- FSA component scan ended.");
-        log.info("#############################################");
         return osaDependenciesJson;
     }
 
