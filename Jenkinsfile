@@ -30,8 +30,8 @@ If($IsReleaseBuild -eq "true")
     Write-Host "|  SNAPSHOT DISABLED: Removing Snapshot before build  |"
     Write-Host " ----------------------------------------------------- "
 
-    $FilePath1 = $RootPath + "\gradle.properties"
-    $FilePath2 = $RootPath + "\build.gradle"
+    $FilePath1 = $RootPath + "\\gradle.properties"
+    $FilePath2 = $RootPath + "\\build.gradle"
 
     If(Test-Path "$FilePath1")
     {  
