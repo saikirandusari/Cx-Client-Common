@@ -13,12 +13,12 @@ import com.cx.restclient.sast.dto.*;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.StringEntity;
 import org.slf4j.Logger;
-import org.whitesource.fs.FSAConfigProperties;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Properties;
 
 import static com.cx.restclient.common.CxPARAM.*;
 import static com.cx.restclient.cxArm.utils.CxARMUtils.getPoliciesNames;
@@ -216,7 +216,7 @@ public class CxShragaClient {
         return (List<CxNameObj>) httpClient.getRequest(SAST_ENGINE_CONFIG, CONTENT_TYPE_APPLICATION_JSON_V1, CxNameObj.class, 200, "engine configurations", true);
     }
 
-    public void setOsaFSAProperties(FSAConfigProperties fsaConfig) {  //For CxMaven plugin
+    public void setOsaFSAProperties(Properties fsaConfig) {  //For CxMaven plugin
         config.setOsaFsaConfig(fsaConfig);
     }
 

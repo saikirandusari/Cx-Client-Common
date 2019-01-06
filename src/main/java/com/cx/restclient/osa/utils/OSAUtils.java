@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
-import org.whitesource.fs.FSAConfigProperties;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -50,8 +49,8 @@ public abstract class OSAUtils {
         return String.format(url + "/CxWebClient/SPA/#/viewer/project/%s", projectId);
     }
 
-    public static FSAConfigProperties generateOSAScanConfiguration(String folderExclusions, String filterPatterns, String archiveIncludes, String scanFolder, boolean installBeforeScan, Logger log) {
-        FSAConfigProperties ret = new FSAConfigProperties();
+    public static Properties generateOSAScanConfiguration(String folderExclusions, String filterPatterns, String archiveIncludes, String scanFolder, boolean installBeforeScan, Logger log) {
+        Properties ret = new Properties();
         filterPatterns = StringUtils.defaultString(filterPatterns);
         archiveIncludes = StringUtils.defaultString(archiveIncludes);
 

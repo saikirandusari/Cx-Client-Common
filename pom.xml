@@ -85,7 +85,7 @@
     <dependency>
       <groupId>org.whitesource</groupId>
       <artifactId>whitesource-fs-agent</artifactId>
-      <version>18.10.2</version>
+      <version>18.7.2</version>
       <exclusions>
         <exclusion>
           <groupId>javax.xml.bind</groupId>
