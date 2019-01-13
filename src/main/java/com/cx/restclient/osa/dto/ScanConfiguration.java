@@ -2,12 +2,14 @@ package com.cx.restclient.osa.dto;
 
 
 import com.cx.restclient.sast.dto.Project;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.File;
 
 /**
  * Created by galn on 21/12/2016.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ScanConfiguration {
 
     private boolean SASTEnabled;

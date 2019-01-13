@@ -1,8 +1,11 @@
 package com.cx.restclient.sast.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Galn on 18/03/2018.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateScanStatusRequest {
     private String status;
 
