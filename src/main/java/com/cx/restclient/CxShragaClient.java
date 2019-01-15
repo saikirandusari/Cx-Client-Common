@@ -67,13 +67,13 @@ public class CxShragaClient {
     public void init() throws CxClientException, IOException {
         log.info("Initializing Cx client");
         login();
+        resolveTeam();
         if (config.getSastEnabled()) {
             resolvePreset();
         }
         if (config.getEnablePolicyViolations()){
             resolveCxARMUrl();
         }
-        resolveTeam();
         resolveProject();
     }
 
@@ -170,9 +170,10 @@ public class CxShragaClient {
     }
 
     public String getTeamIdByName(String teamName) throws CxClientException, IOException {
+        teamName = teamName.replace("\\","/");
         List<Team> allTeams = getTeamList();
         for (Team team : allTeams) {
-            if (team.getFullName().equalsIgnoreCase(teamName)) { //TODO caseSenesitive
+            if (team.getFullName().replace("\\","/").equalsIgnoreCase(teamName)) { //TODO caseSenesitive
                 return team.getId();
             }
         }
@@ -269,10 +270,7 @@ public class CxShragaClient {
         List<Project> projects = getProjectByName(config.getProjectName(), config.getTeamId());
         if (projects == null || projects.isEmpty()) { // Project is new
             if (config.getDenyProject()) {
-                String errMsg = "Creation of the new project [" + config.getProjectName() + "] is not authorized. " +
-                        "Please use an existing project. \nYou can enable the creation of new projects by disabling" + "" +
-                        " the Deny new Checkmarx projects creation checkbox in the Checkmarx plugin global settings.\n";
-                throw new CxClientException(errMsg);
+                throw new CxClientException(DENY_NEW_PROJECT_ERROR.replace("{projectName}" , config.getProjectName()));
             }
             //Create newProject
             CreateProjectRequest request = new CreateProjectRequest(config.getProjectName(), config.getTeamId(), config.getPublic());
