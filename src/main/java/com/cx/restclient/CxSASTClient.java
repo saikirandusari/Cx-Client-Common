@@ -284,9 +284,15 @@ class CxSASTClient {
     }
 
 
-    public void getProjecti(long scanId) throws InterruptedException, CxClientException, IOException {
-        byte[] cxReport = getScanReport(scanId, ReportType.XML, CONTENT_TYPE_APPLICATION_XML_V1);
+    public SASTResults getProjecti(long scanId) throws InterruptedException, CxClientException, IOException {
+        SASTResults sastResults = new SASTResults();
+       byte[] cxReport = getScanReport(scanId, ReportType.XML, CONTENT_TYPE_APPLICATION_XML_V1);
         CxXMLResults reportObj = convertToXMLResult(cxReport);
+        sastResults.setScanDetailedReport(reportObj);
+        sastResults.setRawXMLReport(cxReport);
+        sastResults.setSastResultsReady(true);
+        return sastResults;
+
     }
     //**------ Private Methods  ------**//
     private boolean projectHasQueuedScans(long projectId) throws IOException, CxClientException {

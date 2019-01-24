@@ -163,9 +163,9 @@ public class CxShragaClient {
     }
 
 
-    public void getProject(long scanId) throws InterruptedException, CxClientException, IOException {
+    public SASTResults getProject(long scanId) throws InterruptedException, CxClientException, IOException {
         log.info("gettt Projects");
-        sastClient.getProjecti(scanId);
+        return sastClient.getProjecti(scanId);
     }
 
     //HELP config  Methods
