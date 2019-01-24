@@ -47,7 +47,7 @@ class CxSASTClient {
     private Logger log;
     private CxHttpClient httpClient;
     private CxScanConfig config;
-    private int reportTimeoutSec = 1500;
+    private int reportTimeoutSec = 5000;
     private int cxARMTimeoutSec = 1000;
     private Waiter<ResponseQueueScanStatus> sastWaiter = new Waiter<ResponseQueueScanStatus>("CxSAST scan", 20) {
         @Override
@@ -66,7 +66,7 @@ class CxSASTClient {
         }
     };
 
-    private Waiter<ReportStatus> reportWaiter = new Waiter<ReportStatus>("Scan report", 5) {
+    private Waiter<ReportStatus> reportWaiter = new Waiter<ReportStatus>("Scan report", 10) {
         @Override
         public ReportStatus getStatus(String id) throws CxClientException, IOException {
             return getReportStatus(id);
