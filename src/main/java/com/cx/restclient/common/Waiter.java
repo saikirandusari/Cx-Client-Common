@@ -34,6 +34,7 @@ public abstract class Waiter<T> {
         try {
             obj = getStatus(taskId);
             status = ((BaseStatus) obj).getBaseStatus();
+            log.info(status.value());
 
             while (status.equals(Status.IN_PROGRESS) && (scanTimeoutSec <= 0 || elapsedTimeSec < scanTimeoutSec)) {
                 Thread.sleep(sleepIntervalSec * 1000);
