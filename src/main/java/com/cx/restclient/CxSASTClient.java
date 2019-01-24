@@ -284,6 +284,10 @@ class CxSASTClient {
     }
 
 
+    public void getProjecti(long scanId) throws InterruptedException, CxClientException, IOException {
+        byte[] cxReport = getScanReport(scanId, ReportType.XML, CONTENT_TYPE_APPLICATION_XML_V1);
+        CxXMLResults reportObj = convertToXMLResult(cxReport);
+    }
     //**------ Private Methods  ------**//
     private boolean projectHasQueuedScans(long projectId) throws IOException, CxClientException {
         List<ResponseQueueScanStatus> queuedScans = getQueueScans(projectId);

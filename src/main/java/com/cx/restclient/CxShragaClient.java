@@ -162,6 +162,12 @@ public class CxShragaClient {
         httpClient.close();
     }
 
+
+    public void getProject(long scanId) throws InterruptedException, CxClientException, IOException {
+        log.info("gettt Projects");
+        sastClient.getProjecti(scanId);
+    }
+
     //HELP config  Methods
     public void login() throws IOException, CxClientException {
         // perform login to server
