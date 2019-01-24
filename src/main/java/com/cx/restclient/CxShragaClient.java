@@ -123,6 +123,10 @@ public class CxShragaClient {
         return SummaryUtils.generateSummary(sastResults, osaResults, config);
     }
 
+    public void getProject(long scanId) throws InterruptedException, CxClientException, IOException {
+        log.info("gettt Projects");
+        sastClient.getProjecti(scanId);
+    }
 
     public void close() {
         httpClient.close();
@@ -138,7 +142,7 @@ public class CxShragaClient {
     public String getTeamIdByName(String teamName) throws CxClientException, IOException {
         List<Team> allTeams = getTeamList();
         for (Team team : allTeams) {
-            if (team.getFullName().equalsIgnoreCase(teamName)){ //TODO caseSenesitive- checkkk and REMOVE The WA "\"
+            if (team.getFullName().equalsIgnoreCase(teamName)) { //TODO caseSenesitive- checkkk and REMOVE The WA "\"
                 return team.getId();
             }
         }
@@ -263,7 +267,7 @@ public class CxShragaClient {
         return projects;
     }
 
-    public void setOsaFSAProperties(Properties fsaConfig){  //For CxMaven plugin
+    public void setOsaFSAProperties(Properties fsaConfig) {  //For CxMaven plugin
         config.setOsaFsaConfig(fsaConfig);
     }
 
