@@ -123,11 +123,6 @@ public class CxShragaClient {
         return SummaryUtils.generateSummary(sastResults, osaResults, config);
     }
 
-    public void getProject(long scanId) throws InterruptedException, CxClientException, IOException {
-        log.info("gettt Projects");
-        sastClient.getProjecti(scanId);
-    }
-
     public void close() {
         httpClient.close();
     }
