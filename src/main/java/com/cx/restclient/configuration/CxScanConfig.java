@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -60,6 +59,8 @@ public class CxScanConfig implements Serializable {
     private Properties osaFsaConfig; //for MAVEN
     private String osaDependenciesJson;
     private Boolean avoidDuplicateProjectScans = false;
+
+    private Boolean generateFullReport = true;
 
     public CxScanConfig() {
     }
@@ -433,5 +434,17 @@ public class CxScanConfig implements Serializable {
 
     public void setAvoidDuplicateProjectScans(Boolean avoidDuplicateProjectScans) {
         this.avoidDuplicateProjectScans = avoidDuplicateProjectScans;
+    }
+
+    public Boolean getAvoidDuplicateProjectScans() {
+        return avoidDuplicateProjectScans;
+    }
+
+    public Boolean getGenerateFullReport() {
+        return generateFullReport;
+    }
+
+    public void setGenerateFullReport(Boolean generateFullReport) {
+        this.generateFullReport = generateFullReport;
     }
 }

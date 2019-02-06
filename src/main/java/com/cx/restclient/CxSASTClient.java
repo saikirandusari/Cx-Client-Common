@@ -151,10 +151,12 @@ class CxSASTClient {
         sastResults.setResults(scanId, statisticsResults, config.getUrl(), projectId);
 
         //SAST detailed report
-        byte[] cxReport = getScanReport(sastResults.getScanId(), ReportType.XML, CONTENT_TYPE_APPLICATION_XML_V1);
-        CxXMLResults reportObj = convertToXMLResult(cxReport);
-        sastResults.setScanDetailedReport(reportObj);
-        sastResults.setRawXMLReport(cxReport);
+        if(config.getGenerateFullReport()== null || config.getGenerateFullReport()) {
+            byte[] cxReport = getScanReport(sastResults.getScanId(), ReportType.XML, CONTENT_TYPE_APPLICATION_XML_V1);
+            CxXMLResults reportObj = convertToXMLResult(cxReport);
+            sastResults.setScanDetailedReport(reportObj);
+            sastResults.setRawXMLReport(cxReport);
+        }
         sastResults.setSastResultsReady(true);
         return sastResults;
     }
