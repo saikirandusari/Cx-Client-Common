@@ -19,50 +19,19 @@ pipeline {
         powershell '''#------------------------------------------------------------------------------------------------------------
 # REMOVE THE WORD SNAPSHOT (ONLY FOR RELEASE BUILDS)
 #------------------------------------------------------------------------------------------------------------
-
 [string]$IsReleaseBuild = $ENV:IsReleaseBuild
 [string]$RootPath = "C:\\CI-Slave\\workspace\\$ENV:JOB_NAME"
-
-
 If($IsReleaseBuild -eq "true")
 {
     Write-Host " ----------------------------------------------------- "
     Write-Host "|  SNAPSHOT DISABLED: Removing Snapshot before build  |"
     Write-Host " ----------------------------------------------------- "
-
-    $FilePath1 = $RootPath + "\\gradle.properties"
-    $FilePath2 = $RootPath + "\\build.gradle"
-
-    If(Test-Path "$FilePath1")
+    $XmlPath = $RootPath + "\\pom.xml"
+    If(Test-Path "$XmlPath")
     {  
-        $FileContent = Get-Content -Path $FilePath1
-        Foreach($LineContent in $FileContent)
-        {
-            If($LineContent.Length -gt 9)
-            {
-                If($LineContent.Substring(0,9) -eq "version =")
-                {
-                    $NewLineContent = $LineContent.Replace("-SNAPSHOT", "")
-                    (Get-Content $FilePath1) | ForEach-Object { $_ -replace "$LineContent", "$NewLineContent" } | Set-Content "$FilePath1"
-                }
-            }
-        }
-    }
-
-    If(Test-Path "$FilePath2")
-    {
-        $FileContent = Get-Content -Path $FilePath2
-        Foreach($LineContent in $FileContent)
-        {
-            If($LineContent.Length -gt 9)
-            {
-                If($LineContent.Substring(0,9) -eq "version =")
-                {
-                    $NewLineContent = $LineContent.Replace("-SNAPSHOT", "")
-                    (Get-Content $FilePath2) | ForEach-Object { $_ -replace "$LineContent", "$NewLineContent" } | Set-Content "$FilePath2"
-                }
-            }
-        }
+        [xml]$XmlDocument = Get-Content -Path $XmlPath
+        $XmlDocument.project.version = $XmlDocument.project.version.Replace("-SNAPSHOT", "")
+        $XmlDocument.Save($XmlPath)
     }
 }
 Else
@@ -70,17 +39,13 @@ Else
     Write-Host " ----------------------------------------------------- "
     Write-Host "|    SNAPSHOT ENABLED: Run Build without modifying    |"
     Write-Host " ----------------------------------------------------- " 
-}
-'''
+}'''
       }
     }
 	
      stage('Build') {
             steps {
-				//dir("cli") {
 		    bat """mvn clean install -Dorg.apache.maven.user-settings=C:\\Jenkins\\workspace\\settings.xml -Dbuild.number=${BUILD_NUMBER}"""
-// bat "gradlew.bat -DIsReleaseBuild=${params.IsReleaseBuild} -DBranchName=master --stacktrace clean build && exit %%ERRORLEVEL%%"
-				//}
             }
         }
 		stage('Archive Artifacts') {
