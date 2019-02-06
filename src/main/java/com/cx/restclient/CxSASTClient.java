@@ -282,18 +282,6 @@ class CxSASTClient {
         httpClient.patchRequest(SAST_QUEUE_SCAN_STATUS.replace("{scanId}", Long.toString(scanId)), CONTENT_TYPE_APPLICATION_JSON_V1, entity, 200, "cancel SAST scan");
         log.info("SAST Scan canceled. (scanId: " + scanId + ")");
     }
-
-
-    public SASTResults getProjecti(long scanId) throws InterruptedException, CxClientException, IOException {
-        SASTResults sastResults = new SASTResults();
-       byte[] cxReport = getScanReport(scanId, ReportType.XML, CONTENT_TYPE_APPLICATION_XML_V1);
-        CxXMLResults reportObj = convertToXMLResult(cxReport);
-        sastResults.setScanDetailedReport(reportObj);
-        sastResults.setRawXMLReport(cxReport);
-        sastResults.setSastResultsReady(true);
-        return sastResults;
-
-    }
     //**------ Private Methods  ------**//
     private boolean projectHasQueuedScans(long projectId) throws IOException, CxClientException {
         List<ResponseQueueScanStatus> queuedScans = getQueueScans(projectId);

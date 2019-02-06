@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.checkmarx</groupId>
   <artifactId>cx-client-common</artifactId>
-  <version>9.00.0-SNAPSHOT</version>
+  <version>9.00.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Checkmarx Client</name>
   <description>Enables web services access Checkmarx SAST and OSA scan.</description>
@@ -85,7 +85,7 @@
     <dependency>
       <groupId>org.whitesource</groupId>
       <artifactId>whitesource-fs-agent</artifactId>
-      <version>18.7.2</version>
+      <version>18.10.2</version>
       <exclusions>
         <exclusion>
           <groupId>javax.xml.bind</groupId>

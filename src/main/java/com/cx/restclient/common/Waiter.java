@@ -59,7 +59,7 @@ public abstract class Waiter<T> {
             }
         } catch (Exception e) {
             throw new CxClientException("Failed to get status from " + scanType + ". Error message: " + e.getMessage(), e);
-            }
+        }
         return resolveStatus(obj);
     }
 
