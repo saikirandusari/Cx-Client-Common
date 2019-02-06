@@ -85,7 +85,7 @@ Else
         }
 		stage('Archive Artifacts') {
 			steps {
-				archiveArtifacts '/build/distributions/*.*'
+				archiveArtifacts 'target/*.jar'
 			}
 		}  
   }
