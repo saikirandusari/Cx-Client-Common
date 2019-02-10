@@ -1,5 +1,7 @@
 package com.cx.restclient.osa.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.Map;
 /**
  * Created by Galn on 07/02/2018.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OSAResults implements Serializable {
     private String osaScanId;
     private OSASummaryResults results;
