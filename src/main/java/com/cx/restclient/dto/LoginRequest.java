@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * Date: 08/09/2016.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-
 public class LoginRequest {
 
     private String username;

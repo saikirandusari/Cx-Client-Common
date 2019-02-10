@@ -1,8 +1,11 @@
 package com.cx.restclient.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Galn on 4/10/2018.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ThresholdResult {
     private boolean isFail;
     private String failDescription;

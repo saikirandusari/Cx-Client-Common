@@ -1,8 +1,12 @@
 package com.cx.restclient.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Galn on 13/02/2018.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class BaseStatus {
     private String baseId;
     private Status baseStatus;

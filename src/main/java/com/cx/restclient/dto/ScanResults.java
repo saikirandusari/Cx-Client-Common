@@ -3,9 +3,10 @@ package com.cx.restclient.dto;
 
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.sast.dto.SASTResults;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ScanResults implements Serializable {
 
     private SASTResults sastResults;
