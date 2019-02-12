@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import static org.junit.Assert.*;
 
 public class CxScanConfigTest {
-    private Logger logUnitTests = LoggerFactory.getLogger("testush");
+    private Logger logUnitTests = LoggerFactory.getLogger("CxCommonClient Unit tests ");
     private CxScanConfig cxScanConfig = new CxScanConfig();
 
     String url;
