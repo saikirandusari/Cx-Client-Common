@@ -60,7 +60,7 @@ public class CxScanConfig implements Serializable {
     private String osaDependenciesJson;
     private Boolean avoidDuplicateProjectScans = false;
 
-    private Boolean generateFullReport = true;
+    private Boolean generateXmlReport = true;
 
     public CxScanConfig() {
     }
@@ -440,11 +440,11 @@ public class CxScanConfig implements Serializable {
         return avoidDuplicateProjectScans;
     }
 
-    public Boolean getGenerateFullReport() {
-        return generateFullReport;
+    public Boolean getGenerateXmlReport() {
+        return generateXmlReport;
     }
 
-    public void setGenerateFullReport(Boolean generateFullReport) {
-        this.generateFullReport = generateFullReport;
+    public void setGenerateXmlReport(Boolean generateXmlReport) {
+        this.generateXmlReport = generateXmlReport;
     }
 }

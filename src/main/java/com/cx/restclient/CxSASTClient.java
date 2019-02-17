@@ -151,7 +151,7 @@ class CxSASTClient {
         sastResults.setResults(scanId, statisticsResults, config.getUrl(), projectId);
 
         //SAST detailed report
-        if(config.getGenerateFullReport()== null || config.getGenerateFullReport()) {
+        if(config.getGenerateXmlReport()== null || config.getGenerateXmlReport()) {
             byte[] cxReport = getScanReport(sastResults.getScanId(), ReportType.XML, CONTENT_TYPE_APPLICATION_XML_V1);
             CxXMLResults reportObj = convertToXMLResult(cxReport);
             sastResults.setScanDetailedReport(reportObj);
