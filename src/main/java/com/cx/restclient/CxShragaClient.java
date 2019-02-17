@@ -36,7 +36,6 @@ public class CxShragaClient {
     private Logger log;
     private CxScanConfig config;
     private long projectId;
-
     private CxSASTClient sastClient;
     private CxOSAClient osaClient;
     private long sastScanId;
