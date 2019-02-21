@@ -85,7 +85,7 @@ class CxSASTClient {
     long createSASTScan(long projectId) throws IOException, CxClientException {
         log.info("-----------------------------------Create CxSAST Scan:------------------------------------");
 
-        if (config.isAvoidDuplicateProjectScans()!= null && config.isAvoidDuplicateProjectScans() && projectHasQueuedScans(projectId)) {
+        if (config.isAvoidDuplicateProjectScans() != null && config.isAvoidDuplicateProjectScans() && projectHasQueuedScans(projectId)) {
             throw new CxClientException("\nAvoid duplicate project scans in queue\n");
         }
 
@@ -157,7 +157,7 @@ class CxSASTClient {
                 sastResults.getSastPolicies().add(policy.getPolicyName());
                 sastResults.addAllViolations(policy.getViolations());
             }
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             log.error("CxARM is not available. Policy violations for SAST cannot be calculated: " + ex.getMessage());
         }
     }
@@ -168,10 +168,12 @@ class CxSASTClient {
         sastResults.setResults(scanId, statisticsResults, config.getUrl(), projectId);
 
         //SAST detailed report
-        byte[] cxReport = getScanReport(sastResults.getScanId(), ReportType.XML, CONTENT_TYPE_APPLICATION_XML_V1);
-        CxXMLResults reportObj = convertToXMLResult(cxReport);
-        sastResults.setScanDetailedReport(reportObj);
-        sastResults.setRawXMLReport(cxReport);
+        if (config.getGenerateXmlReport() == null || config.getGenerateXmlReport()) {
+            byte[] cxReport = getScanReport(sastResults.getScanId(), ReportType.XML, CONTENT_TYPE_APPLICATION_XML_V1);
+            CxXMLResults reportObj = convertToXMLResult(cxReport);
+            sastResults.setScanDetailedReport(reportObj);
+            sastResults.setRawXMLReport(cxReport);
+        }
         sastResults.setSastResultsReady(true);
         return sastResults;
     }
@@ -209,7 +211,7 @@ class CxSASTClient {
     }
 
     private boolean isStatusToAvoid(String status) {
-        QueueStatus qStatus =  QueueStatus.valueOf(status);
+        QueueStatus qStatus = QueueStatus.valueOf(status);
 
         switch (qStatus) {
             case New:

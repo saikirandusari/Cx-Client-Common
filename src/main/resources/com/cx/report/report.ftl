@@ -1580,7 +1580,7 @@
             </div>
         </div>
 
-    <#if config.sastEnabled && sast.sastResultsReady>
+    <#if config.sastEnabled && config.generateXmlReport &&sast.sastResultsReady>
         <#if sast.high gt 0 || sast.medium gt 0 || sast.low gt 0>
             <div id="sast-full" class="sast-full full-results-section">
                 <div class="summary-table-row cxsast-full">

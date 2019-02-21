@@ -60,6 +60,7 @@ public class CxScanConfig implements Serializable {
     private String osaDependenciesJson;
     private Boolean avoidDuplicateProjectScans = false;
     private boolean enablePolicyViolations = false;
+    private Boolean generateXmlReport = true;
 
     private String cxARMUrl;
 
@@ -456,5 +457,13 @@ public class CxScanConfig implements Serializable {
 
     public void setAvoidDuplicateProjectScans(Boolean avoidDuplicateProjectScans) {
         this.avoidDuplicateProjectScans = avoidDuplicateProjectScans;
+    }
+
+    public Boolean getGenerateXmlReport() {
+        return generateXmlReport;
+    }
+
+    public void setGenerateXmlReport(Boolean generateXmlReport) {
+        this.generateXmlReport = generateXmlReport;
     }
 }
