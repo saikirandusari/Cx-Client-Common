@@ -116,7 +116,7 @@ class CxSASTClient {
         }
         if (config.getRemoteType() == null) { //scan is local
             return createLocalSASTScan(projectId);
-        }else{
+        } else {
             return createRemoteSourceScan(projectId);
         }
     }
@@ -255,10 +255,12 @@ class CxSASTClient {
         sastResults.setResults(scanId, statisticsResults, config.getUrl(), projectId);
 
         //SAST detailed report
-        byte[] cxReport = getScanReport(sastResults.getScanId(), ReportType.XML, CONTENT_TYPE_APPLICATION_XML_V1);
-        CxXMLResults reportObj = convertToXMLResult(cxReport);
-        sastResults.setScanDetailedReport(reportObj);
-        sastResults.setRawXMLReport(cxReport);
+        if (config.getGenerateXmlReport() == null || config.getGenerateXmlReport()) {
+            byte[] cxReport = getScanReport(sastResults.getScanId(), ReportType.XML, CONTENT_TYPE_APPLICATION_XML_V1);
+            CxXMLResults reportObj = convertToXMLResult(cxReport);
+            sastResults.setScanDetailedReport(reportObj);
+            sastResults.setRawXMLReport(cxReport);
+        }
         sastResults.setSastResultsReady(true);
         return sastResults;
     }
@@ -282,6 +284,7 @@ class CxSASTClient {
         httpClient.patchRequest(SAST_QUEUE_SCAN_STATUS.replace("{scanId}", Long.toString(scanId)), CONTENT_TYPE_APPLICATION_JSON_V1, entity, 200, "cancel SAST scan");
         log.info("SAST Scan canceled. (scanId: " + scanId + ")");
     }
+
     //**------ Private Methods  ------**//
     private boolean projectHasQueuedScans(long projectId) throws IOException, CxClientException {
         List<ResponseQueueScanStatus> queuedScans = getQueueScans(projectId);

@@ -65,6 +65,7 @@ public class CxScanConfig implements Serializable {
     private String osaDependenciesJson;
     private Boolean avoidDuplicateProjectScans = false;
     private boolean enablePolicyViolations = false;
+    private Boolean generateXmlReport = true;
 
     private String cxARMUrl;
     private String[] paths;
@@ -574,5 +575,13 @@ public class CxScanConfig implements Serializable {
 
     public void setJenkinsJob(int jenkinsJob) {
         this.jenkinsJob = jenkinsJob;
+    }
+
+    public Boolean getGenerateXmlReport() {
+        return generateXmlReport;
+    }
+
+    public void setGenerateXmlReport(Boolean generateXmlReport) {
+        this.generateXmlReport = generateXmlReport;
     }
 }
