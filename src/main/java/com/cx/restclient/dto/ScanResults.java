@@ -19,20 +19,6 @@ public class ScanResults implements Serializable {
     public ScanResults() {
     }
 
-    public boolean isSASTCreated() {
-        return this.sastCreateException == null;
-    }
-    public boolean isOSACreated() {
-        return this.osaCreateException == null;
-    }
-
-    public boolean isSASTDone() {
-        return this.sastWaitException == null;
-    }
-    public boolean isOSADone() {
-        return this.osaWaitException == null;
-    }
-
     public SASTResults getSastResults() {
         return sastResults;
     }
