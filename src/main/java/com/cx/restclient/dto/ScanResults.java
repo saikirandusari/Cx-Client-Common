@@ -25,9 +25,7 @@ public class ScanResults implements Serializable {
     public boolean isOSACreated() {
         return this.osaCreateException != null;
     }
-    public boolean isShragaCreated() {
-        return this.generalException != null;
-    }
+
     public boolean isSASTDone() {
         return this.sastWaitException != null;
     }
