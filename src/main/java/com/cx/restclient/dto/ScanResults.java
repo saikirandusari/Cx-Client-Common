@@ -19,6 +19,16 @@ public class ScanResults implements Serializable {
     public ScanResults() {
     }
 
+    public boolean isSASTCreated() {
+        return this.sastCreateException != null;
+    }
+    public boolean isOSACreated() {
+        return this.osaCreateException != null;
+    }
+    public boolean isShragaCreated() {
+        return this.generalException != null;
+    }
+
     public SASTResults getSastResults() {
         return sastResults;
     }
