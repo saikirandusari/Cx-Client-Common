@@ -28,6 +28,12 @@ public class ScanResults implements Serializable {
     public boolean isShragaCreated() {
         return this.generalException != null;
     }
+    public boolean isSASTDone() {
+        return this.sastWaitException != null;
+    }
+    public boolean isOSADone() {
+        return this.osaWaitException != null;
+    }
 
     public SASTResults getSastResults() {
         return sastResults;
