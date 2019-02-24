@@ -96,7 +96,7 @@
         </dependency>
         <dependency>
             <groupId>org.whitesource</groupId>
-            <artifactId>wss-unified-agent-utils</artifactId>
+            <artifactId>wss-unified-agent-main</artifactId>
             <version>18.12.2</version>
             <exclusions>
                 <exclusion>
