@@ -14,6 +14,7 @@ public class ScanResults implements Serializable {
     private Exception sastWaitException = null;
     private Exception osaCreateException = null;
     private Exception osaWaitException = null;
+    private Exception generalException = null;
 
     public ScanResults() {
     }
@@ -64,5 +65,13 @@ public class ScanResults implements Serializable {
 
     public void setOsaWaitException(Exception osaWaitException) {
         this.osaWaitException = osaWaitException;
+    }
+
+    public Exception getGeneralException() {
+        return generalException;
+    }
+
+    public void setGeneralException(Exception generalException) {
+        this.generalException = generalException;
     }
 }
