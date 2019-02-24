@@ -334,7 +334,6 @@ class CxSASTClient {
         return httpClient.postRequest(SAST_CREATE_SCAN, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CxID.class, 201, "create new SAST Scan");
     }
 
-
     private CxID createRemoteSourceScan(long projectId, HttpEntity entity, String sourceType) throws IOException, CxClientException {
         return httpClient.postRequest(SAST_CREATE_REMOTE_SOURCE_SCAN.replace("{projectId}", Long.toString(projectId)).replace("{sourceType}", sourceType), CONTENT_TYPE_APPLICATION_JSON_V1, entity, CxID.class, 204, "create " + sourceType + " remote source scan setting");
     }
