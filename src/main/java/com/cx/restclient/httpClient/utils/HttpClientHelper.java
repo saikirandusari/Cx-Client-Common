@@ -2,7 +2,6 @@ package com.cx.restclient.httpClient.utils;
 
 
 import com.cx.restclient.common.ErrorMessage;
-import com.cx.restclient.common.ErrorUtil;
 import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.exception.CxHTTPClientException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -71,9 +70,6 @@ public abstract class HttpClientHelper {
 
     public static void validateResponse(HttpResponse response, int status, String message) throws CxClientException {
         if (response.getStatusLine().getStatusCode() != status) {
-            if (ErrorUtil.isServerErrorCodes(response.getStatusLine().getStatusCode())) {
-                throw new CxClientException(ErrorMessage.SERVICE_UNAVAILABLE.getErrorMessage());
-            }
             String responseBody = extractResponseBody(response);
             responseBody = responseBody.replace("{", "").replace("}", "").replace(System.getProperty("line.separator"), " ").replace("  ", "");
             throw new CxHTTPClientException(response.getStatusLine().getStatusCode(), message + ": " + responseBody);

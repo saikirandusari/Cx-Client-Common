@@ -41,7 +41,7 @@ public abstract class Waiter<T> {
                 try {
                     obj = getStatus(taskId);
                     status = ((BaseStatus) obj).getBaseStatus();
-                    log.info(status.value());
+                    log.debug(status.value());
                 } catch (Exception e) {
                     log.debug("Failed to get status from " + scanType + ". retrying (" + (retry - 1) + " tries left). Error message: " + e.getMessage());
                     retry--;

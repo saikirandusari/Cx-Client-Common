@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Properties;
 
 import org.whitesource.fs.FSAConfigProperties;
 
@@ -65,8 +66,23 @@ public class CxShragaClient {
     }
 
     //API Scans methods
+    public String getClientVersion() {
+        String version = "";
+        try {
+            Properties properties = new Properties();
+            java.io.InputStream is = getClass().getClassLoader().getResourceAsStream("common.properties");
+            if (is != null) {
+                properties.load(is);
+                version = properties.getProperty("version");
+            }
+        } catch (Exception e) {
+
+        }
+        return version;
+    }
     public void init() throws CxClientException, IOException {
-        log.info("Initializing Cx client");
+
+        log.info("Initializing Cx client ["+ getClientVersion()+"]");
         login();
         resolveTeam();
         if (config.getSastEnabled()) {
