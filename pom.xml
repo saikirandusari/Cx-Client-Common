@@ -182,10 +182,6 @@
                     <artifactId>junrar</artifactId>
                     <groupId>com.github.junrar</groupId>
                 </exclusion>
-                <exclusion>
-                    <artifactId>zip4j</artifactId>
-                    <groupId>net.lingala.zip4j</groupId>
-                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
