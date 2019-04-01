@@ -1,6 +1,6 @@
 pipeline {
   parameters {        
-        booleanParam(name: 'IsReleaseBuild', description: 'Check the box if you want to create a release build') 
+        booleanParam(name: 'IsReleaseBuild', description: 'Check the box if you want to create a release build!') 
     }
   agent {
     node {
