@@ -1,6 +1,5 @@
 package com.cx.restclient.osa.utils;
 
-import com.cx.restclient.common.CxGlobalMessage;
 import com.cx.restclient.common.ShragaUtils;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.osa.dto.OSASummaryResults;

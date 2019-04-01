@@ -1,9 +1,9 @@
 package com.cx.restclient;
 
-import com.cx.restclient.common.CxGlobalMessage;
 import com.cx.restclient.common.summary.SummaryUtils;
 import com.cx.restclient.configuration.CxScanConfig;
 import com.cx.restclient.cxArm.dto.CxArmConfig;
+import com.cx.restclient.dto.CxVersion;
 import com.cx.restclient.dto.Team;
 import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.exception.CxHTTPClientException;
@@ -56,7 +56,7 @@ public class CxShragaClient {
                 config.getUsername(),
                 config.getPassword(),
                 config.getCxOrigin(),
-                config.isDisableCertificateValidation(),config.isUseSSOLogin(), log);
+                config.isDisableCertificateValidation(), config.isUseSSOLogin(), log);
         sastClient = new CxSASTClient(httpClient, log, config);
         osaClient = new CxOSAClient(httpClient, log, config);
     }
@@ -80,15 +80,17 @@ public class CxShragaClient {
         }
         return version;
     }
+
     public void init() throws CxClientException, IOException {
 
-        log.info("Initializing Cx client ["+ getClientVersion()+"]");
+        log.info("Initializing Cx client [" + getClientVersion() + "]");
+        getCxVersion();
         login();
         resolveTeam();
         if (config.getSastEnabled()) {
             resolvePreset();
         }
-        if (config.getEnablePolicyViolations()){
+        if (config.getEnablePolicyViolations()) {
             resolveCxARMUrl();
         }
         resolveProject();
@@ -130,16 +132,16 @@ public class CxShragaClient {
         return osaResults;
     }
 
-    public void printIsProjectViolated(){
-        log.info("-----------------------------------------------------------------------------------------");
-        log.info("Policy Management: ");
-        log.info("--------------------");
+    public void printIsProjectViolated() {
         if (config.getEnablePolicyViolations()) {
-            if (sastResults.getSastPolicies().isEmpty() && osaResults.getOsaPolicies().isEmpty()){
-                log.info(CxGlobalMessage.PROJECT_POLICY_COMPLAINT_STATUS.getMessage());
+            log.info("-----------------------------------------------------------------------------------------");
+            log.info("Policy Management: ");
+            log.info("--------------------");
+            if (sastResults.getSastPolicies().isEmpty() && osaResults.getOsaPolicies().isEmpty()) {
+                log.info(PROJECT_POLICY_COMPLAINT_STATUS);
                 log.info("-----------------------------------------------------------------------------------------");
-            }else {
-                log.info(CxGlobalMessage.PROJECT_POLICY_VIOLATED_STATUS.getMessage());
+            } else {
+                log.info(PROJECT_POLICY_VIOLATED_STATUS);
                 if (!sastResults.getSastPolicies().isEmpty()) {
                     log.info("SAST violated policies names: " + getPoliciesNames(sastResults.getSastPolicies()));
                 }
@@ -186,11 +188,21 @@ public class CxShragaClient {
         httpClient.login();
     }
 
+    public void getCxVersion() throws IOException, CxClientException {
+        try {
+            config.setCxVersion(httpClient.getRequest(CX_VERSION, CONTENT_TYPE_APPLICATION_JSON_V1, CxVersion.class, 200, "cx Version", false));
+            log.info("Checkmarx Server version [" + config.getCxVersion().getVersion() + "]. Hotfix [" + config.getCxVersion().getHotFix() + "].");
+
+        } catch (Exception ex) {
+            log.debug("Checkmarx Server version [lower than 9.0]");
+        }
+    }
+
     public String getTeamIdByName(String teamName) throws CxClientException, IOException {
-        teamName = teamName.replace("\\","/");
+        teamName = teamName.replace("\\", "/");
         List<Team> allTeams = getTeamList();
         for (Team team : allTeams) {
-            if (team.getFullName().replace("\\","/").equalsIgnoreCase(teamName)) { //TODO caseSenesitive
+            if (team.getFullName().replace("\\", "/").equalsIgnoreCase(teamName)) { //TODO caseSenesitive
                 return team.getId();
             }
         }
@@ -287,7 +299,7 @@ public class CxShragaClient {
         List<Project> projects = getProjectByName(config.getProjectName(), config.getTeamId());
         if (projects == null || projects.isEmpty()) { // Project is new
             if (config.getDenyProject()) {
-                throw new CxClientException(DENY_NEW_PROJECT_ERROR.replace("{projectName}" , config.getProjectName()));
+                throw new CxClientException(DENY_NEW_PROJECT_ERROR.replace("{projectName}", config.getProjectName()));
             }
             //Create newProject
             CreateProjectRequest request = new CreateProjectRequest(config.getProjectName(), config.getTeamId(), config.getPublic());

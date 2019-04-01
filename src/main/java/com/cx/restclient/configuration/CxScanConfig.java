@@ -1,6 +1,7 @@
 package com.cx.restclient.configuration;
 
 
+import com.cx.restclient.dto.CxVersion;
 import com.cx.restclient.dto.RemoteSourceTypes;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,6 +18,7 @@ public class CxScanConfig implements Serializable {
     private Boolean osaEnabled = false;
 
     private String cxOrigin;
+    private CxVersion cxVersion;
 
     private boolean disableCertificateValidation = false;
     private boolean useSSOLogin = false;
@@ -70,7 +72,7 @@ public class CxScanConfig implements Serializable {
     private String cxARMUrl;
     private String[] paths;
     //remote source control
-    RemoteSourceTypes remoteType = null;
+    private RemoteSourceTypes remoteType = null;
     private String remoteSrcUser;
     private String remoteSrcPass;
     private String remoteSrcUrl;
@@ -583,5 +585,13 @@ public class CxScanConfig implements Serializable {
 
     public void setGenerateXmlReport(Boolean generateXmlReport) {
         this.generateXmlReport = generateXmlReport;
+    }
+
+    public CxVersion getCxVersion() {
+        return cxVersion;
+    }
+
+    public void setCxVersion(CxVersion cxVersion) {
+        this.cxVersion = cxVersion;
     }
 }

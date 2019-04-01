@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.cx.restclient.common.CxPARAM.PROJECT_POLICY_VIOLATED_STATUS;
+
 /**
  * Created by: dorg.
  * Date: 4/12/2018.
@@ -30,7 +32,7 @@ public abstract class ShragaUtils {
     public static boolean isPolicyViolated(CxScanConfig config, SASTResults sastResults, OSAResults osaResults, StringBuilder res) {
         boolean isPolicyViolated = config.getEnablePolicyViolations() && ((osaResults!=null && osaResults.getOsaPolicies().size() > 0) || (sastResults != null && sastResults.getSastPolicies().size() > 0));
         if(isPolicyViolated) {
-            res.append(CxGlobalMessage.PROJECT_POLICY_VIOLATED_STATUS.getMessage()).append("\n");
+            res.append(PROJECT_POLICY_VIOLATED_STATUS).append("\n");
         }
         return isPolicyViolated;
     }
