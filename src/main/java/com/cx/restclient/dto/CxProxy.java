@@ -10,7 +10,7 @@ public class CxProxy {
     private String proxyScheme;
 
 
-    public CxProxy(Boolean useProxy, String proxyHost, Integer proxyPort, String scheme, String proxyUser, String proxyPass) {
+    public CxProxy(Boolean useProxy, String proxyHost, Integer proxyPort, String scheme) {
         this.useProxy = useProxy;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
