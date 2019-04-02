@@ -2,12 +2,16 @@ package com.cx.restclient.httpClient;
 
 import com.cx.restclient.common.ErrorMessage;
 import com.cx.restclient.common.UrlUtils;
+import com.cx.restclient.dto.CxProxy;
 import com.cx.restclient.dto.TokenLoginResponse;
 import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.exception.CxHTTPClientException;
 import com.cx.restclient.exception.CxTokenExpiredException;
 import org.apache.http.*;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
@@ -16,7 +20,9 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.ProxyAuthenticationStrategy;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContexts;
@@ -53,6 +59,7 @@ public class CxHttpClient {
     private final String username;
     private final String password;
     private String cxOrigin;
+    private CxProxy proxy;
 
     private CookieStore cookieStore;
     private String cookies;
@@ -95,12 +102,13 @@ public class CxHttpClient {
     };
 
 
-    public CxHttpClient(String hostname, String username, String password, String origin, boolean disableSSLValidation, boolean isSSO, Logger logi) throws MalformedURLException {
+    public CxHttpClient(String hostname, String username, String password, String origin, boolean disableSSLValidation, boolean isSSO, CxProxy proxy, Logger logi) throws MalformedURLException {
         this.logi = logi;
         this.username = username;
         this.password = password;
         this.rootUri = UrlUtils.parseURLToString(hostname, "CxRestAPI/");
         this.cxOrigin = origin;
+        this.proxy = proxy;
         //create httpclient
         HttpClientBuilder builder = HttpClientBuilder.create().addInterceptorFirst(requestFilter);
         if (isSSO) {
@@ -112,6 +120,25 @@ public class CxHttpClient {
         if (disableSSLValidation) {
             builder = disableCertificateValidation(builder, logi);
         }
+
+        if (proxy != null && proxy.getUseProxy()) {
+            HttpHost proxyHostObject;
+            if (proxy.getScheme() != null) {
+                proxyHostObject = new HttpHost(proxy.getProxyHost(), proxy.getProxyPort() == null ? 80 : proxy.getProxyPort(), proxy.getScheme());
+            } else {
+                proxyHostObject = new HttpHost(proxy.getProxyHost(), proxy.getProxyPort() == null ? 80 : proxy.getProxyPort());
+            }
+            builder.setProxy(proxyHostObject);
+
+            if (proxy.getProxyUser() != null && proxy.getProxyPass() != null) {
+                CredentialsProvider credsProvider = new BasicCredentialsProvider();
+                credsProvider.setCredentials(new AuthScope(proxy.getProxyHost(), proxy.getProxyPort()),
+                        new UsernamePasswordCredentials(proxy.getProxyUser(), proxy.getProxyPass()));
+                builder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy()).setDefaultCredentialsProvider(credsProvider);
+            }
+            //   httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+        }
+
         builder.useSystemProperties();
         apacheClient = builder.build();
     }
@@ -125,7 +152,6 @@ public class CxHttpClient {
             UrlEncodedFormEntity requestEntity = generateUrlEncodedFormEntity();
             HttpPost post = new HttpPost(rootUri + AUTHENTICATION);
             token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
-
         }
     }
 

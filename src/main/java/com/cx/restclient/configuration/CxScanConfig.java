@@ -1,6 +1,7 @@
 package com.cx.restclient.configuration;
 
 
+import com.cx.restclient.dto.CxProxy;
 import com.cx.restclient.dto.CxVersion;
 import com.cx.restclient.dto.RemoteSourceTypes;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,7 @@ public class CxScanConfig implements Serializable {
     private String username;
     private String password;
     private String url;
+    private CxProxy proxy;
     private String projectName;
     private String teamPath;
     private String teamId;
@@ -87,12 +89,13 @@ public class CxScanConfig implements Serializable {
     public CxScanConfig() {
     }
 
-    public CxScanConfig(String url, String username, String password, String cxOrigin, boolean disableCertificateValidation) {
+    public CxScanConfig(String url, String username, String password, String cxOrigin, CxProxy proxy, boolean disableCertificateValidation) {
         this.url = url;
         this.username = username;
         this.password = password;
         this.cxOrigin = cxOrigin;
         this.disableCertificateValidation = disableCertificateValidation;
+        this.proxy = proxy;
     }
 
     public Boolean getSastEnabled() {
@@ -177,6 +180,14 @@ public class CxScanConfig implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public CxProxy getProxy() {
+        return proxy;
+    }
+
+    public void setProxy(CxProxy proxy) {
+        this.proxy = proxy;
     }
 
     public String getProjectName() {

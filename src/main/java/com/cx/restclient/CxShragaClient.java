@@ -3,6 +3,7 @@ package com.cx.restclient;
 import com.cx.restclient.common.summary.SummaryUtils;
 import com.cx.restclient.configuration.CxScanConfig;
 import com.cx.restclient.cxArm.dto.CxArmConfig;
+import com.cx.restclient.dto.CxProxy;
 import com.cx.restclient.dto.CxVersion;
 import com.cx.restclient.dto.Team;
 import com.cx.restclient.exception.CxClientException;
@@ -56,13 +57,14 @@ public class CxShragaClient {
                 config.getUsername(),
                 config.getPassword(),
                 config.getCxOrigin(),
-                config.isDisableCertificateValidation(), config.isUseSSOLogin(), log);
+                config.isDisableCertificateValidation(), config.isUseSSOLogin(),config.getProxy(), log);
         sastClient = new CxSASTClient(httpClient, log, config);
         osaClient = new CxOSAClient(httpClient, log, config);
     }
 
-    public CxShragaClient(String serverUrl, String username, String password, String origin, boolean disableCertificateValidation, Logger log) throws MalformedURLException {
-        this(new CxScanConfig(serverUrl, username, password, origin, disableCertificateValidation), log);
+    //For Test Connection
+    public CxShragaClient(String serverUrl, String username, String password, CxProxy proxy, String origin, boolean disableCertificateValidation, Logger log) throws MalformedURLException {
+        this(new CxScanConfig(serverUrl, username, password, origin, proxy, disableCertificateValidation), log);
     }
 
     //API Scans methods
