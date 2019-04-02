@@ -123,8 +123,8 @@ public class CxHttpClient {
 
         if (proxy != null && proxy.getUseProxy()) {
             HttpHost proxyHostObject;
-            if (proxy.getScheme() != null) {
-                proxyHostObject = new HttpHost(proxy.getProxyHost(), proxy.getProxyPort() == null ? 80 : proxy.getProxyPort(), proxy.getScheme());
+            if (proxy.getProxyScheme() != null) {
+                proxyHostObject = new HttpHost(proxy.getProxyHost(), proxy.getProxyPort() == null ? 80 : proxy.getProxyPort(), proxy.getProxyScheme());
             } else {
                 proxyHostObject = new HttpHost(proxy.getProxyHost(), proxy.getProxyPort() == null ? 80 : proxy.getProxyPort());
             }
