@@ -129,14 +129,6 @@ public class CxHttpClient {
                 proxyHostObject = new HttpHost(proxy.getProxyHost(), proxy.getProxyPort() == null ? 80 : proxy.getProxyPort());
             }
             builder.setProxy(proxyHostObject);
-
-            if (proxy.getProxyUser() != null && proxy.getProxyPass() != null) {
-                CredentialsProvider credsProvider = new BasicCredentialsProvider();
-                credsProvider.setCredentials(new AuthScope(proxy.getProxyHost(), proxy.getProxyPort()),
-                        new UsernamePasswordCredentials(proxy.getProxyUser(), proxy.getProxyPass()));
-                builder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy()).setDefaultCredentialsProvider(credsProvider);
-            }
-            //   httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
         }
 
         builder.useSystemProperties();

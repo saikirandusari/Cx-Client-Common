@@ -8,8 +8,6 @@ public class CxProxy {
     private String proxyHost;
     private Integer proxyPort;
     private String proxyScheme;
-    private String proxyUser;
-    private String proxyPass;
 
 
     public CxProxy(Boolean useProxy, String proxyHost, Integer proxyPort, String scheme, String proxyUser, String proxyPass) {
@@ -17,8 +15,6 @@ public class CxProxy {
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
         this.proxyScheme = scheme;
-        this.proxyUser = proxyUser;
-        this.proxyPass = proxyPass;
     }
 
     public CxProxy() {
@@ -60,21 +56,5 @@ public class CxProxy {
 
     public void setProxyScheme(String proxyScheme) {
         this.proxyScheme = proxyScheme;
-    }
-
-    public String getProxyUser() {
-        return proxyUser;
-    }
-
-    public void setProxyUser(String proxyUser) {
-        this.proxyUser = proxyUser;
-    }
-
-    public String getProxyPass() {
-        return proxyPass;
-    }
-
-    public void setProxyPass(String proxyPass) {
-        this.proxyPass = proxyPass;
     }
 }
