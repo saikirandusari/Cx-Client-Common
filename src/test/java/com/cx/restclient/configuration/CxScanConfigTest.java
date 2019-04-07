@@ -15,7 +15,7 @@ public class CxScanConfigTest {
     String password;
     String cxOrigin;
     boolean disableCertificateValidation = false;
-    private CxScanConfig cxScanConfigWithParameters = new CxScanConfig(url, username, password, cxOrigin, null, disableCertificateValidation);
+    private CxScanConfig cxScanConfigWithParameters = new CxScanConfig(url, username, password, cxOrigin, disableCertificateValidation);
 
     @Test
     public void CxScanConfig() {
@@ -24,7 +24,7 @@ public class CxScanConfigTest {
         String password = "password";
         String cxOrigin = "cxOrigin";
         boolean disableCertificateValidation = false;
-        CxScanConfig cxScanConfigWithParameters = new CxScanConfig(url, username, password, cxOrigin, null,disableCertificateValidation);
+        CxScanConfig cxScanConfigWithParameters = new CxScanConfig(url, username, password, cxOrigin,disableCertificateValidation);
 
         assertEquals("Incorrect URL", cxScanConfigWithParameters.getUrl(), url);
         assertEquals("Incorrect userName", cxScanConfigWithParameters.getUsername(), username);
