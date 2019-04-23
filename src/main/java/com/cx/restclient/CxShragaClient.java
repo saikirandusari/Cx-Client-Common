@@ -192,10 +192,17 @@ public class CxShragaClient {
     public void getCxVersion() throws IOException, CxClientException {
         try {
             config.setCxVersion(httpClient.getRequest(CX_VERSION, CONTENT_TYPE_APPLICATION_JSON_V1, CxVersion.class, 200, "cx Version", false));
-            log.info("Checkmarx Server version [" + config.getCxVersion().getVersion() + "]. Hotfix [" + config.getCxVersion().getHotFix() + "].");
+            String hotfix = "";
+            try {
+                if (config.getCxVersion().getHotFix() != null && Integer.parseInt(config.getCxVersion().getHotFix()) > 0) {
+                    hotfix = " Hotfix [" + config.getCxVersion().getHotFix() + "].";
+                }
+            }  catch (Exception ex){}
+
+            log.info("Checkmarx server version [" + config.getCxVersion().getVersion() + "]." + hotfix);
 
         } catch (Exception ex) {
-            log.debug("Checkmarx Server version [lower than 9.0]");
+            log.debug("Checkmarx server version [lower than 9.0]");
         }
     }
 
