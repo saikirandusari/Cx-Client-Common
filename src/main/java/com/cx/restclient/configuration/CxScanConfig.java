@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.Serializable;
+
 import org.whitesource.fs.FSAConfigProperties;
 
 /**
@@ -39,6 +40,7 @@ public class CxScanConfig implements Serializable {
     private String sastFolderExclusions;
     private String sastFilterPattern;
     private Integer sastScanTimeoutInMinutes;
+    private Integer sastOsaScanTimeoutInMinutes;
     private String scanComment;
     private Boolean isIncremental = false;
     private Boolean isSynchronous = false;
@@ -191,7 +193,7 @@ public class CxScanConfig implements Serializable {
     }
 
     public void setTeamPath(String teamPath) {
-        if(!StringUtils.isEmpty(teamPath) && !teamPath.startsWith("\\")&& !teamPath.startsWith(("/"))){
+        if (!StringUtils.isEmpty(teamPath) && !teamPath.startsWith("\\") && !teamPath.startsWith(("/"))) {
             teamPath = "\\" + teamPath;
         }
         this.teamPath = teamPath;
@@ -267,6 +269,14 @@ public class CxScanConfig implements Serializable {
 
     public void setSastScanTimeoutInMinutes(Integer sastScanTimeoutInMinutes) {
         this.sastScanTimeoutInMinutes = sastScanTimeoutInMinutes;
+    }
+
+    public Integer getOsaScanTimeoutInMinutes() {
+        return sastOsaScanTimeoutInMinutes == null ? -1 : sastOsaScanTimeoutInMinutes;
+    }
+
+    public void setOsaScanTimeoutInMinutes(Integer sastOsaScanTimeoutInMinutes) {
+        this.sastOsaScanTimeoutInMinutes = sastOsaScanTimeoutInMinutes;
     }
 
     public String getScanComment() {

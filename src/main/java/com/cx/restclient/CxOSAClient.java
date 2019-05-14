@@ -95,7 +95,7 @@ class CxOSAClient {
     public OSAResults getOSAResults(String scanId, long projectId) throws CxClientException, InterruptedException, IOException {
         log.info("-------------------------------------Get CxOSA Results:-----------------------------------");
         log.info("Waiting for OSA scan to finish");
-        OSAScanStatus osaScanStatus = osaWaiter.waitForTaskToFinish(scanId, -1, log);
+        OSAScanStatus osaScanStatus = osaWaiter.waitForTaskToFinish(scanId,this.config.getOsaScanTimeoutInMinutes(), log);
         log.info("OSA scan finished successfully. Retrieving OSA scan results");
 
         log.info("Creating OSA reports");
@@ -115,6 +115,7 @@ class CxOSAClient {
 
         return osaResults;
     }
+
 
     private OSAResults retrieveOSAResults(String scanId, OSAScanStatus osaScanStatus, long projectId) throws CxClientException, IOException {
         OSASummaryResults osaSummaryResults = getOSAScanSummaryResults(scanId);
