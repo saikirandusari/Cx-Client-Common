@@ -36,7 +36,8 @@ public abstract class SASTUtils {
         CxXMLResults reportObj = null;
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(cxReport);
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(CxXMLResults.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(CxXMLResults.class.getPackage().getName(),
+                    CxXMLResults.class.getClassLoader());
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
             reportObj = (CxXMLResults) unmarshaller.unmarshal(byteArrayInputStream);
@@ -49,7 +50,7 @@ public abstract class SASTUtils {
         return reportObj;
     }
 
-    public static void printSASTResultsToConsole(SASTResults sastResults,boolean enableViolations, Logger log) {
+    public static void printSASTResultsToConsole(SASTResults sastResults, boolean enableViolations, Logger log) {
 
         String highNew = sastResults.getNewHigh() > 0 ? " (" + sastResults.getNewHigh() + " new)" : "";
         String mediumNew = sastResults.getNewMedium() > 0 ? " (" + sastResults.getNewMedium() + " new)" : "";
@@ -67,13 +68,13 @@ public abstract class SASTUtils {
     }
 
     //PDF Report
-    public static String writePDFReport(byte[] scanReport, File workspace, String pdfFileName,  Logger log) {
+    public static String writePDFReport(byte[] scanReport, File workspace, String pdfFileName, Logger log) {
         try {
             FileUtils.writeByteArrayToFile(new File(workspace + CX_REPORT_LOCATION, pdfFileName), scanReport);
             log.info("PDF report location: " + workspace + CX_REPORT_LOCATION + File.separator + pdfFileName);
         } catch (Exception e) {
             log.error("Failed to write PDF report to workspace: ", e.getMessage());
-            pdfFileName ="";
+            pdfFileName = "";
         }
         return pdfFileName;
     }
