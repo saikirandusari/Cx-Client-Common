@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.checkmarx</groupId>
     <artifactId>cx-client-common</artifactId>
-    <version>9.00.0-JDK11-SNAPSHOT</version>
+    <version>9.00.0_JDK11-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Checkmarx Client</name>
     <description>Enables web services access Checkmarx SAST and OSA scan.</description>
@@ -157,27 +157,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!--Separate JAXB dependencies for JDK 9+ -->
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.4.0-b180830.0359</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
-            <version>2.4.0-b180830.0438</version>
-        </dependency>
-        <!--End -->
-
     </dependencies>
     <distributionManagement>
         <snapshotRepository>
