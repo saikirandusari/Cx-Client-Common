@@ -207,14 +207,22 @@ public class CxShragaClient {
     }
 
     public String getTeamIdByName(String teamName) throws CxClientException, IOException {
-        teamName = teamName.replace("\\", "/");
+        teamName = replaceDelimiters(teamName);
         List<Team> allTeams = getTeamList();
         for (Team team : allTeams) {
-            if (team.getFullName().replace("\\", "/").equalsIgnoreCase(teamName)) { //TODO caseSenesitive
+            String fullName = replaceDelimiters(team.getFullName());
+            if (fullName.equalsIgnoreCase(teamName)) { //TODO caseSenesitive
                 return team.getId();
             }
         }
         throw new CxClientException("Could not resolve team ID from team name: " + teamName);
+    }
+
+    private String replaceDelimiters(String teamName) {
+        while(teamName.contains("\\")) {
+            teamName = teamName.replace("\\", "/");
+        }
+        return teamName;
     }
 
     public String getTeamNameById(String teamId) throws CxClientException, IOException {
