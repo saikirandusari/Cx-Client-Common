@@ -219,8 +219,9 @@ public class CxShragaClient {
     }
 
     private String replaceDelimiters(String teamName) {
-        while(teamName.contains("\\")) {
+        while(teamName.contains("\\") || teamName.contains("//")) {
             teamName = teamName.replace("\\", "/");
+            teamName = teamName.replace("//", "/");
         }
         return teamName;
     }
