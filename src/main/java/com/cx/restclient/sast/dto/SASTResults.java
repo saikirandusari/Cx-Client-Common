@@ -331,7 +331,9 @@ public class SASTResults implements Serializable {
 
     private Date createStartDate(String scanStart) throws ParseException {
         //"Sunday, February 26, 2017 12:17:09 PM"
-        String oldPattern = "EEEE, MMMM dd, yyyy hh:mm:ss a";
+//        String oldPattern = "EEEE, MMMM dd, yyyy hh:mm:ss a";
+        String oldPattern = "yyyy hh:mm:ss a";
+
         Locale locale = Locale.ENGLISH;
 
         DateFormat oldDateFormat = new SimpleDateFormat(oldPattern, locale);
