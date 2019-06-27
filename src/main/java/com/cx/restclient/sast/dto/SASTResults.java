@@ -35,10 +35,10 @@ public class SASTResults implements Serializable {
     private String sastProjectLink;
     private String sastPDFLink;
 
-    private String scanStart;
-    private String scanTime;
-    private String scanStartTime;
-    private String scanEndTime;
+    private String scanStart = "";
+    private String scanTime = "";
+    private String scanStartTime = "";
+    private String scanEndTime = "";
 
     private String filesScanned;
     private String LOC;
@@ -330,14 +330,23 @@ public class SASTResults implements Serializable {
         return new SimpleDateFormat(displayDatePattern, locale).format(date);
     }
 
-    private Date createStartDate(String scanStart) throws ParseException {
-        //"Sunday, February 26, 2017 12:17:09 PM"
-        String oldPattern = "EEEE, MMMM dd, yyyy hh:mm:ss a";
-        Locale locale = Locale.ENGLISH;
+    private Date createStartDate(String scanStart) throws Exception {
+        DateFormat formatter;
+        Date formattedDate = null;
 
-        DateFormat oldDateFormat = new SimpleDateFormat(oldPattern, locale);
+        for (SupportedLanguage lang : SupportedLanguage.values()) {
+            try {
+                formatter = new SimpleDateFormat(lang.getFormat(), lang.getLocale());
+                formattedDate = formatter.parse(scanStart);
+                break;
+            } catch (Exception ignored) {
+            }
+        }
 
-        return oldDateFormat.parse(scanStart);
+        if(formattedDate == null){
+            throw new Exception(String.format("Failed parsing date [%s]", scanStart));
+        }
+        return formattedDate;
     }
 
     private Date createTimeDate(String scanTime) throws ParseException {
