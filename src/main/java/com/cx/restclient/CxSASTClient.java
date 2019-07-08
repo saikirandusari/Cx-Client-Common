@@ -231,9 +231,6 @@ class CxSASTClient {
                 String pdfFileName = PDF_REPORT_NAME + "_" + now + ".pdf";
                 pdfFileName = writePDFReport(pdfReport, config.getReportsDir(), pdfFileName, log);
                 sastResults.setPdfFileName(pdfFileName);
-                if (JENKINS.equalsIgnoreCase(config.getCxOrigin())) {
-                    sastResults.setSastPDFLink(config.getProjectName(), Integer.toString(config.getJenkinsJob()));
-                }
             }
         }
         return sastResults;

@@ -83,9 +83,6 @@ public class CxScanConfig implements Serializable {
     private String remoteSrcBranch;
     private String preforceMode;
 
-    //for Jenkins PDF rport
-    private int jenkinsJob;
-
     public CxScanConfig() {
     }
 
@@ -579,14 +576,6 @@ public class CxScanConfig implements Serializable {
 
     public void setPreforceMode(String preforceMode) {
         this.preforceMode = preforceMode;
-    }
-
-    public int getJenkinsJob() {
-        return jenkinsJob;
-    }
-
-    public void setJenkinsJob(int jenkinsJob) {
-        this.jenkinsJob = jenkinsJob;
     }
 
     public Boolean getGenerateXmlReport() {
