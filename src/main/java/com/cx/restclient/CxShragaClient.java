@@ -20,6 +20,13 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Properties;
 
+
+
+ //Tests - Margarita
+     //  ONLY MARGARITA tests public static final String SAST_SCAN_RESULTS_STATISTICS = "sast/scans/{scanId}/resultsStatistics";
+   
+
+
 import org.whitesource.fs.FSAConfigProperties;
 
 import static com.cx.restclient.common.CxPARAM.*;
