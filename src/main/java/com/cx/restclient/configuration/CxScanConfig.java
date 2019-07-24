@@ -23,6 +23,8 @@ public class CxScanConfig implements Serializable {
     private boolean disableCertificateValidation = false;
     private boolean useSSOLogin = false;
 
+    private String mvnPath = "";
+
     private String sourceDir;
     private File reportsDir;
     private String username;
@@ -603,4 +605,13 @@ public class CxScanConfig implements Serializable {
     public void setCxVersion(CxVersion cxVersion) {
         this.cxVersion = cxVersion;
     }
+
+    public String getMvnPath() {
+        return mvnPath;
+    }
+
+    public void setMvnPath(String mvnPath) {
+        this.mvnPath = mvnPath;
+    }
+
 }

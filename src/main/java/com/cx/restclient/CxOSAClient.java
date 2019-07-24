@@ -82,6 +82,7 @@ class CxOSAClient {
                     config.getOsaArchiveIncludePatterns(),
                     config.getSourceDir(),
                     config.getOsaRunInstall(),
+                    config.getMvnPath(),
                     log);
         }
         ObjectMapper mapper = new ObjectMapper();

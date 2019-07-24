@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.whitesource.fs.FSAConfigProperties;
 
 
@@ -50,7 +51,7 @@ public abstract class OSAUtils {
         return String.format(url + "/CxWebClient/SPA/#/viewer/project/%s", projectId);
     }
 
-    public static FSAConfigProperties generateOSAScanConfiguration(String folderExclusions, String filterPatterns, String archiveIncludes, String scanFolder, boolean installBeforeScan, Logger log) {
+    public static FSAConfigProperties generateOSAScanConfiguration(String folderExclusions, String filterPatterns, String archiveIncludes, String scanFolder, boolean installBeforeScan, String mvnPath, Logger log) {
         FSAConfigProperties ret = new FSAConfigProperties();
         filterPatterns = StringUtils.defaultString(filterPatterns);
         archiveIncludes = StringUtils.defaultString(archiveIncludes);
@@ -67,6 +68,10 @@ public abstract class OSAUtils {
             ret.put("includes", includesString);
         } else {
             ret.put("includes", INCLUDE_ALL_EXTENSIONS);
+        }
+
+        if (StringUtils.isNotEmpty(mvnPath)) {
+            ret.put("maven.environmentPath", mvnPath);
         }
 
         if (StringUtils.isNotEmpty(excludesString)) {
@@ -94,9 +99,9 @@ public abstract class OSAUtils {
             ret.put("npm.runPreStep", "true");
             ret.put("bower.runPreStep", "false");
             ret.put("npm.ignoreScripts", "true");
-            setResolveDependencies(ret,"true");
-        }else {
-            setResolveDependencies(ret,"false");
+            setResolveDependencies(ret, "true");
+        } else {
+            setResolveDependencies(ret, "false");
         }
 
         ret.put("d", scanFolder);
