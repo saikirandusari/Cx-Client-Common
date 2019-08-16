@@ -15,6 +15,7 @@ bin/
 #IntelliJ
 .idea/
 *.iml
+*.ipr
 *.iws
 #Jenkins specific out
 *.hpi
