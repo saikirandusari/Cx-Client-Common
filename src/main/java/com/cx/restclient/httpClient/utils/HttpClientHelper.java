@@ -72,7 +72,7 @@ public abstract class HttpClientHelper {
     public static void validateResponse(HttpResponse response, int status, String message) throws CxClientException {
         if (response.getStatusLine().getStatusCode() != status) {
             if (ErrorUtil.isServerErrorCodes(response.getStatusLine().getStatusCode())) {
-                throw new CxClientException(ErrorMessage.SERVICE_UNAVAILABLE.getErrorMessage());
+                throw new CxClientException(ErrorMessage.SERVICE_UNAVAILABLE.getErrorMessage() + ", Error code: " + response.getStatusLine().getStatusCode());
             }
             String responseBody = extractResponseBody(response);
             responseBody = responseBody.replace("{", "").replace("}", "").replace(System.getProperty("line.separator"), " ").replace("  ", "");
