@@ -16,15 +16,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.whitesource.fs.FSAConfigProperties;
-
-
 import static com.cx.restclient.common.CxPARAM.CX_REPORT_LOCATION;
 
 /**
  * Created by Galn on 07/02/2018.
  */
 public abstract class OSAUtils {
+
     private static final String[] SUPPORTED_EXTENSIONS = {"jar", "war", "ear", "aar", "dll", "exe", "msi", "nupkg", "egg", "whl", "tar.gz", "gem", "deb", "udeb",
             "dmg", "drpm", "rpm", "pkg.tar.xz", "swf", "swc", "air", "apk", "zip", "gzip", "tar.bz2", "tgz", "c", "cc", "cp", "cpp", "css", "c++", "h", "hh", "hpp",
             "hxx", "h++", "m", "mm", "pch", "java", "c#", "cs", "csharp", "go", "goc", "js", "plx", "pm", "ph", "cgi", "fcgi", "psgi", "al", "perl", "t", "p6m", "p6l", "nqp,6pl", "6pm",
@@ -50,8 +48,8 @@ public abstract class OSAUtils {
         return String.format(url + "/CxWebClient/SPA/#/viewer/project/%s", projectId);
     }
 
-    public static FSAConfigProperties generateOSAScanConfiguration(String folderExclusions, String filterPatterns, String archiveIncludes, String scanFolder, boolean installBeforeScan, String mvnPath, Logger log) {
-        FSAConfigProperties ret = new FSAConfigProperties();
+    public static Properties generateOSAScanConfiguration(String folderExclusions, String filterPatterns, String archiveIncludes, String scanFolder, boolean installBeforeScan, Logger log) {
+        Properties ret = new Properties();
         filterPatterns = StringUtils.defaultString(filterPatterns);
         archiveIncludes = StringUtils.defaultString(archiveIncludes);
 
@@ -67,10 +65,6 @@ public abstract class OSAUtils {
             ret.put("includes", includesString);
         } else {
             ret.put("includes", INCLUDE_ALL_EXTENSIONS);
-        }
-
-        if (StringUtils.isNotEmpty(mvnPath)) {
-            ret.put("maven.environmentPath", mvnPath);
         }
 
         if (StringUtils.isNotEmpty(excludesString)) {
