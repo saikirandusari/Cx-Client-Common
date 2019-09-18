@@ -104,7 +104,7 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.60</version>
+            <version>1.63</version>
         </dependency>
         <dependency>
             <artifactId>plexus-utils</artifactId>
@@ -114,7 +114,7 @@
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-archiver</artifactId>
-            <version>3.6.0</version>
+            <version>4.1.0</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-compress</artifactId>
@@ -137,9 +137,9 @@
             <version>27.0-jre</version>
         </dependency>
         <dependency>
-            <groupId>org.whitesource</groupId>
-            <artifactId>whitesource-fs-agent</artifactId>
-            <version>18.7.2</version>
+            <groupId>com.checkmarx</groupId>
+            <artifactId>cx-ws-fs-agent</artifactId>
+            <version>18.7.2.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.xml.bind</groupId>
