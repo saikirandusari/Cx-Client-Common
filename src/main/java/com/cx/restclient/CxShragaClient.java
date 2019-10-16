@@ -46,6 +46,20 @@ public class CxShragaClient {
     private SASTResults sastResults = new SASTResults();
     private OSAResults osaResults = new OSAResults();
 
+    public CxShragaClient(CxScanConfig config, Logger log, String proxyHost, int proxyPort,
+                          String proxyUser, String proxyPassword) throws MalformedURLException {
+        this.config = config;
+        this.log = log;
+        this.httpClient = new CxHttpClient(
+                config.getUrl(),
+                config.getUsername(),
+                config.getPassword(),
+                config.getCxOrigin(),
+                config.isDisableCertificateValidation(), log,
+                proxyHost, proxyPort, proxyUser, proxyPassword);
+        sastClient = new CxSASTClient(httpClient, log, config);
+        osaClient = new CxOSAClient(httpClient, log, config);
+    }
 
     public CxShragaClient(CxScanConfig config, Logger log) throws MalformedURLException {
         this.config = config;
@@ -60,6 +74,11 @@ public class CxShragaClient {
         osaClient = new CxOSAClient(httpClient, log, config);
     }
 
+    public CxShragaClient(String serverUrl, String username, String password, String origin, boolean disableCertificateValidation,
+                          Logger log, String proxyHost, int proxyPort, String proxyUser, String proxyPassword) throws MalformedURLException {
+        this(new CxScanConfig(serverUrl, username, password, origin, disableCertificateValidation), log, proxyHost, proxyPort, proxyUser, proxyPassword);
+    }
+
     public CxShragaClient(String serverUrl, String username, String password, String origin, boolean disableCertificateValidation, Logger log) throws MalformedURLException {
         this(new CxScanConfig(serverUrl, username, password, origin, disableCertificateValidation), log);
     }
@@ -72,7 +91,7 @@ public class CxShragaClient {
         if (config.getSastEnabled()) {
             resolvePreset();
         }
-        if (config.getEnablePolicyViolations()){
+        if (config.getEnablePolicyViolations()) {
             resolveCxARMUrl();
         }
         resolveProject();
@@ -122,7 +141,7 @@ public class CxShragaClient {
 
     public boolean isPolicyViolated(StringBuilder failDescription) {
         boolean isPolicyViolated = config.getEnablePolicyViolations() && osaResults.getOsaViolations().size() > 0;
-        if(isPolicyViolated) {
+        if (isPolicyViolated) {
             failDescription.append(CxGlobalMessage.PROJECT_POLICY_VIOLATED_STATUS.getMessage()).append("\n");
         }
         return isPolicyViolated;
@@ -165,10 +184,10 @@ public class CxShragaClient {
     }
 
     public String getTeamIdByName(String teamName) throws CxClientException, IOException {
-        teamName = teamName.replace("\\","/");
+        teamName = teamName.replace("\\", "/");
         List<Team> allTeams = getTeamList();
         for (Team team : allTeams) {
-            if (team.getFullName().replace("\\","/").equalsIgnoreCase(teamName)) { //TODO caseSenesitive
+            if (team.getFullName().replace("\\", "/").equalsIgnoreCase(teamName)) { //TODO caseSenesitive
                 return team.getId();
             }
         }
@@ -265,7 +284,7 @@ public class CxShragaClient {
         List<Project> projects = getProjectByName(config.getProjectName(), config.getTeamId());
         if (projects == null || projects.isEmpty()) { // Project is new
             if (config.getDenyProject()) {
-                throw new CxClientException(DENY_NEW_PROJECT_ERROR.replace("{projectName}" , config.getProjectName()));
+                throw new CxClientException(DENY_NEW_PROJECT_ERROR.replace("{projectName}", config.getProjectName()));
             }
             //Create newProject
             CreateProjectRequest request = new CreateProjectRequest(config.getProjectName(), config.getTeamId(), config.getPublic());
