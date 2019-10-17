@@ -108,7 +108,7 @@ public class CxHttpClient {
                 logi.warn("Failed to disable certificate verification: " + e.getMessage());
             }
         }
-        setCustomProxy(cb, proxyHost, proxyPort, proxyUser, proxyPassword);
+        setCustomProxy(cb, proxyHost, proxyPort, proxyUser, proxyPassword, logi);
         cb.setDefaultAuthSchemeRegistry(getAuthSchemeProviderRegistry());
         cb.useSystemProperties();
         apacheClient = cb.build();
@@ -132,13 +132,13 @@ public class CxHttpClient {
                 logi.warn("Failed to disable certificate verification: " + e.getMessage());
             }
         }
-        setProxy(cb);
+        setProxy(cb, logi);
         cb.setDefaultAuthSchemeRegistry(getAuthSchemeProviderRegistry());
         cb.useSystemProperties();
         apacheClient = cb.build();
     }
 
-    private static void setCustomProxy(HttpClientBuilder cb, String proxyHost, int proxyPort, String proxyUser, String proxyPassword) {
+    private static void setCustomProxy(HttpClientBuilder cb, String proxyHost, int proxyPort, String proxyUser, String proxyPassword, Logger logi) {
         HttpHost proxy = null;
         if (!isEmpty(proxyHost)) {
             proxy = new HttpHost(proxyHost, proxyPort, "http");
@@ -152,6 +152,7 @@ public class CxHttpClient {
             }
         }
         if (proxy != null) {
+            logi.info("Setting proxy for Checkmarx http client");
             cb.setProxy(proxy);
             cb.setRoutePlanner(new DefaultProxyRoutePlanner(proxy));
             cb.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
@@ -169,7 +170,7 @@ public class CxHttpClient {
         }
     }
 
-    private static void setProxy(HttpClientBuilder cb) {
+    private static void setProxy(HttpClientBuilder cb, Logger logi) {
         HttpHost proxyHost = null;
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         if (!isEmpty(HTTPS_HOST) && !isEmpty(HTTPS_PORT)) {
@@ -190,6 +191,7 @@ public class CxHttpClient {
             }
         }
         if (proxyHost != null) {
+            logi.info("Setting proxy for Checkmarx http client");
             cb.setRoutePlanner(new DefaultProxyRoutePlanner(proxyHost));
             cb.setProxy(proxyHost);
             cb.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
@@ -300,7 +302,7 @@ public class CxHttpClient {
             }
 
             if (isProxy) {
-                logi.debug("Setting proxy on request method: " + httpMethod.getURI());
+                logi.trace("Setting proxy on request method: " + httpMethod.getURI());
                 httpMethod.addHeader(new BasicHeader("Proxy-Authorization", AUTH_STRING));
                 httpMethod.setConfig(RequestConfig.custom().setProxy(PROXY_HOST).build());
             }
@@ -308,7 +310,7 @@ public class CxHttpClient {
             response = apacheClient.execute(httpMethod);
 
             int statusCode = response.getStatusLine().getStatusCode();
-            logi.debug("Response from: '" + httpMethod.getURI() + "' is: " + statusCode);
+            logi.trace("Response from: '" + httpMethod.getURI() + "' is: " + statusCode);
 
             if (statusCode == HttpStatus.SC_UNAUTHORIZED) { //Token expired
                 throw new CxTokenExpiredException(extractResponseBody(response));
