@@ -6,16 +6,17 @@
     <groupId>com.checkmarx</groupId>
     <artifactId>cx-client-common</artifactId>
     <version>8.90.6</version>
-    <packaging>jar</packaging>
-
     <name>Checkmarx Client</name>
     <description>Enables web services access Checkmarx SAST and OSA scan.</description>
     <url>https://www.checkmarx.com</url>
+    <packaging>jar</packaging>
+
     <scm>
         <connection>scm:git:git://github.com/CxRepositories/Cx-Client-Common.git</connection>
         <developerConnection>scm:git:ssh://github.com/CxRepositories/Cx-Client-Common.git</developerConnection>
         <url>https://github.com/CxRepositories/Cx-Client-Common/tree/master</url>
     </scm>
+
     <licenses>
         <license>
             <name>MIT License</name>
@@ -26,10 +27,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <organization>
         <name>Checkmarx</name>
         <url>https://www.checkmarx.com/</url>
     </organization>
+
     <build>
         <plugins>
             <plugin>
@@ -132,11 +135,11 @@
             <artifactId>spring-web</artifactId>
             <version>4.3.18.RELEASE</version>
         </dependency>
-<!--        <dependency>
-            <artifactId>commons-beanutils</artifactId>
-            <groupId>commons-beanutils</groupId>
-            <version>1.9.3</version>
-        </dependency>-->
+        <!--        <dependency>
+                    <artifactId>commons-beanutils</artifactId>
+                    <groupId>commons-beanutils</groupId>
+                    <version>1.9.3</version>
+                </dependency>-->
         <dependency>
             <groupId>org.whitesource</groupId>
             <artifactId>whitesource-fs-agent</artifactId>
