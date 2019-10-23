@@ -6,8 +6,6 @@ import com.cx.restclient.dto.TokenLoginResponse;
 import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.exception.CxHTTPClientException;
 import com.cx.restclient.exception.CxTokenExpiredException;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.*;
 import org.apache.http.auth.AuthSchemeProvider;
 import org.apache.http.auth.AuthScope;
@@ -28,6 +26,7 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.entity.ContentType;
+import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.auth.BasicSchemeFactory;
 import org.apache.http.impl.auth.DigestSchemeFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -36,7 +35,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.ProxyAuthenticationStrategy;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
@@ -48,7 +46,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -77,9 +74,6 @@ public class CxHttpClient {
     private static String HTTPS_PASSWORD = System.getProperty("https.proxyPassword");
 
     private static HttpClient apacheClient;
-    private static boolean isProxy = false;
-    private static HttpHost PROXY_HOST = null;
-    private static String AUTH_STRING = null;
 
     private Logger logi;
     private TokenLoginResponse token;
@@ -109,6 +103,7 @@ public class CxHttpClient {
             }
         }
         setCustomProxy(cb, proxyHost, proxyPort, proxyUser, proxyPassword, logi);
+        cb.setConnectionReuseStrategy(new NoConnectionReuseStrategy());
         cb.setDefaultAuthSchemeRegistry(getAuthSchemeProviderRegistry());
         cb.useSystemProperties();
         apacheClient = cb.build();
@@ -133,6 +128,7 @@ public class CxHttpClient {
             }
         }
         setProxy(cb, logi);
+        cb.setConnectionReuseStrategy(new NoConnectionReuseStrategy());
         cb.setDefaultAuthSchemeRegistry(getAuthSchemeProviderRegistry());
         cb.useSystemProperties();
         apacheClient = cb.build();
@@ -146,9 +142,6 @@ public class CxHttpClient {
                 CredentialsProvider credsProvider = new BasicCredentialsProvider();
                 credsProvider.setCredentials(new AuthScope(proxy), new UsernamePasswordCredentials(proxyUser, proxyPassword));
                 cb.setDefaultCredentialsProvider(credsProvider);
-
-                String pass = proxyUser + ":" + proxyPassword;
-                AUTH_STRING = "Basic " + Base64.encodeBase64String(pass.getBytes(StandardCharsets.ISO_8859_1));
             }
         }
         if (proxy != null) {
@@ -156,17 +149,6 @@ public class CxHttpClient {
             cb.setProxy(proxy);
             cb.setRoutePlanner(new DefaultProxyRoutePlanner(proxy));
             cb.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
-
-            RequestConfig.Builder rcb = RequestConfig.custom();
-            rcb.setConnectTimeout(60 * 1000);
-            rcb.setSocketTimeout(60 * 1000);
-
-            rcb.setProxy(new HttpHost(proxyHost, proxyPort, "http"));
-            cb.setDefaultRequestConfig(rcb.build());
-            isProxy = true;
-            PROXY_HOST = proxy;
-        } else {
-            isProxy = false;
         }
     }
 
@@ -178,16 +160,12 @@ public class CxHttpClient {
             if (!isEmpty(HTTPS_USERNAME) && !isEmpty(HTTPS_PASSWORD)) {
                 credsProvider.setCredentials(new AuthScope(HTTPS_HOST, Integer.parseInt(HTTPS_PORT)), new UsernamePasswordCredentials(HTTPS_USERNAME, HTTPS_PASSWORD));
                 cb.setDefaultCredentialsProvider(credsProvider);
-                String pass = HTTPS_USERNAME + ":" + HTTPS_PASSWORD;
-                AUTH_STRING = "Basic " + Base64.encodeBase64String(pass.getBytes(StandardCharsets.ISO_8859_1));
             }
         } else if (!isEmpty(HTTP_HOST) && !isEmpty(HTTP_PORT)) {
             proxyHost = new HttpHost(HTTP_HOST, Integer.parseInt(HTTP_PORT), "http");
             if (!isEmpty(HTTP_USERNAME) && !isEmpty(HTTP_PASSWORD)) {
                 credsProvider.setCredentials(new AuthScope(HTTP_HOST, Integer.parseInt(HTTP_PORT)), new UsernamePasswordCredentials(HTTP_USERNAME, HTTP_PASSWORD));
                 cb.setDefaultCredentialsProvider(credsProvider);
-                String pass = HTTP_USERNAME + ":" + HTTP_PASSWORD;
-                AUTH_STRING = "Basic " + Base64.encodeBase64String(pass.getBytes(StandardCharsets.ISO_8859_1));
             }
         }
         if (proxyHost != null) {
@@ -195,21 +173,6 @@ public class CxHttpClient {
             cb.setRoutePlanner(new DefaultProxyRoutePlanner(proxyHost));
             cb.setProxy(proxyHost);
             cb.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
-
-            RequestConfig.Builder rcb = RequestConfig.custom();
-            rcb.setConnectTimeout(60 * 1000);
-            rcb.setSocketTimeout(60 * 1000);
-
-            if (!StringUtils.isEmpty(HTTPS_HOST) && !StringUtils.isEmpty(HTTPS_PORT)) {
-                rcb.setProxy(new HttpHost(HTTPS_HOST, Integer.parseInt(HTTPS_PORT), "https"));
-            } else if (!StringUtils.isEmpty(HTTP_HOST) && !StringUtils.isEmpty(HTTP_PORT)) {
-                rcb.setProxy(new HttpHost(HTTP_HOST, Integer.parseInt(HTTP_PORT), "http"));
-            }
-            cb.setDefaultRequestConfig(rcb.build());
-            isProxy = true;
-            PROXY_HOST = proxyHost;
-        } else {
-            isProxy = false;
         }
     }
 
@@ -299,12 +262,6 @@ public class CxHttpClient {
             httpMethod.addHeader(ORIGIN_HEADER, cxOrigin);
             if (token != null) {
                 httpMethod.addHeader(HttpHeaders.AUTHORIZATION, token.getToken_type() + " " + token.getAccess_token());
-            }
-
-            if (isProxy) {
-                logi.trace("Setting proxy on request method: " + httpMethod.getURI());
-                httpMethod.addHeader(new BasicHeader("Proxy-Authorization", AUTH_STRING));
-                httpMethod.setConfig(RequestConfig.custom().setProxy(PROXY_HOST).build());
             }
 
             response = apacheClient.execute(httpMethod);
