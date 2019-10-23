@@ -257,6 +257,7 @@ public class CxHttpClient {
             ((HttpEntityEnclosingRequestBase) httpMethod).setEntity(entity);
         }
         HttpResponse response = null;
+        int statusCode = 0;
 
         try {
             httpMethod.addHeader(ORIGIN_HEADER, cxOrigin);
@@ -266,7 +267,7 @@ public class CxHttpClient {
 
             response = apacheClient.execute(httpMethod);
 
-            int statusCode = response.getStatusLine().getStatusCode();
+            statusCode = response.getStatusLine().getStatusCode();
             logi.trace("Response from: '" + httpMethod.getURI() + "' is: " + statusCode);
 
             if (statusCode == HttpStatus.SC_UNAUTHORIZED) { //Token expired
@@ -280,7 +281,7 @@ public class CxHttpClient {
             throw new CxHTTPClientException(ErrorMessage.CHECKMARX_SERVER_CONNECTION_FAILED.getErrorMessage());
         } catch (CxTokenExpiredException ex) {
             if (retry) {
-                logi.warn("Access token expired for request: " + httpMethod.getURI() + ", requesting a new token. message: " + ex.getMessage());
+                logi.warn("Access token expired for request: " + httpMethod.getURI() + ", Status code:" + statusCode + "requesting a new token. message: " + ex.getMessage());
                 login();
                 return request(httpMethod, contentType, entity, responseType, expectStatus, failedMsg, isCollection, false);
             }
