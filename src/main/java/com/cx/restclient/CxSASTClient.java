@@ -318,10 +318,9 @@ class CxSASTClient {
     }
 
     private void uploadZipFile(File zipFile, long projectId) throws CxClientException, IOException {
-        InputStreamBody streamBody = new InputStreamBody(new FileInputStream(zipFile.getAbsoluteFile()), ContentType.APPLICATION_OCTET_STREAM, "zippedSource");
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        builder.addPart("zippedSource", streamBody);
+        builder.addBinaryBody("zippedSource", zipFile);
         HttpEntity entity = builder.build();
         httpClient.postRequest(SAST_ZIP_ATTACHMENTS.replace("{projectId}", Long.toString(projectId)), null, entity, null, 204, "upload ZIP file");
     }
