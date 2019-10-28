@@ -53,8 +53,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.cx.restclient.common.CxPARAM.AUTHENTICATION;
-import static com.cx.restclient.common.CxPARAM.SSO_AUTHENTICATION;
+import static com.cx.restclient.common.CxPARAM.*;
 import static com.cx.restclient.httpClient.utils.ContentType.CONTENT_TYPE_APPLICATION_JSON;
 import static com.cx.restclient.httpClient.utils.HttpClientHelper.*;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -322,12 +321,18 @@ public class CxHttpClient {
         int statusCode = 0;
 
         try {
+            httpMethod.addHeader(ORIGIN_HEADER, cxOrigin);
+            if (token != null) {
+                httpMethod.addHeader(HttpHeaders.AUTHORIZATION, token.getToken_type() + " " + token.getAccess_token());
+            }
+
             response = apacheClient.execute(httpMethod);
             statusCode = response.getStatusLine().getStatusCode();
 
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED) { //Token expired
                 throw new CxTokenExpiredException(extractResponseBody(response));
             }
+
             validateResponse(response, expectStatus, "Failed to " + failedMsg);
 
             //extract response as object and return the link
