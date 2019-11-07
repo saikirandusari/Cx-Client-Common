@@ -5,6 +5,7 @@ import com.cx.restclient.configuration.CxScanConfig;
 import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.osa.dto.OSAResults;
 import com.cx.restclient.sast.dto.SASTResults;
+import com.cx.utility.TestingUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -30,7 +31,7 @@ public class ProjectScanTests {
 
     @BeforeClass
     public static void initTest() throws IOException {
-        props = getProps(PROPERTIES_FILE, ProjectScanTests.class);
+        props = TestingUtils.getProps(PROPERTIES_FILE, ProjectScanTests.class);
     }
 
     @Test
@@ -113,12 +114,4 @@ public class ProjectScanTests {
         return config;
     }
 
-    private static Properties getProps(String propsName, Class clazz) throws IOException {
-        Properties properties = new Properties();
-        ClassLoader classLoader = clazz.getClassLoader();
-        URL resource = classLoader.getResource(propsName);
-        properties.load(new FileReader(resource.getFile()));
-
-        return properties;
-    }
 }
