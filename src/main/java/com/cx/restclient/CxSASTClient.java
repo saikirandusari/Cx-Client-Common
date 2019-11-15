@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static com.cx.restclient.cxArm.dto.CxProviders.SAST;
@@ -30,8 +31,8 @@ import static com.cx.restclient.sast.utils.SASTUtils.*;
 /**
  * Created by Galn on 05/02/2018.
  */
-
 class CxSASTClient {
+
     private Logger log;
     private CxHttpClient httpClient;
     private CxScanConfig config;
@@ -190,7 +191,7 @@ class CxSASTClient {
     public void cancelSASTScan(long scanId) throws IOException, CxClientException {
         UpdateScanStatusRequest request = new UpdateScanStatusRequest(CurrentStatus.CANCELED);
         String json = convertToJson(request);
-        StringEntity entity = new StringEntity(json);
+        StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
         httpClient.patchRequest(SAST_QUEUE_SCAN_STATUS.replace("{scanId}", Long.toString(scanId)), CONTENT_TYPE_APPLICATION_JSON_V1, entity, 200, "cancel SAST scan");
         log.info("SAST Scan canceled. (scanId: " + scanId + ")");
     }
@@ -227,7 +228,7 @@ class CxSASTClient {
     }
 
     private void defineScanSetting(ScanSettingRequest scanSetting) throws IOException, CxClientException {
-        StringEntity entity = new StringEntity(convertToJson(scanSetting));
+        StringEntity entity = new StringEntity(convertToJson(scanSetting), StandardCharsets.UTF_8);
         httpClient.putRequest(SAST_UPDATE_SCAN_SETTINGS, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CxID.class, 200, "define scan setting");
     }
 
@@ -240,7 +241,7 @@ class CxSASTClient {
     }
 
     private CxID createScan(CreateScanRequest request) throws CxClientException, IOException {
-        StringEntity entity = new StringEntity(convertToJson(request));
+        StringEntity entity = new StringEntity(convertToJson(request), StandardCharsets.UTF_8);
         return httpClient.postRequest(SAST_CREATE_SCAN, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CxID.class, 201, "create new SAST Scan");
     }
 
@@ -257,7 +258,7 @@ class CxSASTClient {
     }
 
     private CreateReportResponse createScanReport(CreateReportRequest reportRequest) throws CxClientException, IOException {
-        StringEntity entity = new StringEntity(convertToJson(reportRequest));
+        StringEntity entity = new StringEntity(convertToJson(reportRequest), StandardCharsets.UTF_8);
         return httpClient.postRequest(SAST_CREATE_REPORT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CreateReportResponse.class, 202, "to create " + reportRequest.getReportType() + " scan report");
     }
 

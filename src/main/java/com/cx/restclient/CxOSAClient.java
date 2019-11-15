@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.whitesource.fs.ComponentScan;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
 
@@ -31,6 +32,7 @@ class CxOSAClient {
     private CxHttpClient httpClient;
     private Logger log;
     private CxScanConfig config;
+
     private Waiter<OSAScanStatus> osaWaiter = new Waiter<OSAScanStatus>("CxOSA scan", 20) {
         @Override
         public OSAScanStatus getStatus(String id) throws CxClientException, IOException {
@@ -101,7 +103,7 @@ class CxOSAClient {
             resolveOSAViolation(osaResults, projectId);
         }
 
-        OSAUtils.printOSAResultsToConsole(osaResults, config.getEnablePolicyViolations(),  log);
+        OSAUtils.printOSAResultsToConsole(osaResults, config.getEnablePolicyViolations(), log);
 
         if (config.getReportsDir() != null) {
             writeJsonToFile(OSA_SUMMARY_NAME, osaResults.getResults(), config.getReportsDir(), log);
@@ -122,13 +124,13 @@ class CxOSAClient {
         return results;
     }
 
-    private void resolveOSAViolation(OSAResults osaResults, long projectId){
+    private void resolveOSAViolation(OSAResults osaResults, long projectId) {
         try {
             for (Policy policy : getProjectViolations(httpClient, config.getCxARMUrl(), projectId, OPEN_SOURCE.value())) {
                 osaResults.getOsaPolicies().add(policy.getPolicyName());
                 osaResults.addAllViolations(policy.getViolations());
             }
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             log.error("CxARM is not available. Policy violations for OSA cannot be calculated: " + ex.getMessage());
         }
     }
@@ -157,7 +159,7 @@ class CxOSAClient {
 
     private CreateOSAScanResponse sendOSARequest(long projectId, String osaDependenciesJson) throws IOException, CxClientException {
         CreateOSAScanRequest req = new CreateOSAScanRequest(projectId, osaDependenciesJson);
-        StringEntity entity = new StringEntity(convertToJson(req));
+        StringEntity entity = new StringEntity(convertToJson(req), StandardCharsets.UTF_8);
         return httpClient.postRequest(OSA_SCAN_PROJECT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CreateOSAScanResponse.class, 201, "create OSA scan");
     }
 
