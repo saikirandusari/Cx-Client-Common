@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -59,7 +60,6 @@ public class CxHttpClient {
     private String csrfToken;
 
     private Boolean useSSo = false;
-
 
     private final HttpRequestInterceptor requestFilter = new HttpRequestInterceptor() {
         public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
@@ -94,7 +94,6 @@ public class CxHttpClient {
         }
     };
 
-
     public CxHttpClient(String hostname, String username, String password, String origin, boolean disableSSLValidation, boolean isSSO, Logger logi) throws MalformedURLException {
         this.logi = logi;
         this.username = username;
@@ -121,7 +120,7 @@ public class CxHttpClient {
 
         if (useSSo) {
             HttpPost post = new HttpPost(rootUri + SSO_AUTHENTICATION);
-            request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), new StringEntity(""), TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
+            request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), new StringEntity("", StandardCharsets.UTF_8), TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
         } else {
             UrlEncodedFormEntity requestEntity = generateUrlEncodedFormEntity();
             HttpPost post = new HttpPost(rootUri + AUTHENTICATION);

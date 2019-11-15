@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
 
@@ -342,7 +343,7 @@ public class CxShragaClient {
 
     private Project createNewProject(CreateProjectRequest request) throws CxClientException, IOException {
         String json = convertToJson(request);
-        StringEntity entity = new StringEntity(json);
+        StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
         return httpClient.postRequest(CREATE_PROJECT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, Project.class, 201, "create new project: " + request.getName());
     }
 }

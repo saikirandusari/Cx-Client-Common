@@ -2,7 +2,6 @@ package com.cx.restclient;
 
 import com.cx.restclient.common.Waiter;
 import com.cx.restclient.configuration.CxScanConfig;
-import com.cx.restclient.cxArm.dto.Policy;
 import com.cx.restclient.dto.Status;
 import com.cx.restclient.exception.CxClientException;
 import com.cx.restclient.httpClient.CxHttpClient;
@@ -15,6 +14,7 @@ import org.slf4j.Logger;
 import org.whitesource.fs.ComponentScan;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
 
@@ -33,6 +33,7 @@ class CxOSAClient {
     private CxHttpClient httpClient;
     private Logger log;
     private CxScanConfig config;
+
     private Waiter<OSAScanStatus> osaWaiter = new Waiter<OSAScanStatus>("CxOSA scan", 20) {
         @Override
         public OSAScanStatus getStatus(String id) throws CxClientException, IOException {
@@ -159,7 +160,7 @@ class CxOSAClient {
 
     private CreateOSAScanResponse sendOSARequest(long projectId, String osaDependenciesJson) throws IOException, CxClientException {
         CreateOSAScanRequest req = new CreateOSAScanRequest(projectId, osaDependenciesJson);
-        StringEntity entity = new StringEntity(convertToJson(req));
+        StringEntity entity = new StringEntity(convertToJson(req), StandardCharsets.UTF_8);
         return httpClient.postRequest(OSA_SCAN_PROJECT, CONTENT_TYPE_APPLICATION_JSON_V1, entity, CreateOSAScanResponse.class, 201, "create OSA scan");
     }
 
@@ -221,5 +222,6 @@ class CxOSAClient {
         }
         return scanStatus;
     }
+
 }
 
