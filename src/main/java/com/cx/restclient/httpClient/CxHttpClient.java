@@ -33,8 +33,8 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.ProxyAuthenticationStrategy;
-import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
@@ -97,11 +97,14 @@ public class CxHttpClient {
         if (disableSSLValidation) {
             try {
                 cb.setSSLSocketFactory(getSSLSF());
-                cb.setConnectionManager(getHttpConnManager());
+                cb.setConnectionManager(getSSLHttpConnManager());
             } catch (CxClientException e) {
                 logi.warn("Failed to disable certificate verification: " + e.getMessage());
             }
+        } else {
+            cb.setConnectionManager(getHttpConnManager());
         }
+        cb.setConnectionManagerShared(true);
         setCustomProxy(cb, proxyHost, proxyPort, proxyUser, proxyPassword, logi);
         cb.setConnectionReuseStrategy(new NoConnectionReuseStrategy());
         cb.setDefaultAuthSchemeRegistry(getAuthSchemeProviderRegistry());
@@ -122,11 +125,14 @@ public class CxHttpClient {
         if (disableSSLValidation) {
             try {
                 cb.setSSLSocketFactory(getSSLSF());
-                cb.setConnectionManager(getHttpConnManager());
+                cb.setConnectionManager(getSSLHttpConnManager());
             } catch (CxClientException e) {
                 logi.warn("Failed to disable certificate verification: " + e.getMessage());
             }
+        } else {
+            cb.setConnectionManager(getHttpConnManager());
         }
+        cb.setConnectionManagerShared(true);
         setProxy(cb, logi);
         cb.setConnectionReuseStrategy(new NoConnectionReuseStrategy());
         cb.setDefaultAuthSchemeRegistry(getAuthSchemeProviderRegistry());
@@ -187,12 +193,26 @@ public class CxHttpClient {
         return new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
     }
 
-    private static BasicHttpClientConnectionManager getHttpConnManager() throws CxClientException {
+    private static PoolingHttpClientConnectionManager getSSLHttpConnManager() throws CxClientException {
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("https", getSSLSF())
                 .register("http", new PlainConnectionSocketFactory())
                 .build();
-        return new BasicHttpClientConnectionManager(socketFactoryRegistry);
+        PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+        connManager.setMaxTotal(50);
+        connManager.setDefaultMaxPerRoute(5);
+        return connManager;
+    }
+
+    private static PoolingHttpClientConnectionManager getHttpConnManager() {
+        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("https", new PlainConnectionSocketFactory())
+                .register("http", new PlainConnectionSocketFactory())
+                .build();
+        PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+        connManager.setMaxTotal(50);
+        connManager.setDefaultMaxPerRoute(5);
+        return connManager;
     }
 
     private static Registry<AuthSchemeProvider> getAuthSchemeProviderRegistry() {
