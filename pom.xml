@@ -208,6 +208,10 @@
                             </execution>
                         </executions>
                     </plugin>
+                            <plugin>
+                                <artifactId>maven-deploy-plugin</artifactId>
+                                <version>2.7</version>
+                            </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
