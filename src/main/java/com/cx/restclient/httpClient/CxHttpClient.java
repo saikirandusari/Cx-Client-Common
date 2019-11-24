@@ -283,18 +283,26 @@ public class CxHttpClient {
             HttpPost post = new HttpPost(rootUri + SSO_AUTHENTICATION);
             request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), new StringEntity(""), TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
         } else {
-            UrlEncodedFormEntity requestEntity = generateUrlEncodedFormEntity();
+            UrlEncodedFormEntity requestEntity = generateUrlEncodedFormEntity(" cxarm_api");
             HttpPost post = new HttpPost(rootUri + AUTHENTICATION);
-            token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
+            try {
+                token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
+            } catch (CxClientException e) {
+                if(!e.getMessage().contains("invalid_scope")) {
+                    throw e;
+                }
+                requestEntity = generateUrlEncodedFormEntity("");
+                token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
+            }
         }
     }
 
-    private UrlEncodedFormEntity generateUrlEncodedFormEntity() throws UnsupportedEncodingException {
+    private UrlEncodedFormEntity generateUrlEncodedFormEntity(String armScope) throws UnsupportedEncodingException {
         List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
         parameters.add(new BasicNameValuePair("username", username));
         parameters.add(new BasicNameValuePair("password", password));
         parameters.add(new BasicNameValuePair("grant_type", "password"));
-        parameters.add(new BasicNameValuePair("scope", "sast_rest_api cxarm_api"));
+        parameters.add(new BasicNameValuePair("scope", "sast_rest_api" + armScope));
         parameters.add(new BasicNameValuePair("client_id", "resource_owner_client"));
         parameters.add(new BasicNameValuePair("client_secret", "014DF517-39D1-4453-B7B3-9930C563627C"));
 
