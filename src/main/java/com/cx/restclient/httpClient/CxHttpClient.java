@@ -26,7 +26,6 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.auth.BasicSchemeFactory;
 import org.apache.http.impl.auth.DigestSchemeFactory;
@@ -37,6 +36,7 @@ import org.apache.http.impl.client.ProxyAuthenticationStrategy;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.ssl.TrustStrategy;
 import org.slf4j.Logger;
@@ -76,123 +76,50 @@ public class CxHttpClient {
 
     private static HttpClient apacheClient;
 
-    private Logger log;
+    private Logger logi;
     private TokenLoginResponse token;
     private String rootUri;
     private final String username;
     private final String password;
     private String cxOrigin;
-    private Boolean useSSo = false;
-
-
-//    private final HttpRequestInterceptor requestFilter = new HttpRequestInterceptor() {
-//        public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
-//            httpRequest.addHeader(ORIGIN_HEADER, cxOrigin);
-//            if (token != null) {
-//                httpRequest.addHeader(HttpHeaders.AUTHORIZATION, token.getToken_type() + " " + token.getAccess_token());
-//            }
-//            if (csrfToken != null) {
-//                httpRequest.addHeader(CSRF_TOKEN_HEADER, csrfToken);
-//            }
-//            if (cookies != null) {
-//                httpRequest.addHeader("cookie", cookies);
-//            }
-//        }
-//    };
-
-//
-//    private final HttpResponseInterceptor responseFilter = new HttpResponseInterceptor() {
-//
-//        public void process(HttpResponse httpResponse, HttpContext httpContext) throws HttpException, IOException {
-//            for (org.apache.http.cookie.Cookie c : cookieStore.getCookies()) {
-//                if (CSRF_TOKEN_HEADER.equals(c.getName())) {
-//                    csrfToken = c.getValue();
-//                }
-//            }
-//            Header[] setCookies = httpResponse.getHeaders("Set-Cookie");
-//            StringBuilder sb = new StringBuilder();
-//            for (Header h : setCookies) {
-//                sb.append(h.getValue()).append(";");
-//            }
-//            cookies = (cookies == null ? "" : cookies) + sb.toString();
-//        }
-//    };
-
 
     public CxHttpClient(String hostname, String username, String password, String origin,
-                        boolean disableSSLValidation, boolean isSSO, Logger logi,
-                        String proxyHost, int proxyPort, String proxyUser, String proxyPassword) throws MalformedURLException {
-        this.log = logi;
+                        boolean disableSSLValidation, Logger logi, String proxyHost, int proxyPort,
+                        String proxyUser, String proxyPassword) throws MalformedURLException, CxClientException {
+        this.logi = logi;
         this.username = username;
         this.password = password;
         this.rootUri = UrlUtils.parseURLToString(hostname, "CxRestAPI/");
         this.cxOrigin = origin;
-        this.useSSo = isSSO;
         //create httpclient
         HttpClientBuilder cb = HttpClients.custom();
         cb.setDefaultRequestConfig(RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build());
-        setSSLTls("TLSv1.2", logi);
-
-        /* TODO: verify that responseFilter is compatible (or needed) with refactor */
-
-//        if (isSSO) {
-//            this.useSSo = true;
-//            cookieStore = new BasicCookieStore();
-//            cb.addInterceptorLast(responseFilter).setDefaultCookieStore(cookieStore);
-//        }
-
+        setSSLTls(cb, "TLSv1.2", logi);
         if (disableSSLValidation) {
             try {
                 cb.setSSLSocketFactory(getSSLSF());
-                cb.setConnectionManager(getSSLHttpConnManager());
+                cb.setConnectionManager(getHttpConnManager(true));
             } catch (CxClientException e) {
                 logi.warn("Failed to disable certificate verification: " + e.getMessage());
             }
         } else {
-            cb.setConnectionManager(getHttpConnManager());
+            cb.setConnectionManager(getHttpConnManager(false));
         }
         cb.setConnectionManagerShared(true);
-        setCustomProxy(cb, proxyHost, proxyPort, proxyUser, proxyPassword, logi);
+        if (proxyHost != null) {
+            setCustomProxy(cb, proxyHost, proxyPort, proxyUser, proxyPassword, logi);
+        } else {
+            setProxy(cb, logi);
+        }
+
         cb.setConnectionReuseStrategy(new NoConnectionReuseStrategy());
         cb.setDefaultAuthSchemeRegistry(getAuthSchemeProviderRegistry());
         cb.useSystemProperties();
         apacheClient = cb.build();
     }
 
-    public CxHttpClient(String hostname, String username, String password, String origin,
-                        boolean disableSSLValidation, boolean isSSO, Logger logi) throws MalformedURLException {
-        this.log = logi;
-        this.username = username;
-        this.password = password;
-        this.rootUri = UrlUtils.parseURLToString(hostname, "CxRestAPI/");
-        this.cxOrigin = origin;
-        this.useSSo = isSSO;
-
-        //create httpclient
-        HttpClientBuilder cb = HttpClients.custom();
-//        if (isSSO) {
-//            this.useSSo = true;
-//            cookieStore = new BasicCookieStore();
-//            cb.addInterceptorLast(responseFilter).setDefaultCookieStore(cookieStore);
-//        }
-        cb.setDefaultRequestConfig(RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build());
-        setSSLTls("TLSv1.2", logi);
-        if (disableSSLValidation) {
-            try {
-                cb.setSSLSocketFactory(getSSLSF());
-                cb.setConnectionManager(getSSLHttpConnManager());
-            } catch (CxClientException e) {
-                logi.warn("Failed to disable certificate verification: " + e.getMessage());
-            }
-        } else {
-            cb.setConnectionManager(getHttpConnManager());
-        }
-        cb.setConnectionManagerShared(true);
-        setProxy(cb, logi);
-        cb.setConnectionReuseStrategy(new NoConnectionReuseStrategy());
-        cb.setDefaultAuthSchemeRegistry(getAuthSchemeProviderRegistry());
-        cb.useSystemProperties();
-        apacheClient = cb.build();
+    public CxHttpClient(String hostname, String username, String password, String origin, boolean disableSSLValidation, Logger logi) throws MalformedURLException, CxClientException {
+        this(hostname, username, password, origin, disableSSLValidation, logi, null, 0, null, null);
     }
 
     private static void setCustomProxy(HttpClientBuilder cb, String proxyHost, int proxyPort, String proxyUser, String proxyPassword, Logger logi) {
@@ -248,21 +175,12 @@ public class CxHttpClient {
         return new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
     }
 
+    private static PoolingHttpClientConnectionManager getHttpConnManager(boolean disableSSLValidation) throws CxClientException {
+        ConnectionSocketFactory sslConnectionFactory = disableSSLValidation ? getSSLSF()
+                : new SSLConnectionSocketFactory(SSLContexts.createDefault());
 
-    private static PoolingHttpClientConnectionManager getSSLHttpConnManager() throws CxClientException {
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("https", getSSLSF())
-                .register("http", new PlainConnectionSocketFactory())
-                .build();
-        PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-        connManager.setMaxTotal(50);
-        connManager.setDefaultMaxPerRoute(5);
-        return connManager;
-    }
-
-    private static PoolingHttpClientConnectionManager getHttpConnManager() {
-        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("https", new PlainConnectionSocketFactory())
+                .register("https", sslConnectionFactory)
                 .register("http", new PlainConnectionSocketFactory())
                 .build();
         PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
@@ -279,23 +197,19 @@ public class CxHttpClient {
     }
 
     public void login() throws IOException, CxClientException {
-        if (useSSo) {
-            HttpPost post = new HttpPost(rootUri + SSO_AUTHENTICATION);
-            request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), new StringEntity(""), TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
-        } else {
-            UrlEncodedFormEntity requestEntity = generateUrlEncodedFormEntity(" cxarm_api");
-            HttpPost post = new HttpPost(rootUri + AUTHENTICATION);
-            try {
-                token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
-            } catch (CxClientException e) {
-                if(!e.getMessage().contains("invalid_scope")) {
-                    throw e;
-                }
-                requestEntity = generateUrlEncodedFormEntity("");
-                token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
+        UrlEncodedFormEntity requestEntity = generateUrlEncodedFormEntity(" cxarm_api");
+        HttpPost post = new HttpPost(rootUri + AUTHENTICATION);
+        try {
+            token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
+        } catch (CxClientException e) {
+            if (!e.getMessage().contains("invalid_scope")) {
+                throw e;
             }
+            requestEntity = generateUrlEncodedFormEntity("");
+            token = request(post, ContentType.APPLICATION_FORM_URLENCODED.toString(), requestEntity, TokenLoginResponse.class, HttpStatus.SC_OK, "authenticate", false, false);
         }
     }
+
 
     private UrlEncodedFormEntity generateUrlEncodedFormEntity(String armScope) throws UnsupportedEncodingException {
         List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
@@ -369,7 +283,7 @@ public class CxHttpClient {
             throw new CxHTTPClientException(ErrorMessage.CHECKMARX_SERVER_CONNECTION_FAILED.getErrorMessage());
         } catch (CxTokenExpiredException ex) {
             if (retry) {
-                log.warn("Access token expired for request: " + httpMethod.getURI() + ", Status code:" + statusCode + "requesting a new token. message: " + ex.getMessage());
+                logi.warn("Access token expired for request: " + httpMethod.getURI() + ", Status code:" + statusCode + "requesting a new token. message: " + ex.getMessage());
                 login();
                 return request(httpMethod, contentType, entity, responseType, expectStatus, failedMsg, isCollection, false);
             }
@@ -384,11 +298,11 @@ public class CxHttpClient {
         HttpClientUtils.closeQuietly(apacheClient);
     }
 
-    private void setSSLTls(String protocol, Logger log) {
+    private void setSSLTls(HttpClientBuilder builder, String protocol, Logger log) {
+        SSLContext sslContext = null;
         try {
-            final SSLContext sslContext = SSLContext.getInstance(protocol);
-            sslContext.init(null, null, null);
-            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+            sslContext = SSLContextBuilder.create().useProtocol(protocol).build();
+            builder.setSSLContext(sslContext);
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             log.warn("Failed to set SSL TLS : " + e.getMessage());
         }
