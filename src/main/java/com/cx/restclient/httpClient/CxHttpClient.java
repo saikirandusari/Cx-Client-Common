@@ -29,10 +29,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.auth.BasicSchemeFactory;
 import org.apache.http.impl.auth.DigestSchemeFactory;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.ProxyAuthenticationStrategy;
+import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
@@ -111,6 +108,11 @@ public class CxHttpClient {
             setProxy(cb, logi);
         }
 
+        cb.setRedirectStrategy(new LaxRedirectStrategy() {
+            protected boolean isRedirectable(String method) {
+                return "PUT".equalsIgnoreCase(method) || super.isRedirectable(method);
+            }
+        });
         cb.setConnectionReuseStrategy(new NoConnectionReuseStrategy());
         cb.setDefaultAuthSchemeRegistry(getAuthSchemeProviderRegistry());
         cb.useSystemProperties();
