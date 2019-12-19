@@ -99,6 +99,7 @@ public abstract class OSAUtils {
         }
 
         ret.put("d", scanFolder);
+        log.info("OSA Scan folder: " + scanFolder);
 
         return ret;
     }

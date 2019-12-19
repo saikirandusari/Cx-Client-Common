@@ -71,7 +71,7 @@ class CxOSAClient {
         return sendOSAScan(osaDependenciesJson, projectId);
     }
 
-    private String resolveOSADependencies() {
+    private synchronized String resolveOSADependencies() {
         log.info("Scanning for CxOSA compatible files");
         Properties scannerProperties = config.getOsaFsaConfig();
         if (scannerProperties == null) {
