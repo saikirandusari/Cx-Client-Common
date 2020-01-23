@@ -93,9 +93,9 @@ public abstract class OSAUtils {
             ret.put("npm.runPreStep", "true");
             ret.put("bower.runPreStep", "false");
             ret.put("npm.ignoreScripts", "true");
-            setResolveDependencies(ret,"true");
-        }else {
-            setResolveDependencies(ret,"false");
+            setResolveDependencies(ret, "true");
+        } else {
+            setResolveDependencies(ret, "false");
         }
 
         ret.put("d", scanFolder);
@@ -132,11 +132,11 @@ public abstract class OSAUtils {
         log.info("Non-vulnerable libraries: " + osaSummaryResults.getNonVulnerableLibraries());
         log.info("");
         if (enableViolations) {
-            if (osaResults.getOsaPolicies().isEmpty()){
+            if (osaResults.getOsaPolicies().isEmpty()) {
                 log.info(CxGlobalMessage.PROJECT_POLICY_COMPLAINT_STATUS.getMessage());
-            }else{
+            } else {
                 log.info(CxGlobalMessage.PROJECT_POLICY_VIOLATED_STATUS.getMessage());
-                log.info("OSA violated policies names: " +  StringUtils.join(osaResults.getOsaPolicies(), ','));
+                log.info("OSA violated policies names: " + StringUtils.join(osaResults.getOsaPolicies(), ','));
             }
         }
         log.info("OSA scan results location: " + osaResults.getOsaProjectSummaryLink());

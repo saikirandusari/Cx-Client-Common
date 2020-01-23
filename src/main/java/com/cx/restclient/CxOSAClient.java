@@ -221,5 +221,6 @@ class CxOSAClient {
         }
         return scanStatus;
     }
+
 }
 
