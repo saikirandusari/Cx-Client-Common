@@ -184,15 +184,19 @@ public class CxShragaClient {
         httpClient.login();
     }
 
-    public String getTeamIdByName(String teamName) throws CxClientException, IOException {
-        teamName = teamName.replace("\\", "/");
-        List<Team> allTeams = getTeamList();
-        for (Team team : allTeams) {
-            if (team.getFullName().replace("\\", "/").equalsIgnoreCase(teamName)) { //TODO caseSenesitive
-                return team.getId();
+    public String getTeamIdByName(String teamName) throws CxClientException {
+        try {
+            teamName = teamName.replace("\\", "/");
+            List<Team> allTeams = getTeamList();
+            for (Team team : allTeams) {
+                if (team.getFullName().replace("\\", "/").equalsIgnoreCase(teamName)) { //TODO caseSenesitive
+                    return team.getId();
+                }
             }
+            throw new CxClientException("Could not resolve team ID from team name: " + teamName);
+        } catch (IOException e) {
+            throw new CxClientException("Could not resolve team ID from team name: " + teamName, e);
         }
-        throw new CxClientException("Could not resolve team ID from team name: " + teamName);
     }
 
     public String getTeamNameById(String teamId) throws CxClientException, IOException {

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Semaphore;
 
 import static com.cx.restclient.cxArm.dto.CxProviders.OPEN_SOURCE;
 import static com.cx.restclient.cxArm.utils.CxARMUtils.getProjectViolations;
@@ -71,7 +72,9 @@ class CxOSAClient {
         return sendOSAScan(osaDependenciesJson, projectId);
     }
 
-    private synchronized String resolveOSADependencies() {
+    private final Semaphore resolvePermit = new Semaphore(1);
+
+    private String resolveOSADependencies() {
         log.info("Scanning for CxOSA compatible files");
         Properties scannerProperties = config.getOsaFsaConfig();
         if (scannerProperties == null) {
@@ -83,9 +86,16 @@ class CxOSAClient {
                     config.getOsaRunInstall(),
                     log);
         }
-        ComponentScan componentScan = new ComponentScan(scannerProperties);
-        String osaDependenciesJson = componentScan.scan();
-        OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
+
+        String osaDependenciesJson = null;
+        if (resolvePermit.tryAcquire()){
+            Thread thread = Thread.currentThread();
+            log.info("Before FSA: Thread name: " + thread.getName() + ", Thread id: " + thread.getId());
+            ComponentScan componentScan = new ComponentScan(scannerProperties);
+            osaDependenciesJson = componentScan.scan();
+            OSAUtils.writeToOsaListToFile(config.getReportsDir(), osaDependenciesJson, log);
+            resolvePermit.release();
+        }
 
         return osaDependenciesJson;
     }
