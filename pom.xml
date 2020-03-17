@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.checkmarx</groupId>
     <artifactId>cx-client-common</artifactId>
-    <version>9.00.10</version>
+    <version>9.00.11</version>
     <packaging>jar</packaging>
     <name>Checkmarx Client</name>
     <description>Enables web services access Checkmarx SAST and OSA scan.</description>
@@ -107,7 +107,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.10.1</version>
+            <version>20.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
