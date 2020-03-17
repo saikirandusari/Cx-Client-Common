@@ -107,7 +107,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>20.0.3</version>
+            <version>2.9.10.1</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
@@ -147,7 +147,7 @@
         <dependency>
             <groupId>com.checkmarx</groupId>
             <artifactId>cx-ws-fs-agent</artifactId>
-            <version>18.7.2.4</version>
+            <version>20.0.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.xml.bind</groupId>
